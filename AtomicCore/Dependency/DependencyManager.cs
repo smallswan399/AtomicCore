@@ -156,7 +156,7 @@ namespace AtomicCore.Dependency
             this._container = builder.Build();
 
             Type[] lifetimeScopeTypes = this.FindClassesOfType<IDependencyLifetimeScope>(listAllType, true);
-            int lifetimeScopeClassTotal = lifetimeScopeTypes.Count(d => d.FullName != this.GetType().FullName);
+            int lifetimeScopeClassTotal = null == lifetimeScopeTypes ? 0 : lifetimeScopeTypes.Count(d => d.FullName != this.GetType().FullName);
             if (lifetimeScopeClassTotal <= 0)
                 this._lifetimeScop = this;
             else

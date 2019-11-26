@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Atomic for dotnet core,Author Telephone is +86 13871772983</Description>
+    <Description>Atomic for dotnet core</Description>
     <Copyright>Copyright 2019</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>171331668@qq.com</Authors>
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

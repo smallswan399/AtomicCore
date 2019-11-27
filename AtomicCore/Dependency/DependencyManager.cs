@@ -108,16 +108,45 @@ namespace AtomicCore.Dependency
             CompilationLibrary[] libs = deps.CompileLibraries.Where(lib =>
                 !lib.Serviceable && lib.Type != C_LIBTYPE_PACKAGE && lib.Type != C_LIBTYPE_REFERENCEASSEMBLY
             ).ToArray();
+
+            //开始遍历装载程序集中的类型
+            List<string> libNameList = new List<string>();
             List<Type> listAllType = new List<Type>();
             foreach (var lib in libs)
             {
+                if (libNameList.Exists(d => d.Equals(lib.Name, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
                 try
                 {
                     var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
                     listAllType.AddRange(assembly.GetTypes().Where(type => null != type));
+                    libNameList.Add(lib.Name);
                 }
                 catch { }
             }
+
+            //包含自身框架命名开头的包或项
+            CompilationLibrary[] selfLibs = deps.CompileLibraries.Where(d =>
+                d.Name.StartsWith("AtomicCore.", StringComparison.OrdinalIgnoreCase) &&
+                !libNameList.Exists(d => libNameList.Exists(e => e.Equals(d, StringComparison.OrdinalIgnoreCase)))
+            ).ToArray();
+            foreach (var lib in selfLibs)
+            {
+                if (libNameList.Exists(d => d.Equals(lib.Name, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                try
+                {
+                    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
+                    listAllType.AddRange(assembly.GetTypes().Where(type => null != type));
+                    libNameList.Add(lib.Name);
+                }
+                catch { }
+            }
+
+            //过滤相同的类型数据
+            listAllType = listAllType.Distinct(new TypeClassEqualityComparer()).ToList();
 
             #endregion
 
@@ -453,6 +482,37 @@ namespace AtomicCore.Dependency
             catch
             {
                 return false;
+            }
+        }
+
+        #endregion
+
+        #region Private Classies
+
+        /// <summary>
+        /// Type类型比较接口实现
+        /// </summary>
+        private class TypeClassEqualityComparer : IEqualityComparer<Type>
+        {
+            /// <summary>
+            /// 比较是否相等
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
+            public bool Equals(Type x, Type y)
+            {
+                return x.FullName.Equals(y.FullName, StringComparison.OrdinalIgnoreCase);
+            }
+
+            /// <summary>
+            /// 返回哈希CODE
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public int GetHashCode(Type obj)
+            {
+                return obj.GetHashCode();
             }
         }
 

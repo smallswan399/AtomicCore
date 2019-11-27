@@ -127,9 +127,9 @@ namespace AtomicCore.Dependency
             }
 
             //包含自身框架命名开头的包或项
-            CompilationLibrary[] selfLibs = deps.CompileLibraries.Where(d =>
-                d.Name.StartsWith("AtomicCore.", StringComparison.OrdinalIgnoreCase) &&
-                !libNameList.Exists(d => libNameList.Exists(e => e.Equals(d, StringComparison.OrdinalIgnoreCase)))
+            CompilationLibrary[] selfLibs = deps.CompileLibraries.Where(lib =>
+                lib.Name.StartsWith("AtomicCore.", StringComparison.OrdinalIgnoreCase) &&
+                !libNameList.Exists(d => d.Equals(lib.Name, StringComparison.OrdinalIgnoreCase))
             ).ToArray();
             foreach (var lib in selfLibs)
             {

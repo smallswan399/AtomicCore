@@ -19,6 +19,20 @@ namespace AtomicCore.Dependency
         #region Variable
 
         /// <summary>
+        /// 引用LIB为Package类型的名称
+        /// </summary>
+        private const string C_LIBTYPE_PACKAGE = "package";
+        /// <summary>
+        /// 引用LIB为referenceassembly类型的名称
+        /// </summary>
+        private const string C_LIBTYPE_REFERENCEASSEMBLY = "referenceassembly";
+        /// <summary>
+        /// 引用LIB为project类型的名称
+        /// </summary>
+        private const string C_LIBTYPE_PROJECT = "project";
+
+
+        /// <summary>
         /// IOC当前容器接口实例
         /// </summary>
         private Autofac.IContainer _container = null;
@@ -88,18 +102,51 @@ namespace AtomicCore.Dependency
         {
             #region 0.所有程序集和程序集下类型
 
-            var deps = DependencyContext.Default;
-            var libs = deps.CompileLibraries.Where(lib => !lib.Serviceable && lib.Type != "package");//排除所有的系统程序集、Nuget下载包
+            //获取默认的依赖引用
+            DependencyContext deps = DependencyContext.Default;
+            //排除所有的系统程序集、Nuget下载包
+            CompilationLibrary[] libs = deps.CompileLibraries.Where(lib =>
+                !lib.Serviceable && lib.Type != C_LIBTYPE_PACKAGE && lib.Type != C_LIBTYPE_REFERENCEASSEMBLY
+            ).ToArray();
+
+            //开始遍历装载程序集中的类型
+            List<string> libNameList = new List<string>();
             List<Type> listAllType = new List<Type>();
             foreach (var lib in libs)
             {
+                if (libNameList.Exists(d => d.Equals(lib.Name, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
                 try
                 {
                     var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
                     listAllType.AddRange(assembly.GetTypes().Where(type => null != type));
+                    libNameList.Add(lib.Name);
                 }
                 catch { }
             }
+
+            //包含自身框架命名开头的包或项
+            CompilationLibrary[] selfLibs = deps.CompileLibraries.Where(lib =>
+                lib.Name.StartsWith("AtomicCore.", StringComparison.OrdinalIgnoreCase) &&
+                !libNameList.Exists(d => d.Equals(lib.Name, StringComparison.OrdinalIgnoreCase))
+            ).ToArray();
+            foreach (var lib in selfLibs)
+            {
+                if (libNameList.Exists(d => d.Equals(lib.Name, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                try
+                {
+                    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
+                    listAllType.AddRange(assembly.GetTypes().Where(type => null != type));
+                    libNameList.Add(lib.Name);
+                }
+                catch { }
+            }
+
+            //过滤相同的类型数据
+            listAllType = listAllType.Distinct(new TypeClassEqualityComparer()).ToList();
 
             #endregion
 
@@ -113,8 +160,8 @@ namespace AtomicCore.Dependency
 
             #region 2.IDependencyRegisterHook 外部挂钩注册
 
-            IEnumerable<Type> hookTypes = this.FindClassesOfType<IDependencyRegisterHook>(listAllType, true);
-            if (hookTypes.Any())
+            Type[] hookTypes = this.FindClassesOfType<IDependencyRegisterHook>(listAllType, true);
+            if (null != hookTypes && hookTypes.Length > 0)
             {
                 List<IDependencyRegisterHook> hookList = new List<IDependencyRegisterHook>();
                 foreach (var hookT in hookTypes)
@@ -137,12 +184,10 @@ namespace AtomicCore.Dependency
 
             this._container = builder.Build();
 
-            IEnumerable<Type> lifetimeScopeTypes = this.FindClassesOfType<IDependencyLifetimeScope>(listAllType, true);
-            int lifetimeScopeClassTotal = lifetimeScopeTypes.Count(d => d.FullName != this.GetType().FullName);
+            Type[] lifetimeScopeTypes = this.FindClassesOfType<IDependencyLifetimeScope>(listAllType, true);
+            int lifetimeScopeClassTotal = null == lifetimeScopeTypes ? 0 : lifetimeScopeTypes.Count(d => d.FullName != this.GetType().FullName);
             if (lifetimeScopeClassTotal <= 0)
-            {
                 this._lifetimeScop = this;
-            }
             else
             {
                 if (lifetimeScopeClassTotal > 1)
@@ -155,15 +200,14 @@ namespace AtomicCore.Dependency
 
             #region 100.将注册的IDependencyRebuildDelegate接口实现进行纳入执行
 
-            IEnumerable<Type> rebuildDelegateTypes = this.FindClassesOfType<IDependencyInitComplete>(listAllType, true);
-            List<IDependencyInitComplete> taskList = new List<IDependencyInitComplete>();
-            foreach (var taskT in rebuildDelegateTypes)
+            Type[] rebuildDelegateTypes = this.FindClassesOfType<IDependencyInitComplete>(listAllType, true);
+            if (null != rebuildDelegateTypes && rebuildDelegateTypes.Length > 0)
             {
-                taskList.Add(Activator.CreateInstance(taskT) as IDependencyInitComplete);
-            }
-            foreach (var taskOpt in taskList.AsQueryable().OrderBy(d => d.Priority))
-            {
-                taskOpt.OnCompleted(this._container);
+                List<IDependencyInitComplete> taskList = new List<IDependencyInitComplete>();
+                foreach (var taskT in rebuildDelegateTypes)
+                    taskList.Add(Activator.CreateInstance(taskT) as IDependencyInitComplete);
+                foreach (var taskOpt in taskList.AsQueryable().OrderBy(d => d.Priority))
+                    taskOpt.OnCompleted(this._container);
             }
 
             #endregion
@@ -398,18 +442,18 @@ namespace AtomicCore.Dependency
         /// <param name="scanTypeList">指定的类型集合</param>
         /// <param name="onlyConcreteClasses">True:不包含抽象类型,False:包含抽象类型</param>
         /// <returns></returns>
-        private IEnumerable<Type> FindClassesOfType<I>(List<Type> scanTypeList, bool onlyConcreteClasses = true)
+        private Type[] FindClassesOfType<I>(List<Type> scanTypeList, bool onlyConcreteClasses = true)
         {
-            if (null == scanTypeList || !scanTypeList.Any())
+            if (null == scanTypeList || scanTypeList.Count <= 0)
                 return null;
 
             Type assignTypeFrom = typeof(I);
             Type[] findTypes = scanTypeList.Where(t => typeof(I).IsAssignableFrom(t) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(t, assignTypeFrom))).ToArray();
-            if (null == findTypes || !findTypes.Any())
+            if (null == findTypes || findTypes.Length <= 0)
                 return null;
 
             if (onlyConcreteClasses)
-                return findTypes.Where(t => t.IsClass && !t.IsAbstract);
+                return findTypes.Where(t => t.IsClass && !t.IsAbstract).ToArray();
             else
                 return findTypes;
         }
@@ -438,6 +482,37 @@ namespace AtomicCore.Dependency
             catch
             {
                 return false;
+            }
+        }
+
+        #endregion
+
+        #region Private Classies
+
+        /// <summary>
+        /// Type类型比较接口实现
+        /// </summary>
+        private class TypeClassEqualityComparer : IEqualityComparer<Type>
+        {
+            /// <summary>
+            /// 比较是否相等
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
+            public bool Equals(Type x, Type y)
+            {
+                return x.FullName.Equals(y.FullName, StringComparison.OrdinalIgnoreCase);
+            }
+
+            /// <summary>
+            /// 返回哈希CODE
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public int GetHashCode(Type obj)
+            {
+                return obj.GetHashCode();
             }
         }
 

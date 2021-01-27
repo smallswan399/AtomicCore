@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AtomicCore.IOStorage.Core\AtomicCore.IOStorage.Core.csproj" />
+    <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
+  </ItemGroup>
+
+</Project>

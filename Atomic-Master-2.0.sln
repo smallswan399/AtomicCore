@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IOStorage", "IOStorage", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.IOStorage.Core", "AtomicCore.IOStorage.Core\AtomicCore.IOStorage.Core.csproj", "{892D51D3-732B-44C9-8DA9-C7112F5369D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.IOStorage.StoragePort", "AtomicCore.IOStorage.StoragePort\AtomicCore.IOStorage.StoragePort.csproj", "{A67CAF65-F4F9-4437-877C-67F159717958}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.IOStorage.StoragePort", "AtomicCore.IOStorage.StoragePort\AtomicCore.IOStorage.StoragePort.csproj", "{A67CAF65-F4F9-4437-877C-67F159717958}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

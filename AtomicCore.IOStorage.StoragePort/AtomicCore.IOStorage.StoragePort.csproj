@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>171331668@qq.com</Authors>
+    <Company>171331668@qq.com</Company>
+    <Product>AtomicCore.IOStorage.StoragePort</Product>
+    <Description>AtomicCore.IOStorage.StoragePort,Author Telephone is +86 13871772983</Description>
+    <Copyright>Copyright 2019</Copyright>
+    <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
+    <PackageTags>AtomicCore.IOStorage.StoragePorts</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

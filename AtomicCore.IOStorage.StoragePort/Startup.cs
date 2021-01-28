@@ -45,6 +45,24 @@ namespace AtomicCore.IOStorage.StoragePort
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region 启用IIS进程内核承载模型（https://docs.microsoft.com/zh-cn/aspnet/core/host-and-deploy/iis/?view=aspnetcore-3.1）
+
+            //services.Configure<IISServerOptions>(options =>
+            //{
+            //    options.AutomaticAuthentication = false;
+            //});
+
+            #endregion
+
+            #region 启用IIS进程外承载模型
+
+            //services.Configure<IISOptions>(options =>
+            //{
+            //    options.ForwardClientCertificate = false;
+            //});
+
+            #endregion
+
             #region 加载读取配置项（AppSettings）
 
             IConfigurationSection appSettings = Configuration.GetSection("AppSettings");

@@ -1,7 +1,11 @@
-﻿{
+{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://s.atomiccore.test/",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:9946",
       "sslPort": 0
@@ -18,7 +22,15 @@
     "AtomicCore.IOStorage.StoragePort": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "IIS": {
+      "commandName": "IIS",
+      "launchBrowser": true,
+      "launchUrl": "http://s.atomiccore.test/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

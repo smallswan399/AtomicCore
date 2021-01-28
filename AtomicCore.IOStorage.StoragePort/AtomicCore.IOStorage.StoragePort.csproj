@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore.IOStorage.StoragePorts</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <UserSecretsId>41604144-212c-48be-9371-52e79d73e3aa</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

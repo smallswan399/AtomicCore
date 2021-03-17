@@ -28,5 +28,16 @@ namespace AtomicCore
 
             return value.ToString(format.ToString());
         }
+
+        ///// <summary>
+        ///// 固定保留小数位数（非四舍五入或任何进位机制）
+        ///// </summary>
+        ///// <param name="_this"></param>
+        ///// <param name="decimals"></param>
+        ///// <returns></returns>
+        //public static decimal Retention(this decimal _this, int decimals)
+        //{
+        //    return decimal.Parse(_this.ToString(string.Format("F{0}", decimals)));
+        //}
     }
 }

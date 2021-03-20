@@ -20,4 +20,8 @@
     <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

@@ -59,7 +59,7 @@ namespace AtomicCore
                     if (!s_dbProviderCache.ContainsKey(MT))
                     {
                         //解析数据模型映射接口实例
-                        IDbMappingHandler dbMapper = AtomicKernel.Dependency.Resolve<IDbMappingHandler>();
+                        IDbMappingHandler dbMapper = Dependency.Resolve<IDbMappingHandler>();
                         if (null == dbMapper)
                             throw new Exception("未能解析出IDbMappingHandler接口实例");
 
@@ -99,7 +99,7 @@ namespace AtomicCore
                             { "dbMappingHandler", dbMapper }
                         };
 
-                        instance = AtomicKernel.Dependency.Resolve<IDbProvider<M>>(connectionSetting.ProviderName, paramDic.ToArray());
+                        instance = Dependency.Resolve<IDbProvider<M>>(connectionSetting.ProviderName, paramDic.ToArray());
 
                         s_dbProviderCache.Add(MT, instance);
                     }
@@ -137,7 +137,7 @@ namespace AtomicCore
                 {
                     if (!s_dbProviderCache.ContainsKey(MT))
                     {
-                        if (!AtomicKernel.Dependency.IsRegistered<IDbProvider<M>>(dbType))
+                        if (!Dependency.IsRegistered<IDbProvider<M>>(dbType))
                             throw new Exception("dbType is illegal");
 
                         if (null == conn)
@@ -145,7 +145,7 @@ namespace AtomicCore
 
 
                         //解析数据模型映射接口实例
-                        IDbMappingHandler dbMapper = AtomicKernel.Dependency.Resolve<IDbMappingHandler>();
+                        IDbMappingHandler dbMapper = Dependency.Resolve<IDbMappingHandler>();
                         if (null == dbMapper)
                             throw new Exception("未能解析出IDbMappingHandler接口实例");
 
@@ -163,7 +163,7 @@ namespace AtomicCore
                             { "dbMappingHandler", dbMapper }
                         };
 
-                        instance = AtomicKernel.Dependency.Resolve<IDbProvider<M>>(dbType, paramDic.ToArray());
+                        instance = Dependency.Resolve<IDbProvider<M>>(dbType, paramDic.ToArray());
 
                         s_dbProviderCache.Add(MT, instance);
                     }
@@ -190,7 +190,7 @@ namespace AtomicCore
             //Ioc Init
             DependencyManager dependency = new DependencyManager();
             dependency.Initialize();
-            AtomicKernel.Dependency = dependency;
+            Dependency = dependency;
         }
 
         #endregion

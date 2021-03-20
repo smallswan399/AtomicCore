@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -18,7 +17,7 @@ namespace AtomicCore
         /// <summary>
         /// 默认协商KEY
         /// </summary>
-        public const string def_consultKey = "AtomicCore.Cryptography";
+        public const string def_consultKey = "gotogether";
 
         #endregion
 

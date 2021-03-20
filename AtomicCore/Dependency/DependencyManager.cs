@@ -106,7 +106,9 @@ namespace AtomicCore.Dependency
             DependencyContext deps = DependencyContext.Default;
             //排除所有的系统程序集、Nuget下载包
             CompilationLibrary[] libs = deps.CompileLibraries.Where(lib =>
-                !lib.Serviceable && lib.Type != C_LIBTYPE_PACKAGE && lib.Type != C_LIBTYPE_REFERENCEASSEMBLY
+                !lib.Serviceable &&
+                lib.Type != C_LIBTYPE_PACKAGE &&
+                lib.Type != C_LIBTYPE_REFERENCEASSEMBLY
             ).ToArray();
 
             //开始遍历装载程序集中的类型
@@ -165,9 +167,8 @@ namespace AtomicCore.Dependency
             {
                 List<IDependencyRegisterHook> hookList = new List<IDependencyRegisterHook>();
                 foreach (var hookT in hookTypes)
-                {
                     hookList.Add(Activator.CreateInstance(hookT) as IDependencyRegisterHook);
-                }
+
                 hookList = hookList.AsQueryable().OrderBy(d => d.Priority).ToList();
                 hookList.ForEach(o => o.Register(builder, listAllType));
             }

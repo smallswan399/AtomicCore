@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -52,7 +53,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             var section = await reader.ReadNextSectionAsync();
 
             //存储路径
-            string savePath = _pathProvider.MapPath(Path.Combine(c_rootDir,"Test"));
+            string trustedFileNameForFileStorage = Path.GetRandomFileName();
+            string savePath = this.GetSavePath("Test", null, trustedFileNameForFileStorage);
 
             //读取section
             while (section != null)
@@ -60,7 +62,6 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out _);
                 if (hasContentDispositionHeader)
                 {
-                    var trustedFileNameForFileStorage = Path.GetRandomFileName();
                     await WriteFileAsync(section.Body, savePath);
                 }
                 section = await reader.ReadNextSectionAsync();
@@ -82,16 +83,44 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         public async Task<IActionResult> UploadingFormFile(IFormFile file)
         {
             //存储路径
-            string savePath = _pathProvider.MapPath(Path.Combine(c_rootDir, "Test"));
+            string trustedFileNameForFileStorage = Path.GetRandomFileName();
+            string savePath = this.GetSavePath("Test", null, trustedFileNameForFileStorage);
 
             using (var stream = file.OpenReadStream())
             {
-                string trustedFileNameForFileStorage = Path.GetRandomFileName();
                 await WriteFileAsync(stream, savePath);
             }
             return Created(nameof(UploadController), null);
         }
 
+        /// <summary>
+        /// 获取存储IO路径
+        /// </summary>
+        /// <param name="bizFolder"></param>
+        /// <param name="indexFolder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private string GetSavePath(string bizFolder, string indexFolder, string fileName)
+        {
+            if (string.IsNullOrEmpty(bizFolder))
+                throw new ArgumentNullException(nameof(bizFolder));
+
+            string io_bizFolder = this._pathProvider.MapPath(bizFolder);
+            if (!Directory.Exists(io_bizFolder))
+                Directory.CreateDirectory(io_bizFolder);
+
+            string io_indexFolder;
+            if (string.IsNullOrEmpty(indexFolder))
+                io_indexFolder = io_bizFolder;
+            else
+            {
+                io_indexFolder = Path.Combine(io_bizFolder, indexFolder);
+                if (!Directory.Exists(io_indexFolder))
+                    Directory.CreateDirectory(io_indexFolder);
+            }
+
+            return Path.Combine(io_indexFolder, fileName);
+        }
 
         /// <summary>
         /// 写文件导到磁盘
@@ -99,7 +128,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <param name="stream">流</param>
         /// <param name="path">文件保存路径</param>
         /// <returns></returns>
-        public static async Task<int> WriteFileAsync(System.IO.Stream stream, string path)
+        private async Task<int> WriteFileAsync(System.IO.Stream stream, string path)
         {
             const int FILE_WRITE_SIZE = 84975;//写出缓冲区大小
             int writeCount = 0;

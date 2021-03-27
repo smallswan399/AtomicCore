@@ -29,7 +29,7 @@ namespace AtomicCore.IOStorage.StoragePort
         /// <returns></returns>
         public string MapPath(string path)
         {
-            var filePath = Path.Combine(_hostEnv.WebRootPath, path);
+            var filePath = Path.Combine(_hostEnv.WebRootPath ?? _hostEnv.ContentRootPath, path);
             return filePath;
         }
     }

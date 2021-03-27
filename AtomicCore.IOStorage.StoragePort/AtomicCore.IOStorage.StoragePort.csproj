@@ -14,6 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Uploads\**" />
+    <Content Remove="Uploads\**" />
+    <EmbeddedResource Remove="Uploads\**" />
+    <None Remove="Uploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AtomicCore.IOStorage.Core\AtomicCore.IOStorage.Core.csproj" />
     <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>

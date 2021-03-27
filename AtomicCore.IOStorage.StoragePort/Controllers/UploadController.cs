@@ -42,7 +42,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 从多部分请求收到文件，然后应用直接处理或保存它。流式传输无法显著提高性能。流式传输可降低上传文件时对内存或磁盘空间的需求。
         /// </remarks>
         /// <returns></returns>
-        [HttpPost("UploadingStream")]
+        [HttpPost]
         public async Task<IActionResult> UploadingStream()
         {
             //获取boundary
@@ -61,11 +61,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             {
                 var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out _);
                 if (hasContentDispositionHeader)
-                {
                     await WriteFileAsync(section.Body, savePath);
-                }
+
                 section = await reader.ReadNextSectionAsync();
             }
+
             return Created(nameof(UploadController), null);
         }
 
@@ -79,7 +79,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 如果应用尝试缓冲过多上传，站点就会在内存或磁盘空间不足时崩溃。如果文件上传的大小或频率会消耗应用资源，请使用流式传输
         /// </remarks>
         /// <returns></returns>
-        [HttpPost("UploadingFormFile")]
+        [HttpPost]
         public async Task<IActionResult> UploadingFormFile(IFormFile file)
         {
             //存储路径
@@ -87,9 +87,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             string savePath = this.GetSavePath("Test", null, trustedFileNameForFileStorage);
 
             using (var stream = file.OpenReadStream())
-            {
                 await WriteFileAsync(stream, savePath);
-            }
+
             return Created(nameof(UploadController), null);
         }
 
@@ -105,7 +104,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
 
-            string io_bizFolder = this._pathProvider.MapPath(bizFolder);
+            if (!Directory.Exists(c_rootDir))
+                Directory.CreateDirectory(c_rootDir);
+
+            string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}", c_rootDir, bizFolder));
             if (!Directory.Exists(io_bizFolder))
                 Directory.CreateDirectory(io_bizFolder);
 
@@ -142,6 +144,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                     writeCount += readCount;
                 }
             }
+
             return writeCount;
         }
     }

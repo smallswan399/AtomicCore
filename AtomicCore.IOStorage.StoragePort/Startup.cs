@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +69,15 @@ namespace AtomicCore.IOStorage.StoragePort
             IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
             services.Configure<BizAppSettings>(appSettings);
             services.AddSingleton<IBizPathSrvProvider, BizPathSrvProvider>();
+
+            #endregion
+
+            #region 设置上传最大限制阀值（修改默认阀值）
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = long.MaxValue;
+            });
 
             #endregion
 

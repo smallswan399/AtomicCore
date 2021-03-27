@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,12 +16,14 @@ namespace AtomicCore.IOStorage.StoragePort
         #region Constructor
 
         /// <summary>
-        /// 注入构造函数
+        /// 构造函数
         /// </summary>
-        /// <param name="configuration">配置接口注入</param>
-        public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
+        /// <param name="configuration">系统配置</param>
+        /// <param name="env">WebHost变量</param>
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            WebHostEnvironment = env;
         }
 
         #endregion
@@ -34,9 +31,14 @@ namespace AtomicCore.IOStorage.StoragePort
         #region Propertys
 
         /// <summary>
-        /// 配置信息解耦
+        /// 系统配置
         /// </summary>
-        public Microsoft.Extensions.Configuration.IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
+
+        /// <summary>
+        /// WebHost变量
+        /// </summary>
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         #endregion
 
@@ -46,17 +48,26 @@ namespace AtomicCore.IOStorage.StoragePort
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            #region 启用IIS进程内核承载模型（https://docs.microsoft.com/zh-cn/aspnet/core/host-and-deploy/iis/?view=aspnetcore-3.1）
+            #region AtomicCore引擎初始化
 
-            //services.Configure<IISServerOptions>(options =>
-            //{
-            //    options.AutomaticAuthentication = false;
-            //});
+            AtomicCore.AtomicKernel.Initialize();
 
             #endregion
 
-            #region 启用IIS进程外承载模型
+            #region 运行环境部署（Linux or IIS）
 
+            ///* 如果部署在linux系统上，需要加上下面的配置： */
+            //services.Configure<KestrelServerOptions>(options => 
+            //{
+            //    options.AllowSynchronousIO = true;
+            //});
+
+            ///* 如果部署在IIS上，需要加上下面的配置： */
+            //services.Configure<IISServerOptions>(options => 
+            //{
+            //    options.AllowSynchronousIO = true;
+            //    options.AutomaticAuthentication = false;
+            //});
             //services.Configure<IISOptions>(options =>
             //{
             //    options.ForwardClientCertificate = false;
@@ -91,6 +102,7 @@ namespace AtomicCore.IOStorage.StoragePort
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            /* 调试DEBUG模式 */
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 

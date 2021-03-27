@@ -3,10 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AtomicCore.IOStorage.StoragePort.Controllers
@@ -17,7 +14,24 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
     /// </summary>
     public class UploadController : Controller
     {
-        private readonly string _targetFilePath = "C:\\files\\TempDir";
+        /// <summary>
+        /// 文件存储根目录
+        /// </summary>
+        private const string c_rootDir = "Uploads";
+
+        /// <summary>
+        /// 当前WEB路径
+        /// </summary>
+        private IBizPathSrvProvider _pathProvider = null;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="pathProvider"></param>
+        public UploadController(IBizPathSrvProvider pathProvider)
+        {
+            this._pathProvider = pathProvider;
+        }
 
         /// <summary>
         /// 流式文件上传
@@ -37,6 +51,9 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             //{ BodyLengthLimit = 2000 };//
             var section = await reader.ReadNextSectionAsync();
 
+            //存储路径
+            string savePath = _pathProvider.MapPath(Path.Combine(c_rootDir,"Test"));
+
             //读取section
             while (section != null)
             {
@@ -44,7 +61,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 if (hasContentDispositionHeader)
                 {
                     var trustedFileNameForFileStorage = Path.GetRandomFileName();
-                    await WriteFileAsync(section.Body, Path.Combine(_targetFilePath, trustedFileNameForFileStorage));
+                    await WriteFileAsync(section.Body, savePath);
                 }
                 section = await reader.ReadNextSectionAsync();
             }
@@ -64,10 +81,13 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         [HttpPost("UploadingFormFile")]
         public async Task<IActionResult> UploadingFormFile(IFormFile file)
         {
+            //存储路径
+            string savePath = _pathProvider.MapPath(Path.Combine(c_rootDir, "Test"));
+
             using (var stream = file.OpenReadStream())
             {
                 string trustedFileNameForFileStorage = Path.GetRandomFileName();
-                await WriteFileAsync(stream, Path.Combine(_targetFilePath, trustedFileNameForFileStorage));
+                await WriteFileAsync(stream, savePath);
             }
             return Created(nameof(UploadController), null);
         }

@@ -19,11 +19,9 @@ namespace AtomicCore.IOStorage.StoragePort
         /// 构造函数
         /// </summary>
         /// <param name="configuration">系统配置</param>
-        /// <param name="env">WebHost变量</param>
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            WebHostEnvironment = env;
         }
 
         #endregion
@@ -34,11 +32,6 @@ namespace AtomicCore.IOStorage.StoragePort
         /// 系统配置
         /// </summary>
         public IConfiguration Configuration { get; }
-
-        /// <summary>
-        /// WebHost变量
-        /// </summary>
-        public IWebHostEnvironment WebHostEnvironment { get; }
 
         #endregion
 

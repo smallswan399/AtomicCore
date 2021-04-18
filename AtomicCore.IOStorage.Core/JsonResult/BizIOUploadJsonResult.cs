@@ -1,9 +1,11 @@
-﻿namespace AtomicCore.IOStorage.Core
+﻿using Newtonsoft.Json;
+
+namespace AtomicCore.IOStorage.Core
 {
     /// <summary>
     /// IO上传Json Result
     /// </summary>
-    public sealed class BizIOUploadJsonResult : ResultBase
+    public sealed class BizIOUploadJsonResult : BizIOBaseJsonResult
     {
         #region Constructors
 
@@ -16,9 +18,9 @@
         /// 构造函数（错误）
         /// </summary>
         /// <param name="errorMsg"></param>
-        public BizIOUploadJsonResult(string errorMsg) : base()
+        public BizIOUploadJsonResult(string errorMsg) : base(errorMsg)
         {
-            this.AppendError(errorMsg);
+            
         }
 
         #endregion
@@ -28,6 +30,7 @@
         /// <summary>
         /// 上传返回相对路径
         /// </summary>
+        [JsonProperty("path")]
         public string RelativePath { get; set; } = string.Empty;
 
         #endregion

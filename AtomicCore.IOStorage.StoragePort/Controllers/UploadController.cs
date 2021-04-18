@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -70,6 +71,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 流式文件上传（分片多文件上传）
         /// 直接读取请求体装载后的Section 对应的stream 直接操作strem即可。无需把整个请求体读入内存
         /// </summary>
+        /// <param name="bizFolder">业务文件夹</param>
+        /// <param name="indexFolder">数据索引文件夹</param>
         /// <remarks>
         /// 从多部分请求收到文件，然后应用直接处理或保存它。流式传输无法显著提高性能。流式传输可降低上传文件时对内存或磁盘空间的需求。
         /// https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-5.0
@@ -78,17 +81,18 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <returns></returns>
         [HttpPost]
         [DisableFormValueModelBinding]
-        public async Task<IActionResult> UploadingStream()
+        public async Task<IActionResult> UploadingStream(string bizFolder, string indexFolder)
         {
+            //基础判断
+            if (string.IsNullOrEmpty(bizFolder))
+                return Ok(new BizIOBatchUploadJsonResult("业务文件夹不允许为空"));
+
             //判断内容类型
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
-                return Json(new BizIOUploadJsonResult("contentType must be 'multipart' type..."));
+                return Ok(new BizIOBatchUploadJsonResult("contentType must be 'multipart' type..."));
 
-            // Accumulate the form data key-value pairs in the request (formAccumulator).
-            KeyValueAccumulator formAccumulator = new KeyValueAccumulator();
-            var trustedFileNameForDisplay = string.Empty;
-            var untrustedFileNameForStorage = string.Empty;
-            var streamedFileContent = new byte[0];
+            //上传文件集合
+            List<string> relativePathList = new List<string>();
 
             //获取boundary
             MediaTypeHeaderValue mediaTypeHeaderValue = MediaTypeHeaderValue.Parse(Request.ContentType);
@@ -97,15 +101,9 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             MultipartReader reader = new MultipartReader(boundary.Value, HttpContext.Request.Body);
 
             //开始抽取一个地址
-            //MultipartSection section = await reader.ReadNextSectionAsync();
-
-            //存储路径
-            //string trustedFileNameForFileStorage = Path.GetRandomFileName();
-            //string relativePath = this.GetRelativePath(bizFolder, indexFolder, trustedFileNameForFileStorage);
-            //string savePath = this.GetSaveIOPath("Test", null, trustedFileNameForFileStorage);
+            MultipartSection section = await reader.ReadNextSectionAsync();
 
             //优先读取表单提交字段数据
-            MultipartSection section = await reader.ReadNextSectionAsync();
             while (null != section)
             {
                 //获取分片内容的描述部分
@@ -114,73 +112,23 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 //若存在描述则执行下逻辑
                 if (hasContentDispositionHeader)
                 {
-                    if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
-                    {
-                        // Don't limit the key name length because the 
-                        // multipart headers length limit is already in effect.
-                        var key = HeaderUtilities
-                            .RemoveQuotes(contentDisposition.Name).Value;
-                        var encoding = GetEncoding(section);
+                    //判断是否包含
+                    if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                        return Ok(new BizIOBatchUploadJsonResult("No valid file stream was identified..."));
 
-                        if (encoding == null)
-                        {
-                            ModelState.AddModelError("File",
-                                $"The request couldn't be processed (Error 2).");
-                            // Log error
+                    //读取文件流
+                    byte[] buffer = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState, _permittedExtensions, _fileSizeLimit);
 
-                            return BadRequest(ModelState);
-                        }
+                    //计算文件HASH值
+                    string fileExt = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
+                    string fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(buffer, false), fileExt);
 
-                        using (var streamReader = new StreamReader(
-                            section.Body,
-                            encoding,
-                            detectEncodingFromByteOrderMarks: true,
-                            bufferSize: 1024,
-                            leaveOpen: true))
-                        {
-                            // The value length limit is enforced by 
-                            // MultipartBodyLengthLimit
-                            string value = await streamReader.ReadToEndAsync();
+                    //计算存储路径 + 上传文件
+                    string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
+                    await WriteFileAsync(buffer, savePath);
 
-                            if (string.IsNullOrEmpty(value) || string.Equals(value, "undefined",
-                                StringComparison.OrdinalIgnoreCase))
-                                value = string.Empty;
-
-                            formAccumulator.Append(key, value);
-                        }
-                    }
-
-                    //循环抽取分片数据
-                    section = await reader.ReadNextSectionAsync();
-                }
-            }
-
-            //再次读取文件流数据(根据首次表单中的数据进行确定数据存储位置)
-            HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
-            section = await reader.ReadNextSectionAsync();
-            while (null != section)
-            {
-                var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out ContentDispositionHeaderValue contentDisposition);
-
-                if (hasContentDispositionHeader)
-                {
-                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
-                    {
-                        untrustedFileNameForStorage = contentDisposition.FileName.Value;
-                        // Don't trust the file name sent by the client. To display
-                        // the file name, HTML-encode the value.
-                        trustedFileNameForDisplay = WebUtility.HtmlEncode(
-                                contentDisposition.FileName.Value);
-
-                        streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition,
-                        ModelState, _permittedExtensions, _fileSizeLimit);
-
-                        if (!ModelState.IsValid)
-                        {
-                            return BadRequest(ModelState);
-                        }
-                    }
-                    //await WriteFileAsync(section.Body, savePath);
+                    //将文件存储结果返回至集合
+                    relativePathList.Add(this.GetRelativePath(bizFolder, indexFolder, fileName));
                 }
 
                 // Drain any remaining section body that hasn't been consumed and
@@ -188,25 +136,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 section = await reader.ReadNextSectionAsync();
             }
 
-            // Bind form data to the model
-            var formData = new FormData();
-            var formValueProvider = new FormValueProvider(
-                BindingSource.Form,
-                new FormCollection(formAccumulator.GetResults()),
-                CultureInfo.CurrentCulture);
-            var bindingSuccessful = await TryUpdateModelAsync(formData, prefix: "",
-                valueProvider: formValueProvider);
-
-            if (!bindingSuccessful)
+            //返回成功数据
+            return Ok(new BizIOBatchUploadJsonResult()
             {
-                ModelState.AddModelError("File",
-                    "The request couldn't be processed (Error 5).");
-                // Log error
-
-                return BadRequest(ModelState);
-            }
-
-            return Created(nameof(UploadController), null);
+                RelativePath = relativePathList
+            });
         }
 
         /// <summary>
@@ -227,11 +161,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         {
             //基础判断
             if (string.IsNullOrEmpty(fileName))
-                return Ok(new BizIOUploadJsonResult("文件名称不允许为空"));
+                return Ok(new BizIOSingleUploadJsonResult("文件名称不允许为空"));
             if (null == file || file.Length <= 0)
-                return Ok(new BizIOUploadJsonResult("未检测到上传数据流"));
+                return Ok(new BizIOSingleUploadJsonResult("未检测到上传数据流"));
             if (string.IsNullOrEmpty(bizFolder))
-                return Ok(new BizIOUploadJsonResult("业务文件夹不允许为空"));
+                return Ok(new BizIOSingleUploadJsonResult("业务文件夹不允许为空"));
 
             //存储路径
             string relativePath = this.GetRelativePath(bizFolder, indexFolder, fileName);
@@ -242,7 +176,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 await WriteFileAsync(stream, savePath);
 
             //返回成功数据
-            return Ok(new BizIOUploadJsonResult()
+            return Ok(new BizIOSingleUploadJsonResult()
             {
                 RelativePath = relativePath
             });
@@ -317,12 +251,14 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <returns></returns>
         private async Task<int> WriteFileAsync(System.IO.Stream stream, string path)
         {
-            const int FILE_WRITE_SIZE = 84975;//写出缓冲区大小
+            const int FILE_WRITE_SIZE = 84975;
             int writeCount = 0;
+
             using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write, FILE_WRITE_SIZE, true))
             {
-                byte[] byteArr = new byte[FILE_WRITE_SIZE];
                 int readCount = 0;
+                byte[] byteArr = new byte[FILE_WRITE_SIZE];
+
                 while ((readCount = await stream.ReadAsync(byteArr, 0, byteArr.Length)) > 0)
                 {
                     await fileStream.WriteAsync(byteArr, 0, readCount);
@@ -331,6 +267,18 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             }
 
             return writeCount;
+        }
+
+        /// <summary>
+        /// 写文件导入磁盘
+        /// </summary>
+        /// <param name="buffer">字节数组</param>
+        /// <param name="path">文件保存路径</param>
+        /// <returns></returns>
+        private async Task WriteFileAsync(byte[] buffer, string path)
+        {
+            using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write))
+                await fs.WriteAsync(buffer.AsMemory(0, buffer.Length));
         }
 
         /// <summary>

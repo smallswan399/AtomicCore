@@ -5,20 +5,20 @@ namespace AtomicCore.IOStorage.Core
     /// <summary>
     /// IO上传Json Result
     /// </summary>
-    public sealed class BizIOUploadJsonResult : BizIOBaseJsonResult
+    public sealed class BizIOSingleUploadJsonResult : BizIOBaseJsonResult
     {
         #region Constructors
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public BizIOUploadJsonResult() : base() { }
+        public BizIOSingleUploadJsonResult() : base() { }
 
         /// <summary>
         /// 构造函数（错误）
         /// </summary>
         /// <param name="errorMsg"></param>
-        public BizIOUploadJsonResult(string errorMsg) : base(errorMsg)
+        public BizIOSingleUploadJsonResult(string errorMsg) : base(errorMsg)
         {
             
         }

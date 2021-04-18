@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AtomicCore
 {
@@ -25,8 +24,8 @@ namespace AtomicCore
 
         #region Propertys
 
-        private List<string> _errors = null;
-        private List<Exception> _exceptions = null;
+        private readonly List<string> _errors = null;
+        private readonly List<Exception> _exceptions = null;
 
         /// <summary>
         /// 业务错误信息

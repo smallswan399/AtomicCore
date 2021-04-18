@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
     <Authors>171331668@qq.com</Authors>
-    <Description>AtomicCore.IOStorage.Core,Author Telephone is +86 13871772983</Description>
+    <Description>AtomicCore.IOStorage.Core,the basic type(or interface) definition</Description>
     <Copyright>Copyright 2019</Copyright>
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore.IOStorage.Core</PackageTags>

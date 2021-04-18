@@ -10,6 +10,9 @@ using Microsoft.Extensions.Options;
 
 namespace AtomicCore.IOStorage.StoragePort.Controllers
 {
+    /// <summary>
+    /// 生成缩略图服务
+    /// </summary>
     public class ThumbnailController : Controller
     {
         /// <summary>

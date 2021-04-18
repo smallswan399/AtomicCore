@@ -15,6 +15,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
     /// </summary>
     public class UploadController : Controller
     {
+        #region Variable
+
         /// <summary>
         /// 文件存储根目录
         /// </summary>
@@ -23,7 +25,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <summary>
         /// 当前WEB路径
         /// </summary>
-        private IBizPathSrvProvider _pathProvider = null;
+        private readonly IBizPathSrvProvider _pathProvider = null;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// 构造函数
@@ -33,6 +39,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         {
             this._pathProvider = pathProvider;
         }
+
+        #endregion
+
+        #region Action Methods
 
         /// <summary>
         /// 流式文件上传
@@ -92,6 +102,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             return Created(nameof(UploadController), null);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// 获取存储IO路径
         /// </summary>
@@ -147,5 +161,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
 
             return writeCount;
         }
+
+        #endregion
     }
 }

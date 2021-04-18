@@ -1,11 +1,16 @@
 ﻿using AtomicCore.IOStorage.Core;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AtomicCore.IOStorage.StoragePort.Controllers
@@ -22,6 +27,22 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 文件存储根目录
         /// </summary>
         private const string c_rootDir = "Uploads";
+
+        /// <summary>
+        /// 允许的后缀
+        /// </summary>
+        private readonly string[] _permittedExtensions = { ".txt" };
+
+        /// <summary>
+        /// 文件最大限制
+        /// </summary>
+        private readonly long _fileSizeLimit = 2097152;
+
+        /// <summary>
+        /// Get the default form options so that we can use them to set the default 
+        /// limits for request body data.
+        /// </summary>
+        private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
         /// <summary>
         /// 当前WEB路径
@@ -51,30 +72,137 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </summary>
         /// <remarks>
         /// 从多部分请求收到文件，然后应用直接处理或保存它。流式传输无法显著提高性能。流式传输可降低上传文件时对内存或磁盘空间的需求。
+        /// https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-5.0
+        /// https://github.com/dotnet/AspNetCore.Docs/blob/main/aspnetcore/mvc/models/file-uploads/samples/2.x/SampleApp/Controllers/StreamingController.cs
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
+        [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadingStream()
         {
+            //判断内容类型
+            if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
+                return Json(new BizIOUploadJsonResult("contentType must be 'multipart' type..."));
+
+            // Accumulate the form data key-value pairs in the request (formAccumulator).
+            KeyValueAccumulator formAccumulator = new KeyValueAccumulator();
+            var trustedFileNameForDisplay = string.Empty;
+            var untrustedFileNameForStorage = string.Empty;
+            var streamedFileContent = new byte[0];
+
             //获取boundary
-            StringSegment boundary = HeaderUtilities.RemoveQuotes(MediaTypeHeaderValue.Parse(Request.ContentType).Boundary).Value;
-            //得到reader
+            MediaTypeHeaderValue mediaTypeHeaderValue = MediaTypeHeaderValue.Parse(Request.ContentType);
+            StringSegment stringSegment = HeaderUtilities.RemoveQuotes(mediaTypeHeaderValue.Boundary);
+            StringSegment boundary = stringSegment.Value;
             MultipartReader reader = new MultipartReader(boundary.Value, HttpContext.Request.Body);
-            //{ BodyLengthLimit = 2000 };//
-            var section = await reader.ReadNextSectionAsync();
+
+            //开始抽取一个地址
+            MultipartSection section = await reader.ReadNextSectionAsync();
 
             //存储路径
-            string trustedFileNameForFileStorage = Path.GetRandomFileName();
-            string savePath = this.GetSavePath("Test", null, trustedFileNameForFileStorage);
+            //string trustedFileNameForFileStorage = Path.GetRandomFileName();
+            //string relativePath = this.GetRelativePath(bizFolder, indexFolder, trustedFileNameForFileStorage);
+            //string savePath = this.GetSaveIOPath("Test", null, trustedFileNameForFileStorage);
 
             //读取section
             while (null != section)
             {
-                var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out _);
-                if (hasContentDispositionHeader)
-                    await WriteFileAsync(section.Body, savePath);
+                var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out ContentDispositionHeaderValue contentDisposition);
 
+                if (hasContentDispositionHeader)
+                {
+                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                    {
+                        untrustedFileNameForStorage = contentDisposition.FileName.Value;
+                        // Don't trust the file name sent by the client. To display
+                        // the file name, HTML-encode the value.
+                        trustedFileNameForDisplay = WebUtility.HtmlEncode(
+                                contentDisposition.FileName.Value);
+
+                        streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition,
+                        ModelState, _permittedExtensions, _fileSizeLimit);
+
+                        if (!ModelState.IsValid)
+                        {
+                            return BadRequest(ModelState);
+                        }
+                    }
+                    else if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
+                    {
+                        // Don't limit the key name length because the 
+                        // multipart headers length limit is already in effect.
+                        var key = HeaderUtilities
+                            .RemoveQuotes(contentDisposition.Name).Value;
+                        var encoding = GetEncoding(section);
+
+                        if (encoding == null)
+                        {
+                            ModelState.AddModelError("File",
+                                $"The request couldn't be processed (Error 2).");
+                            // Log error
+
+                            return BadRequest(ModelState);
+                        }
+
+                        using (var streamReader = new StreamReader(
+                            section.Body,
+                            encoding,
+                            detectEncodingFromByteOrderMarks: true,
+                            bufferSize: 1024,
+                            leaveOpen: true))
+                        {
+                            // The value length limit is enforced by 
+                            // MultipartBodyLengthLimit
+                            var value = await streamReader.ReadToEndAsync();
+
+                            if (string.Equals(value, "undefined",
+                                StringComparison.OrdinalIgnoreCase))
+                            {
+                                value = string.Empty;
+                            }
+
+                            formAccumulator.Append(key, value);
+
+                            if (formAccumulator.ValueCount >
+                                _defaultFormOptions.ValueCountLimit)
+                            {
+                                // Form key count limit of 
+                                // _defaultFormOptions.ValueCountLimit 
+                                // is exceeded.
+                                ModelState.AddModelError("File",
+                                    $"The request couldn't be processed (Error 3).");
+                                // Log error
+
+                                return BadRequest(ModelState);
+                            }
+                        }
+                    }
+
+
+                    //await WriteFileAsync(section.Body, savePath);
+                }
+
+                // Drain any remaining section body that hasn't been consumed and
+                // read the headers for the next section.
                 section = await reader.ReadNextSectionAsync();
+            }
+
+            // Bind form data to the model
+            var formData = new FormData();
+            var formValueProvider = new FormValueProvider(
+                BindingSource.Form,
+                new FormCollection(formAccumulator.GetResults()),
+                CultureInfo.CurrentCulture);
+            var bindingSuccessful = await TryUpdateModelAsync(formData, prefix: "",
+                valueProvider: formValueProvider);
+
+            if (!bindingSuccessful)
+            {
+                ModelState.AddModelError("File",
+                    "The request couldn't be processed (Error 5).");
+                // Log error
+
+                return BadRequest(ModelState);
             }
 
             return Created(nameof(UploadController), null);
@@ -105,20 +233,51 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 return Json(new BizIOUploadJsonResult("业务文件夹不允许为空"));
 
             //存储路径
-            string savePath = this.GetSavePath(bizFolder, indexFolder, fileName);
+            string relativePath = this.GetRelativePath(bizFolder, indexFolder, fileName);
+            string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
 
             using (var stream = file.OpenReadStream())
                 await WriteFileAsync(stream, savePath);
 
-            return Json(new BizIOUploadJsonResult()
+            return Ok(new BizIOUploadJsonResult()
             {
-                RelativePath = savePath
+                RelativePath = relativePath
             });
+
+            //return Json(new BizIOUploadJsonResult()
+            //{
+            //    RelativePath = relativePath
+            //});
         }
 
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// 获取相对路径
+        /// </summary>
+        /// <param name="bizFolder"></param>
+        /// <param name="indexFolder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private string GetRelativePath(string bizFolder, string indexFolder, string fileName)
+        {
+            if (string.IsNullOrEmpty(bizFolder))
+                throw new ArgumentNullException(nameof(bizFolder));
+
+            StringBuilder strb = new StringBuilder("/");
+            strb.Append(c_rootDir);
+            strb.Append('/');
+            strb.Append(bizFolder);
+            strb.Append('/');
+            if (string.IsNullOrEmpty(indexFolder))
+                strb.Append(fileName);
+            else
+                strb.AppendFormat("/{0}/{1}", indexFolder, fileName);
+
+            return strb.ToString();
+        }
 
         /// <summary>
         /// 获取存储IO路径
@@ -127,7 +286,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <param name="indexFolder"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private string GetSavePath(string bizFolder, string indexFolder, string fileName)
+        private string GetSaveIOPath(string bizFolder, string indexFolder, string fileName)
         {
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
@@ -176,6 +335,29 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             return writeCount;
         }
 
+        /// <summary>
+        /// 获取编码
+        /// </summary>
+        /// <param name="section"></param>
+        /// <returns></returns>
+        private static Encoding GetEncoding(MultipartSection section)
+        {
+            var hasMediaTypeHeader =
+                MediaTypeHeaderValue.TryParse(section.ContentType, out var mediaType);
+
+            // UTF-7 is insecure and shouldn't be honored. UTF-8 succeeds in 
+            // most cases.
+            if (!hasMediaTypeHeader || Encoding.UTF7.Equals(mediaType.Encoding))
+                return Encoding.UTF8;
+
+            return mediaType.Encoding;
+        }
+
         #endregion
+    }
+
+    public class FormData
+    {
+        public string Note { get; set; }
     }
 }

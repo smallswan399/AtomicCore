@@ -5,12 +5,30 @@
     /// </summary>
     public sealed class BizIOUploadJsonResult : ResultBase
     {
+        #region Constructors
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public BizIOUploadJsonResult() : base() { }
+
+        /// <summary>
+        /// 构造函数（错误）
+        /// </summary>
+        /// <param name="errorMsg"></param>
+        public BizIOUploadJsonResult(string errorMsg) : base()
+        {
+            this.AppendError(errorMsg);
+        }
+
+        #endregion
+
         #region Propertys
 
         /// <summary>
         /// 上传返回相对路径
         /// </summary>
-        public string RelativePath { get; set; }
+        public string RelativePath { get; set; } = string.Empty;
 
         #endregion
 

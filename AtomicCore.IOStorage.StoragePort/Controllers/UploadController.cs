@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AtomicCore.IOStorage.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
@@ -67,7 +68,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             string savePath = this.GetSavePath("Test", null, trustedFileNameForFileStorage);
 
             //读取section
-            while (section != null)
+            while (null != section)
             {
                 var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out _);
                 if (hasContentDispositionHeader)
@@ -83,23 +84,36 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 缓存式文件上传
         /// 通过模型绑定先把整个文件保存到内存，然后我们通过IFormFile得到stream，优点是效率高，缺点对内存要求大。文件不宜过大
         /// </summary>
-        /// <param name=""></param>
+        /// <param name="fileName">文件名称（带后缀）</param>
+        /// <param name="file">上传文件数据</param>
+        /// <param name="bizFolder">业务文件夹</param>
+        /// <param name="indexFolder">数据索引文件夹</param>
         /// <remarks>
         /// 整个文件读入 IFormFile，它是文件的 C# 表示形式，用于处理或保存文件。文件上传所用的资源（磁盘、内存）取决于并发文件上传的数量和大小。 
         /// 如果应用尝试缓冲过多上传，站点就会在内存或磁盘空间不足时崩溃。如果文件上传的大小或频率会消耗应用资源，请使用流式传输
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> UploadingFormFile(IFormFile file)
+        public async Task<IActionResult> UploadingFormFile(string fileName, IFormFile file, string bizFolder, string indexFolder)
         {
+            //基础判断
+            if (string.IsNullOrEmpty(fileName))
+                return Json(new BizIOUploadJsonResult("文件名称不允许为空"));
+            if (null == file || file.Length <= 0)
+                return Json(new BizIOUploadJsonResult("未检测到上传数据流"));
+            if (string.IsNullOrEmpty(bizFolder))
+                return Json(new BizIOUploadJsonResult("业务文件夹不允许为空"));
+
             //存储路径
-            string trustedFileNameForFileStorage = Path.GetRandomFileName();
-            string savePath = this.GetSavePath("Test", null, trustedFileNameForFileStorage);
+            string savePath = this.GetSavePath(bizFolder, indexFolder, fileName);
 
             using (var stream = file.OpenReadStream())
                 await WriteFileAsync(stream, savePath);
 
-            return Created(nameof(UploadController), null);
+            return Json(new BizIOUploadJsonResult()
+            {
+                RelativePath = savePath
+            });
         }
 
         #endregion

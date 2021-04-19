@@ -12,6 +12,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <UserSecretsId>41604144-212c-48be-9371-52e79d73e3aa</UserSecretsId>
     <IsPackable>true</IsPackable>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
+    <FileVersion>1.0.7.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

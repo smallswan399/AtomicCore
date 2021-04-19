@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 
@@ -14,12 +15,12 @@ namespace AtomicCore.IOStorage.StoragePort
         /// <summary>
         /// 路径环境变量
         /// </summary>
-        private IWebHostEnvironment _hostEnv;
+        private readonly IWebHostEnvironment _hostEnv;
 
         /// <summary>
         /// 服务提供接口
         /// </summary>
-        private IServiceProvider _srvProvider;
+        private readonly IOptionsMonitor<BizAppSettings> _appSettings;
 
         #endregion
 
@@ -30,18 +31,14 @@ namespace AtomicCore.IOStorage.StoragePort
         /// </summary>
         /// <param name="hostEnv">WEB变量</param>
         /// <param name="srvProvider">服务提供接口</param>
-        public BizPathSrvProvider(IWebHostEnvironment hostEnv, IServiceProvider srvProvider)
+        public BizPathSrvProvider(IWebHostEnvironment hostEnv, IOptionsMonitor<BizAppSettings> appSettings)
         {
             this._hostEnv = hostEnv;
-            this._srvProvider = srvProvider;
+            this._appSettings = appSettings;
 
-            BizAppSettings cfg = (BizAppSettings)this._srvProvider.GetService(typeof(BizAppSettings));
-            if (null == cfg)
-                throw new Exception(nameof(BizAppSettings));
-
-            this.SaveRootDir = cfg.SaveRootDir;
-            this.PermittedExtensions = cfg.AllowFileExts.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            this.FileSizeLimit = int.TryParse(cfg.AllowFileMBSizeLimit, out int size) ? size * 1024 * 1024 : 0;
+            this.SaveRootDir = appSettings.CurrentValue.SaveRootDir;
+            this.PermittedExtensions = appSettings.CurrentValue.AllowFileExts.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            this.FileSizeLimit = int.TryParse(appSettings.CurrentValue.AllowFileMBSizeLimit, out int size) ? size * 1024 * 1024 : 0;
         }
 
         #endregion

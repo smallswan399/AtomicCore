@@ -1,6 +1,5 @@
 ﻿using AtomicCore.IOStorage.Core;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
@@ -9,6 +8,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -144,15 +144,18 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 return Ok(new BizIOSingleUploadJsonResult("业务文件夹不允许为空"));
 
             //长度验证、文件格式
-            if (file.Length <= _pathProvider.FileSizeLimit)
-                return Ok(new BizIOSingleUploadJsonResult(string.Format("最大上传不得超过{0}M", 2)));
+            if (file.Length >= _pathProvider.FileSizeLimit)
+                return Ok(new BizIOSingleUploadJsonResult(string.Format("最大上传不得超过【{0}】M", _pathProvider.FileSizeLimit / (1024 * 1024))));
+
+            string fileExt = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (null != _pathProvider.PermittedExtensions && !_pathProvider.PermittedExtensions.Contains(fileExt))
+                return Ok(new BizIOSingleUploadJsonResult(string.Format("非法的文件格式 -> 当前格式为【{0}】", fileExt)));
 
             //读取文件流并保存数据
             string relativePath;
             using (Stream stream = file.OpenReadStream())
             {
                 //计算文件HASH值
-                string fileExt = Path.GetExtension(file.FileName).ToLowerInvariant();
                 string fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
 
                 //计算存储路径 + 上传文件

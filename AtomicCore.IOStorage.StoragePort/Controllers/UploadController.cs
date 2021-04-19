@@ -305,10 +305,12 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 if (item.Errors.Count > 0)
                 {
                     ModelError mr = item.Errors[0];
-                    if (null == mr.Exception)
+                    if (null != mr.Exception)
                         return mr.Exception.Message;
-                    else
+                    else if (!string.IsNullOrEmpty(mr.ErrorMessage))
                         return mr.ErrorMessage;
+                    else
+                        return "error";
                 }
             }
 

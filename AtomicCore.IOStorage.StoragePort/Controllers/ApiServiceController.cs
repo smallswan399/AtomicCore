@@ -18,7 +18,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
     /// 上传控制器
     /// https://www.jb51.net/article/174873.htm
     /// </summary>
-    public class UploadController : Controller
+    public class ApiServiceController : Controller
     {
         #region Variable
 
@@ -35,7 +35,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="pathProvider"></param>
-        public UploadController(IBizPathSrvProvider pathProvider)
+        public ApiServiceController(IBizPathSrvProvider pathProvider)
         {
             this._pathProvider = pathProvider;
         }

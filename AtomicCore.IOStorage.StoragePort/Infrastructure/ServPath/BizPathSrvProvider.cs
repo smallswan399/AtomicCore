@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
 
 namespace AtomicCore.IOStorage.StoragePort
@@ -8,19 +9,63 @@ namespace AtomicCore.IOStorage.StoragePort
     /// </summary>
     public class BizPathSrvProvider : IBizPathSrvProvider
     {
+        #region Variable
+
         /// <summary>
         /// 路径环境变量
         /// </summary>
         private IWebHostEnvironment _hostEnv;
 
         /// <summary>
+        /// 服务提供接口
+        /// </summary>
+        private IServiceProvider _srvProvider;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="hostEnv"></param>
-        public BizPathSrvProvider(IWebHostEnvironment hostEnv)
+        /// <param name="hostEnv">WEB变量</param>
+        /// <param name="srvProvider">服务提供接口</param>
+        public BizPathSrvProvider(IWebHostEnvironment hostEnv, IServiceProvider srvProvider)
         {
             this._hostEnv = hostEnv;
+            this._srvProvider = srvProvider;
+
+            BizAppSettings cfg = (BizAppSettings)this._srvProvider.GetService(typeof(BizAppSettings));
+            if (null == cfg)
+                throw new Exception(nameof(BizAppSettings));
+
+            this.SaveRootDir = cfg.SaveRootDir;
+            this.PermittedExtensions = cfg.AllowFileExts.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            this.FileSizeLimit = int.TryParse(cfg.AllowFileMBSizeLimit, out int size) ? size * 1024 * 1024 : 0;
         }
+
+        #endregion
+
+        #region Propertys
+
+        /// <summary>
+        /// 文件存储根目录
+        /// </summary>
+        public string SaveRootDir { get; }
+
+        /// <summary>
+        /// 允许存储的格式（eg -> .jpg .png ....）
+        /// </summary>
+        public string[] PermittedExtensions { get; }
+
+        /// <summary>
+        /// 允许存储的单文件最大限制（单位:B）
+        /// </summary>
+        public long FileSizeLimit { get; }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// 获取IO路径
@@ -32,5 +77,7 @@ namespace AtomicCore.IOStorage.StoragePort
             var filePath = Path.Combine(_hostEnv.WebRootPath ?? _hostEnv.ContentRootPath, path);
             return filePath;
         }
+
+        #endregion
     }
 }

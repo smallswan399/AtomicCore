@@ -240,9 +240,6 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         {
             if (imgUrl.StartsWith("http"))
             {
-                if (!imgUrl.StartsWith(this._appSettings.CurrentValue.AppStartUrl))
-                    return false;
-
                 if (!Uri.TryCreate(imgUrl, UriKind.RelativeOrAbsolute, out Uri uri))
                     return false;
 

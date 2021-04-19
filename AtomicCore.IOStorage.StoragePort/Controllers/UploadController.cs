@@ -8,9 +8,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,28 +23,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         #region Variable
 
         /// <summary>
-        /// 文件存储根目录
-        /// </summary>
-        private const string c_rootDir = "Uploads";
-
-        /// <summary>
-        /// 允许的后缀
-        /// </summary>
-        private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
-
-        /// <summary>
-        /// 文件最大限制
-        /// </summary>
-        private readonly long _fileSizeLimit = 2097152;
-
-        /// <summary>
-        /// Get the default form options so that we can use them to set the default 
-        /// limits for request body data.
-        /// </summary>
-        private static readonly FormOptions _defaultFormOptions = new FormOptions();
-
-        /// <summary>
-        /// 当前WEB路径
+        /// 当前WEB路径(相关配置参数)
         /// </summary>
         private readonly IBizPathSrvProvider _pathProvider = null;
 
@@ -117,7 +94,9 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                         return Ok(new BizIOBatchUploadJsonResult("No valid file stream was identified..."));
 
                     //读取文件流
-                    byte[] buffer = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState, _permittedExtensions, _fileSizeLimit);
+                    byte[] buffer = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState, _pathProvider.PermittedExtensions, _pathProvider.FileSizeLimit);
+                    if (!ModelState.IsValid)
+                        return Ok(new BizIOBatchUploadJsonResult(GetError(ModelState)));
 
                     //计算文件HASH值
                     string fileExt = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
@@ -147,7 +126,6 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 缓存式文件上传（单文件上传）
         /// 通过模型绑定先把整个文件保存到内存，然后我们通过IFormFile得到stream，优点是效率高，缺点对内存要求大。文件不宜过大
         /// </summary>
-        /// <param name="fileName">文件名称（带后缀）</param>
         /// <param name="file">上传文件数据</param>
         /// <param name="bizFolder">业务文件夹</param>
         /// <param name="indexFolder">数据索引文件夹</param>
@@ -157,23 +135,32 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> UploadingFormFile(string fileName, IFormFile file, string bizFolder, string indexFolder)
+        public async Task<IActionResult> UploadingFormFile(IFormFile file, string bizFolder, string indexFolder)
         {
             //基础判断
-            if (string.IsNullOrEmpty(fileName))
-                return Ok(new BizIOSingleUploadJsonResult("文件名称不允许为空"));
             if (null == file || file.Length <= 0)
                 return Ok(new BizIOSingleUploadJsonResult("未检测到上传数据流"));
             if (string.IsNullOrEmpty(bizFolder))
                 return Ok(new BizIOSingleUploadJsonResult("业务文件夹不允许为空"));
 
-            //存储路径
-            string relativePath = this.GetRelativePath(bizFolder, indexFolder, fileName);
-            string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
+            //长度验证、文件格式
+            if (file.Length <= _pathProvider.FileSizeLimit)
+                return Ok(new BizIOSingleUploadJsonResult(string.Format("最大上传不得超过{0}M", 2)));
 
             //读取文件流并保存数据
-            using (var stream = file.OpenReadStream())
+            string relativePath;
+            using (Stream stream = file.OpenReadStream())
+            {
+                //计算文件HASH值
+                string fileExt = Path.GetExtension(file.FileName).ToLowerInvariant();
+                string fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
+
+                //计算存储路径 + 上传文件
+                string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
                 await WriteFileAsync(stream, savePath);
+
+                relativePath = this.GetRelativePath(bizFolder, indexFolder, fileName);
+            }
 
             //返回成功数据
             return Ok(new BizIOSingleUploadJsonResult()
@@ -199,7 +186,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 throw new ArgumentNullException(nameof(bizFolder));
 
             StringBuilder strb = new StringBuilder("/");
-            strb.Append(c_rootDir);
+            strb.Append(_pathProvider.SaveRootDir);
             strb.Append('/');
             strb.Append(bizFolder);
             strb.Append('/');
@@ -223,10 +210,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
 
-            if (!Directory.Exists(c_rootDir))
-                Directory.CreateDirectory(c_rootDir);
+            if (!Directory.Exists(_pathProvider.SaveRootDir))
+                Directory.CreateDirectory(_pathProvider.SaveRootDir);
 
-            string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}", c_rootDir, bizFolder));
+            string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}", _pathProvider.SaveRootDir, bizFolder));
             if (!Directory.Exists(io_bizFolder))
                 Directory.CreateDirectory(io_bizFolder);
 
@@ -282,28 +269,27 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         }
 
         /// <summary>
-        /// 获取编码
+        /// 获取验证模型中的第一个错误
         /// </summary>
-        /// <param name="section"></param>
+        /// <param name="modelStateDic"></param>
         /// <returns></returns>
-        private static Encoding GetEncoding(MultipartSection section)
+        private string GetError(ModelStateDictionary modelStateDic)
         {
-            var hasMediaTypeHeader =
-                MediaTypeHeaderValue.TryParse(section.ContentType, out var mediaType);
+            foreach (var item in modelStateDic.Values)
+            {
+                if (item.Errors.Count > 0)
+                {
+                    ModelError mr = item.Errors[0];
+                    if (null == mr.Exception)
+                        return mr.Exception.Message;
+                    else
+                        return mr.ErrorMessage;
+                }
+            }
 
-            // UTF-7 is insecure and shouldn't be honored. UTF-8 succeeds in 
-            // most cases.
-            if (!hasMediaTypeHeader || Encoding.UTF7.Equals(mediaType.Encoding))
-                return Encoding.UTF8;
-
-            return mediaType.Encoding;
+            return string.Empty;
         }
 
         #endregion
-    }
-
-    public class FormData
-    {
-        public string Note { get; set; }
     }
 }

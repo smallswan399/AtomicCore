@@ -23,11 +23,6 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         #region Variable
 
         /// <summary>
-        /// 应用资源根目录
-        /// </summary>
-        private const string c_wwwroot = "wwwroot";
-
-        /// <summary>
         /// 当前WEB路径(相关配置参数)
         /// </summary>
         private readonly IBizPathSrvProvider _pathProvider = null;
@@ -74,7 +69,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 return Ok(new BizIOBatchUploadJsonResult("contentType must be 'multipart' type..."));
 
             //上传文件集合
-            List<string> relativePathList = new List<string>();
+            List<string> relativeList = new List<string>();
+            List<string> urlList = new List<string>();
 
             //获取boundary
             MediaTypeHeaderValue mediaTypeHeaderValue = MediaTypeHeaderValue.Parse(Request.ContentType);
@@ -112,7 +108,16 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                     await WriteFileAsync(buffer, savePath);
 
                     //将文件存储结果返回至集合
-                    relativePathList.Add(this.GetRelativePath(bizFolder, indexFolder, fileName));
+                    string each_relative_path = this.GetRelativePath(bizFolder, indexFolder, fileName);
+                    relativeList.Add(each_relative_path);
+
+                    string each_url = string.Format(
+                        "{0}://{1}{2}",
+                        this.Request.IsHttps ? "https" : "http",
+                        this.Request.Host.Value,
+                        each_relative_path
+                    );
+                    urlList.Add(each_url);
                 }
 
                 // Drain any remaining section body that hasn't been consumed and
@@ -123,7 +128,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             //返回成功数据
             return Ok(new BizIOBatchUploadJsonResult()
             {
-                RelativePath = relativePathList
+                RelativeList = relativeList,
+                UrlList = urlList
             });
         }
 

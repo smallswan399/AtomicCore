@@ -30,10 +30,15 @@ namespace AtomicCore.IOStorage.Core
         #region Propertys
 
         /// <summary>
-        /// 上传返回相对路径
+        /// 上传返回相对路径列表
         /// </summary>
-        [JsonProperty("path")]
-        public List<string> RelativePath { get; set; }
+        [JsonProperty("paths")]
+        public List<string> RelativeList { get; set; }
+
+        /// <summary>
+        /// 图片链接列表
+        /// </summary>
+        public List<string> UrlList { get; set; }
 
         #endregion
 
@@ -46,10 +51,10 @@ namespace AtomicCore.IOStorage.Core
         /// <returns></returns>
         public List<string> GetAbsolutePath(string baseUrl)
         {
-            if (null == this.RelativePath || this.RelativePath.Count <= 0)
+            if (null == this.RelativeList || this.RelativeList.Count <= 0)
                 return null;
 
-            return this.RelativePath.Select(s => string.Format(
+            return this.RelativeList.Select(s => string.Format(
                 "{0}{1}",
                 baseUrl,
                 s.StartsWith("/") ? s : string.Format("/{0}", s)
@@ -64,12 +69,12 @@ namespace AtomicCore.IOStorage.Core
         /// <returns></returns>
         public List<string> GetAbsolutePath(string host, bool isSSL = false)
         {
-            if (null == this.RelativePath || this.RelativePath.Count <= 0)
+            if (null == this.RelativeList || this.RelativeList.Count <= 0)
                 return null;
 
             string tmp_http_scheme = isSSL ? "https" : "http";
 
-            return this.RelativePath.Select(s => string.Format(
+            return this.RelativeList.Select(s => string.Format(
                 "{0}://{1}{2}",
                 tmp_http_scheme,
                 host,

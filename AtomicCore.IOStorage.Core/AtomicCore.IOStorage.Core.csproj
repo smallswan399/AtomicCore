@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>171331668@qq.com</Authors>
     <Description>AtomicCore.IOStorage.Core,the basic type(or interface) definition</Description>
     <Copyright>Copyright 2019</Copyright>
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore.IOStorage.Core</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.7</Version>
     <AssemblyVersion>1.0.7.0</AssemblyVersion>
     <FileVersion>1.0.7.0</FileVersion>
   </PropertyGroup>

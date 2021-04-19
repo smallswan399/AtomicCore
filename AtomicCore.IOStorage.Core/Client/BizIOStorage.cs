@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace AtomicCore.IOStorage.Core
 {
@@ -10,7 +7,15 @@ namespace AtomicCore.IOStorage.Core
     /// </summary>
     public class BizIOStorageClient
     {
-        private const string c_singleFile = "/ApiService/UploadingStream";
+        /// <summary>
+        /// 单文件上传
+        /// </summary>
+        private const string c_singleFile = "/ApiService/UploadingFormFile";
+
+        /// <summary>
+        /// 多文件上传
+        /// </summary>
+        private const string c_batchFile = "/ApiService/UploadingStream";
 
         /// <summary>
         /// 服务端基础URL
@@ -31,7 +36,7 @@ namespace AtomicCore.IOStorage.Core
         /// </summary>
         /// <param name="input">输入参数</param>
         /// <returns></returns>
-        public BizIOSingleUploadJsonResult UploadFile(BizIOSingleUploadInput input)
+        public BizIOSingleUploadJsonResult UploadFile(BizIOUploadFileInput input)
         {
             //基础判断
             if (null == input)
@@ -41,10 +46,77 @@ namespace AtomicCore.IOStorage.Core
             if (null == input.FileStream || input.FileStream.Length <= 0)
                 return new BizIOSingleUploadJsonResult("文件流不允许为空");
 
-            //HTTP请求终端
-            //string 
+            //拼接URL
+            string url = string.Format(
+                "{0}{1}",
+                this._baseUrl,
+                c_singleFile
+            );
 
-            return null;
+            //Stream -> buffer
+            byte[] buffer = input.FileStream.ToBuffer();
+
+            //请求服务端
+            string respText = BizHttpUtils.PostFile(url, buffer);
+            if (string.IsNullOrEmpty(respText))
+                return new BizIOSingleUploadJsonResult("请求失败");
+
+            //结果集反序列化
+            BizIOSingleUploadJsonResult result;
+            try
+            {
+                result = Newtonsoft.Json.JsonConvert.DeserializeObject<BizIOSingleUploadJsonResult>(respText);
+            }
+            catch (Exception ex)
+            {
+                return new BizIOSingleUploadJsonResult(ex.Message);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 多文件上传
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public BizIOBatchUploadJsonResult UploadBatch(BizIOUploadBatchInput input)
+        {
+            //基础判断
+            if (null == input)
+                return new BizIOBatchUploadJsonResult("input参数为空");
+            if (string.IsNullOrEmpty(input.BizFolder))
+                return new BizIOBatchUploadJsonResult("请指定业务文件夹");
+            if (null == input.MultipartStream || input.MultipartStream.Length <= 0)
+                return new BizIOBatchUploadJsonResult("文件流不允许为空");
+
+            //拼接URL
+            string url = string.Format(
+                "{0}{1}",
+                this._baseUrl,
+                c_batchFile
+            );
+
+            //Stream -> buffer
+            byte[] buffer = input.MultipartStream.ToBuffer();
+
+            //请求服务端
+            string respText = BizHttpUtils.PostFile(url, buffer);
+            if (string.IsNullOrEmpty(respText))
+                return new BizIOBatchUploadJsonResult("请求失败");
+
+            //结果集反序列化
+            BizIOBatchUploadJsonResult result;
+            try
+            {
+                result = Newtonsoft.Json.JsonConvert.DeserializeObject<BizIOBatchUploadJsonResult>(respText);
+            }
+            catch (Exception ex)
+            {
+                return new BizIOBatchUploadJsonResult(ex.Message);
+            }
+
+            return result;
         }
     }
 }

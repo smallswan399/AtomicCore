@@ -15,4 +15,8 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.8.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
+  </ItemGroup>
+
 </Project>

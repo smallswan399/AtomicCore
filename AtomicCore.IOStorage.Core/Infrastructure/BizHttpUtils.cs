@@ -139,6 +139,57 @@ namespace AtomicCore.IOStorage.Core
         }
 
         /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="buffer"></param>
+        /// <param name="chast"></param>
+        /// <returns></returns>
+        public static string PostFile(string url, byte[] buffer, Encoding chast = null)
+        {
+            if (null == buffer || buffer.Length <= 0)
+                throw new ArgumentNullException(nameof(buffer));
+
+            if (null == chast)
+                chast = Encoding.UTF8;
+
+            if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+                SetCertificateValidationCallBack();//HTTPS证书验证
+
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            request.Method = "POST";
+            request.ContentType = "multipart/form-data";
+            request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
+            request.Timeout = 30 * 60 * 1000;
+
+            using (var reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(buffer, 0, buffer.Length);
+                reqStream.Close();
+            }
+
+            string respText = string.Empty;
+            HttpWebResponse response = null;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                using (StreamReader sr = new StreamReader(response.GetResponseStream(), chast))
+                    respText = sr.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (null != response)
+                    response.Dispose();
+            }
+
+            return respText;
+        }
+
+        /// <summary>
         /// Http Get
         /// </summary>
         /// <param name="url"></param>

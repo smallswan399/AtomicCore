@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
 namespace AtomicCore.IOStorage.Core
 {
     /// <summary>
     /// 单文件上传输入参数
     /// </summary>
-    public sealed class BizIOSingleUploadInput
+    public sealed class BizIOUploadFileInput
     {
         /// <summary>
         /// 业务文件夹名称

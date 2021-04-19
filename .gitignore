@@ -331,3 +331,4 @@ UpgradeLog*.XML
 /AtomicCore.Integration.MssqlDbProvider/bin
 /AtomicCore.Integration.MysqlDbProvider/bin
 /AtomicCore.IOStorage.StoragePort/Uploads
+/AtomicCore.IOStorage.StoragePort/wwwroot/Uploads

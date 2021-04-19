@@ -33,6 +33,12 @@ namespace AtomicCore.IOStorage.Core
         [JsonProperty("path")]
         public string RelativePath { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 上传的当前站点URL地址
+        /// </summary>
+        [JsonProperty("url")]
+        public string Url { get; set; } = string.Empty;
+
         #endregion
 
         #region Public Methods

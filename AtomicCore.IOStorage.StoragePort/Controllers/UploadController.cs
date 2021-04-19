@@ -173,7 +173,13 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             //返回成功数据
             return Ok(new BizIOSingleUploadJsonResult()
             {
-                RelativePath = relativePath
+                RelativePath = relativePath,
+                Url = string.Format(
+                    "{0}://{1}{2}",
+                    this.Request.IsHttps ? "https" : "http",
+                    this.Request.Host.Value,
+                    relativePath
+                )
             });
         }
 
@@ -218,15 +224,15 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
 
-            string io_wwwroot = this._pathProvider.MapPath(c_wwwroot);
+            string io_wwwroot = this._pathProvider.MapPath(string.Empty);
             if (!Directory.Exists(io_wwwroot))
                 Directory.CreateDirectory(io_wwwroot);
 
-            string io_saveRoot = this._pathProvider.MapPath(string.Format("{0}\\{1}", c_wwwroot, _pathProvider.SaveRootDir));
+            string io_saveRoot = this._pathProvider.MapPath(string.Format("{0}", _pathProvider.SaveRootDir));
             if (!Directory.Exists(io_saveRoot))
                 Directory.CreateDirectory(io_saveRoot);
 
-            string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}\\{2}", c_wwwroot, _pathProvider.SaveRootDir, bizFolder));
+            string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}", _pathProvider.SaveRootDir, bizFolder));
             if (!Directory.Exists(io_bizFolder))
                 Directory.CreateDirectory(io_bizFolder);
 

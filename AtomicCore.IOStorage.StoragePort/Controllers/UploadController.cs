@@ -23,6 +23,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         #region Variable
 
         /// <summary>
+        /// 应用资源根目录
+        /// </summary>
+        private const string c_wwwroot = "wwwroot";
+
+        /// <summary>
         /// 当前WEB路径(相关配置参数)
         /// </summary>
         private readonly IBizPathSrvProvider _pathProvider = null;
@@ -212,6 +217,9 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         {
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
+
+            if (!Directory.Exists(c_wwwroot))
+                Directory.CreateDirectory(c_wwwroot);
 
             if (!Directory.Exists(_pathProvider.SaveRootDir))
                 Directory.CreateDirectory(_pathProvider.SaveRootDir);

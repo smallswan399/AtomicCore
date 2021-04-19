@@ -16,9 +16,13 @@
 
   <ItemGroup>
     <Compile Remove="Uploads\**" />
+    <Compile Remove="wwwroot\Uploads\**" />
     <Content Remove="Uploads\**" />
+    <Content Remove="wwwroot\Uploads\**" />
     <EmbeddedResource Remove="Uploads\**" />
+    <EmbeddedResource Remove="wwwroot\Uploads\**" />
     <None Remove="Uploads\**" />
+    <None Remove="wwwroot\Uploads\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +35,10 @@
   <ItemGroup>
     <ProjectReference Include="..\AtomicCore.IOStorage.Core\AtomicCore.IOStorage.Core.csproj" />
     <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

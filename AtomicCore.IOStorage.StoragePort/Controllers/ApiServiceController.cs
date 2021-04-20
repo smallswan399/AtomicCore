@@ -221,7 +221,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             if (string.IsNullOrEmpty(indexFolder))
                 strb.Append(fileName);
             else
-                strb.AppendFormat("/{0}/{1}", indexFolder, fileName);
+                strb.AppendFormat("{0}/{1}", indexFolder, fileName);
 
             return strb.ToString();
         }
@@ -255,7 +255,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 io_indexFolder = io_bizFolder;
             else
             {
-                io_indexFolder = Path.Combine(io_bizFolder, indexFolder);
+                io_indexFolder = string.Format("{0}\\{1}", io_bizFolder, indexFolder);
                 if (!Directory.Exists(io_indexFolder))
                     Directory.CreateDirectory(io_indexFolder);
             }

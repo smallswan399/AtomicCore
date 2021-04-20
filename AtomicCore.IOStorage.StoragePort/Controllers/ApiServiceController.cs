@@ -128,6 +128,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             //返回成功数据
             return Ok(new BizIOBatchUploadJsonResult()
             {
+                Code = BizIOStateCode.Success,
+                Message = string.Empty,
                 RelativeList = relativeList,
                 UrlList = urlList
             });
@@ -183,6 +185,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             //返回成功数据
             return Ok(new BizIOSingleUploadJsonResult()
             {
+                Code = BizIOStateCode.Success,
+                Message = string.Empty,
                 RelativePath = relativePath,
                 Url = string.Format(
                     "{0}://{1}{2}",

@@ -18,6 +18,11 @@ namespace AtomicCore.IOStorage.Core
         public string SubFolder { get; set; }
 
         /// <summary>
+        /// 上传文件名称（上传文件的时候的名称,eg:test.jpg）
+        /// </summary>
+        public string FileName { get; set; }
+
+        /// <summary>
         /// 文件流对象
         /// </summary>
         public Stream FileStream { get; set; }

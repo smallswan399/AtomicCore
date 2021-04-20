@@ -137,7 +137,6 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 缓存式文件上传（单文件上传）
         /// 通过模型绑定先把整个文件保存到内存，然后我们通过IFormFile得到stream，优点是效率高，缺点对内存要求大。文件不宜过大
         /// </summary>
-        /// <param name="file">上传文件数据</param>
         /// <param name="bizFolder">业务文件夹</param>
         /// <param name="indexFolder">数据索引文件夹</param>
         /// <remarks>
@@ -146,13 +145,18 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> UploadingFormFile(IFormFile file, string bizFolder, string indexFolder)
+        public async Task<IActionResult> UploadingFormFile(string bizFolder, string indexFolder)
         {
             //基础判断
-            if (null == file || file.Length <= 0)
+            if (null == this.Request.Form.Files || this.Request.Form.Files.Count <= 0)
                 return Ok(new BizIOSingleUploadJsonResult("未检测到上传数据流"));
             if (string.IsNullOrEmpty(bizFolder))
                 return Ok(new BizIOSingleUploadJsonResult("业务文件夹不允许为空"));
+
+            //获取文件数据
+            IFormFile file = this.Request.Form.Files.FirstOrDefault();
+            if (null == file || file.Length <= 0)
+                return Ok(new BizIOSingleUploadJsonResult("未检测到上传数据流"));
 
             //长度验证、文件格式
             if (file.Length >= _pathProvider.FileSizeLimit)

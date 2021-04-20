@@ -12,6 +12,17 @@ namespace AtomicCore.IOStorage.Core
     /// </summary>
     internal static class BizHttpUtils
     {
+        #region Variable
+
+        /// <summary>
+        /// 默认编码 UTF-8
+        /// </summary>
+        private static readonly Encoding ENCODING = Encoding.UTF8;
+
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Http Post application/json
         /// </summary>
@@ -24,7 +35,7 @@ namespace AtomicCore.IOStorage.Core
             where T : new()
         {
             if (null == chast)
-                chast = Encoding.UTF8;
+                chast = ENCODING;
 
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 SetCertificateValidationCallBack();//HTTPS证书验证
@@ -97,7 +108,7 @@ namespace AtomicCore.IOStorage.Core
         public static string HttpPost(string url, string data, Encoding chast = null)
         {
             if (null == chast)
-                chast = Encoding.UTF8;
+                chast = ENCODING;
 
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 SetCertificateValidationCallBack();//HTTPS证书验证
@@ -142,32 +153,71 @@ namespace AtomicCore.IOStorage.Core
         /// 上传文件
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="buffer"></param>
+        /// <param name="files"></param>
+        /// <param name="formDatas"></param>
         /// <param name="chast"></param>
+        /// <remarks>
+        /// https://www.cnblogs.com/amylis_chen/p/9699766.html
+        /// </remarks>
         /// <returns></returns>
-        public static string PostFile(string url, byte[] buffer, Encoding chast = null)
+        public static string PostFile(string url, IDictionary<string, byte[]> files, IDictionary<string, string> formDatas, Encoding chast = null)
         {
-            if (null == buffer || buffer.Length <= 0)
-                throw new ArgumentNullException(nameof(buffer));
-
+            if (null == files || files.Count < 0)
+                return string.Empty;
             if (null == chast)
-                chast = Encoding.UTF8;
+                chast = ENCODING;
 
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 SetCertificateValidationCallBack();//HTTPS证书验证
 
+            //0.计算boundary
+            string boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+            byte[] boundarybytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
+            byte[] endbytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
+
+            //1.HttpWebRequest
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            request.ContentType = string.Format("multipart/form-data; boundary={0}", boundary);
             request.Method = "POST";
-            request.ContentType = "multipart/form-data";
+            request.KeepAlive = true;
+            request.Credentials = CredentialCache.DefaultCredentials;
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
             request.Timeout = 30 * 60 * 1000;
 
-            using (var reqStream = request.GetRequestStream())
+            using (var stream = request.GetRequestStream())
             {
-                reqStream.Write(buffer, 0, buffer.Length);
-                reqStream.Close();
+                //1.1 key/value
+                string formdataTemplate = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
+                if (null != formDatas && formDatas.Count > 0)
+                {
+                    foreach (var kv in formDatas)
+                    {
+                        stream.Write(boundarybytes, 0, boundarybytes.Length);
+                        string formitem = string.Format(formdataTemplate, kv.Key, kv.Value);
+                        byte[] formitembytes = chast.GetBytes(formitem);
+                        stream.Write(formitembytes, 0, formitembytes.Length);
+                    }
+                }
+
+                //1.2 file
+                string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: application/octet-stream\r\n\r\n";
+                int each_index = 1;
+                foreach (var kv in files)
+                {
+                    string each_fileName = string.Format("file{0}", each_index++);
+                    stream.Write(boundarybytes, 0, boundarybytes.Length);
+                    string header = string.Format(headerTemplate, each_fileName, kv.Key);
+                    byte[] headerbytes = chast.GetBytes(header);
+                    stream.Write(headerbytes, 0, headerbytes.Length);
+                    stream.Write(kv.Value, 0, kv.Value.Length);
+                }
+
+                //1.3 form end
+                stream.Write(endbytes, 0, endbytes.Length);
+                stream.Close();
             }
 
+            //2.WebResponse
             string respText = string.Empty;
             HttpWebResponse response = null;
             try
@@ -199,7 +249,7 @@ namespace AtomicCore.IOStorage.Core
         public static string HttpGet(string url, string data, Encoding chast = null)
         {
             if (null == chast)
-                chast = Encoding.UTF8;
+                chast = ENCODING;
 
             string get_url;
             if (string.IsNullOrEmpty(data))
@@ -231,6 +281,71 @@ namespace AtomicCore.IOStorage.Core
             }
 
             return respText;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// 获取多部分表单数据byte数组
+        /// </summary>
+        /// <param name="postParameters"></param>
+        /// <param name="boundary"></param>
+        /// <returns></returns>
+        private static byte[] GetMultipartFormData(IDictionary<string, object> postParameters, string boundary)
+        {
+            Stream formDataStream = new System.IO.MemoryStream();
+            bool needsCLRF = false;
+
+            foreach (var param in postParameters)
+            {
+                // Thanks to feedback from commenters, add a CRLF to allow multiple parameters to be added.
+                // Skip it on the first parameter, add it to subsequent parameters.
+                if (needsCLRF)
+                    formDataStream.Write(ENCODING.GetBytes("\r\n"), 0, ENCODING.GetByteCount("\r\n"));
+
+                needsCLRF = true;
+
+                if (param.Value is FileParameter)
+                {
+                    FileParameter fileToUpload = (FileParameter)param.Value;
+
+                    // Add just the first part of this param, since we will write the file data directly to the Stream
+                    string header = string.Format(
+                        "--{0}\r\nContent-Disposition: form-data; name=\"{1}\"; filename=\"{2}\"\r\nContent-Type: {3}\r\n\r\n",
+                        boundary,
+                        param.Key,
+                        fileToUpload.FileName ?? param.Key,
+                        fileToUpload.ContentType ?? "application/octet-stream");
+
+                    formDataStream.Write(ENCODING.GetBytes(header), 0, ENCODING.GetByteCount(header));
+
+                    // Write the file data directly to the Stream, rather than serializing it to a string.
+                    formDataStream.Write(fileToUpload.File, 0, fileToUpload.File.Length);
+                }
+                else
+                {
+                    string postData = string.Format(
+                        "--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}",
+                        boundary,
+                        param.Key,
+                        param.Value);
+                    formDataStream.Write(ENCODING.GetBytes(postData), 0, ENCODING.GetByteCount(postData));
+                }
+            }
+
+            // Add the end of the request.  Start with a newline
+            string footer = "\r\n--" + boundary + "--\r\n";
+            formDataStream.Write(ENCODING.GetBytes(footer), 0, ENCODING.GetByteCount(footer));
+
+            // Dump the Stream into a byte[]
+            formDataStream.Position = 0;
+            byte[] formData = new byte[formDataStream.Length];
+            formDataStream.Read(formData, 0, formData.Length);
+            formDataStream.Close();
+
+            return formData;
         }
 
         /// <summary>
@@ -277,5 +392,43 @@ namespace AtomicCore.IOStorage.Core
         {
             return true;
         }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// 文件参数类
+    /// https://blog.csdn.net/winterye12/article/details/104005109
+    /// </summary>
+    public class FileParameter
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileParameter"/> class.
+        /// FileParameter.
+        /// </summary>
+        /// <param name="file">file.</param>
+        /// <param name="filename">filename.</param>
+        /// <param name="contenttype">contenttype.</param>
+        public FileParameter(byte[] file, string filename, string contenttype)
+        {
+            this.File = file;
+            this.FileName = filename;
+            this.ContentType = contenttype;
+        }
+
+        /// <summary>
+        /// Gets or sets File.
+        /// </summary>
+        public byte[] File { get; set; }
+
+        /// <summary>
+        /// Gets or sets FileName.
+        /// </summary>
+        public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets ContentType.
+        /// </summary>
+        public string ContentType { get; set; }
     }
 }

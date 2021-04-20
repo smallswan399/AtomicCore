@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace AtomicCore.IOStorage.Core
 {
@@ -43,21 +45,41 @@ namespace AtomicCore.IOStorage.Core
                 return new BizIOSingleUploadJsonResult("input参数为空");
             if (string.IsNullOrEmpty(input.BizFolder))
                 return new BizIOSingleUploadJsonResult("请指定业务文件夹");
+            if (string.IsNullOrEmpty(input.FileName))
+                return new BizIOSingleUploadJsonResult("文件名称不允许为空");
             if (null == input.FileStream || input.FileStream.Length <= 0)
                 return new BizIOSingleUploadJsonResult("文件流不允许为空");
 
             //拼接URL
-            string url = string.Format(
-                "{0}{1}",
+            StringBuilder urlBuilder = new StringBuilder(string.Format(
+                "{0}{1}?bizFolder={2}",
                 this._baseUrl,
-                c_singleFile
-            );
+                c_singleFile,
+                input.BizFolder
+            ));
+            if (!string.IsNullOrEmpty(input.SubFolder))
+                urlBuilder.AppendFormat("&indexFolder={0}", input.SubFolder);
+            urlBuilder.AppendFormat("&rd={0}", DateTime.Now.Ticks.ToString("x"));
 
             //Stream -> buffer
             byte[] buffer = input.FileStream.ToBuffer();
 
+            //构建文件集合
+            Dictionary<string, byte[]> fileDic = new Dictionary<string, byte[]>
+            {
+                { input.FileName, buffer }
+            };
+
+            //////////构建表单提交参数
+            ////////Dictionary<string, string> dateDic = new Dictionary<string, string>
+            ////////{
+            ////////    { "bizFolder", input.BizFolder }
+            ////////};
+            ////////if (!string.IsNullOrEmpty(input.SubFolder))
+            ////////    dateDic.Add("indexFolder", input.SubFolder);
+
             //请求服务端
-            string respText = BizHttpUtils.PostFile(url, buffer);
+            string respText = BizHttpUtils.PostFile(urlBuilder.ToString(), fileDic, null);
             if (string.IsNullOrEmpty(respText))
                 return new BizIOSingleUploadJsonResult("请求失败");
 
@@ -101,7 +123,7 @@ namespace AtomicCore.IOStorage.Core
             byte[] buffer = input.MultipartStream.ToBuffer();
 
             //请求服务端
-            string respText = BizHttpUtils.PostFile(url, buffer);
+            string respText = BizHttpUtils.PostFile(url, null, null);
             if (string.IsNullOrEmpty(respText))
                 return new BizIOBatchUploadJsonResult("请求失败");
 

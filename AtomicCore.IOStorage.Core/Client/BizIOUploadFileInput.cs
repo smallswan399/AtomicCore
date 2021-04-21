@@ -5,7 +5,7 @@ namespace AtomicCore.IOStorage.Core
     /// <summary>
     /// 单文件上传输入参数
     /// </summary>
-    public sealed class BizIOUploadFileInput
+    public sealed class BizIOUploadFileInput : BizIORequestInputBase
     {
         /// <summary>
         /// 业务文件夹名称

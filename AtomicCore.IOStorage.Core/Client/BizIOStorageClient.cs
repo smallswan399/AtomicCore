@@ -70,14 +70,6 @@ namespace AtomicCore.IOStorage.Core
                 { input.FileName, buffer }
             };
 
-            //////////构建表单提交参数
-            ////////Dictionary<string, string> dateDic = new Dictionary<string, string>
-            ////////{
-            ////////    { "bizFolder", input.BizFolder }
-            ////////};
-            ////////if (!string.IsNullOrEmpty(input.SubFolder))
-            ////////    dateDic.Add("indexFolder", input.SubFolder);
-
             //请求服务端
             string respText = BizHttpUtils.PostFile(urlBuilder.ToString(), fileDic, null);
             if (string.IsNullOrEmpty(respText))

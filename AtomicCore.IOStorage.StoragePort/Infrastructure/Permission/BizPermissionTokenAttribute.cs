@@ -13,7 +13,6 @@ namespace AtomicCore.IOStorage.StoragePort
         /// <param name="filterContext"></param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-
             if (filterContext.Controller is IBizPremissionIntercept intercept)
             {
                 intercept.OnIntercept(filterContext);

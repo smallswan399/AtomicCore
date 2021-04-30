@@ -20,7 +20,7 @@ namespace AtomicCore.IOStorage.StoragePort
         /// <summary>
         /// 服务提供接口
         /// </summary>
-        private readonly IOptionsMonitor<BizAppSettings> _appSettings;
+        private readonly IOptionsMonitor<BizIOStorageConfig> _ioStorageOption;
 
         #endregion
 
@@ -31,14 +31,14 @@ namespace AtomicCore.IOStorage.StoragePort
         /// </summary>
         /// <param name="hostEnv">WEB变量</param>
         /// <param name="srvProvider">服务提供接口</param>
-        public BizPathSrvProvider(IWebHostEnvironment hostEnv, IOptionsMonitor<BizAppSettings> appSettings)
+        public BizPathSrvProvider(IWebHostEnvironment hostEnv, IOptionsMonitor<BizIOStorageConfig> ioStorageOption)
         {
             this._hostEnv = hostEnv;
-            this._appSettings = appSettings;
+            this._ioStorageOption = ioStorageOption;
 
-            this.SaveRootDir = appSettings.CurrentValue.SaveRootDir;
-            this.PermittedExtensions = appSettings.CurrentValue.AllowFileExts.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            this.FileSizeLimit = int.TryParse(appSettings.CurrentValue.AllowFileMBSizeLimit, out int size) ? size * 1024 * 1024 : 0;
+            this.SaveRootDir = ioStorageOption.CurrentValue.SaveRootDir;
+            this.PermittedExtensions = ioStorageOption.CurrentValue.AllowFileExts.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            this.FileSizeLimit = int.TryParse(ioStorageOption.CurrentValue.AllowFileMBSizeLimit, out int size) ? size * 1024 * 1024 : 0;
         }
 
         #endregion

@@ -1,9 +1,9 @@
 ﻿namespace AtomicCore.IOStorage.StoragePort
 {
     /// <summary>
-    /// Appsetting配置信息
+    /// IOStorage Config配置信息
     /// </summary>
-    public class BizAppSettings
+    public class BizIOStorageConfig
     {
         /// <summary>
         /// APP应用TOKEN

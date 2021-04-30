@@ -76,8 +76,8 @@ namespace AtomicCore.IOStorage.StoragePort
 
             #region º”‘ÿ∂¡»°≈‰÷√œÓ£®AppSettings£©
 
-            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
-            services.Configure<BizAppSettings>(appSettings);
+            IConfigurationSection ioStorageSec = Configuration.GetSection("IOStorage");
+            services.Configure<BizIOStorageConfig>(ioStorageSec);
             services.AddSingleton<IBizPathSrvProvider, BizPathSrvProvider>();
 
             #endregion

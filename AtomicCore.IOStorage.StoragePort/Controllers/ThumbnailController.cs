@@ -27,7 +27,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <summary>
         /// 配置信息读取
         /// </summary>
-        private readonly IOptionsMonitor<BizAppSettings> _appSettings;
+        private readonly IOptionsMonitor<BizIOStorageConfig> _appSettings;
 
         /// <summary>
         /// 物理路径获取
@@ -39,7 +39,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </summary>
         /// <param name="appSettings"></param>
         /// <param name="pathSrv"></param>
-        public ThumbnailController(IOptionsMonitor<BizAppSettings> appSettings, IBizPathSrvProvider pathSrv)
+        public ThumbnailController(IOptionsMonitor<BizIOStorageConfig> appSettings, IBizPathSrvProvider pathSrv)
         {
             this._appSettings = appSettings;
             this._pathSrv = pathSrv;

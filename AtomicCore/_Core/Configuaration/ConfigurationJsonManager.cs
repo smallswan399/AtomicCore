@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace AtomicCore
@@ -11,10 +12,25 @@ namespace AtomicCore
     {
         #region Variable
 
-        ///// <summary>
-        ///// .NET CORE appsetting.json
-        ///// </summary>
-        //private static readonly IConfiguration s_appsettingJson = null;
+        /// <summary>
+        /// appsettings.json
+        /// </summary>
+        private const string c_appsettingsFileName = "appsettings.json";
+
+        /// <summary>
+        /// connections.json
+        /// </summary>
+        private const string c_connectionsFileName = "connections.json";
+
+        /// <summary>
+        /// connections.json -> connectionString
+        /// </summary>
+        private const string c_connectionString = "connectionString";
+
+        /// <summary>
+        /// connections.json -> providerName
+        /// </summary>
+        private const string c_providerName = "providerName";
 
         #endregion
 
@@ -26,16 +42,22 @@ namespace AtomicCore
         static ConfigurationJsonManager()
         {
             string baseDir = System.IO.Directory.GetCurrentDirectory();
+            string appsettingJsonPath = string.Format("{0}\\{1}", baseDir, c_appsettingsFileName);
+            string connectionsJsonPath = string.Format("{0}\\{1}", baseDir, c_connectionsFileName);
+            if (!File.Exists(appsettingJsonPath))
+                throw new FileNotFoundException(string.Format("{0}文件不存在,请检查是否项目中是否添加了该文件并设置为'如果较新则复制'!", c_appsettingsFileName));
+            if (!File.Exists(connectionsJsonPath))
+                throw new FileNotFoundException(string.Format("{0}文件不存在,请检查是否项目中是否添加了该文件并设置为'如果较新则复制'!", c_connectionsFileName));
 
             AppSettings = new ConfigurationBuilder()
                     .SetBasePath(baseDir)
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile(c_appsettingsFileName, optional: true, reloadOnChange: true)
                     .Build();
 
             ConnectionStrings = new Dictionary<string, ConnectionStringJsonSettings>();
             IConfiguration connectionJsonConf = new ConfigurationBuilder()
                     .SetBasePath(baseDir)
-                    .AddJsonFile("connections.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile(c_connectionsFileName, optional: true, reloadOnChange: true)
                     .Build();
             List<IConfigurationSection> childSections = connectionJsonConf.GetChildren().ToList();
             if (null != childSections && childSections.Any())
@@ -43,8 +65,8 @@ namespace AtomicCore
                 ConnectionStringJsonSettings jsonSetting = null;
                 foreach (IConfigurationSection child in childSections)
                 {
-                    string each_connectionString = child["connectionString"];
-                    string each_providerName = child["providerName"];
+                    string each_connectionString = child[c_connectionString];
+                    string each_providerName = child[c_providerName];
 
                     if (string.IsNullOrEmpty(each_connectionString) || string.IsNullOrEmpty(each_providerName))
                         continue;

@@ -18,14 +18,21 @@ namespace AtomicCore
         /// 数据库缓存操作KEY
         /// </summary>
         private static readonly object s_dbProviderKey = new object();
+
         /// <summary>
         /// 数据库操作实例缓存
         /// </summary>
         private static readonly Dictionary<Type, object> s_dbProviderCache = new Dictionary<Type, object>();
+
         /// <summary>
         /// 允许的数据库类型
         /// </summary>
-        private static readonly string[] s_allowDbType = new string[] { DatabaseType.Mssql2008, DatabaseType.Mysql, DatabaseType.SQLite };
+        private static readonly string[] s_allowDbType = new string[] 
+        { 
+            DatabaseType.Mssql2008, 
+            DatabaseType.Mysql, 
+            DatabaseType.SQLite 
+        };
 
         #endregion
 
@@ -104,15 +111,11 @@ namespace AtomicCore
                         s_dbProviderCache.Add(MT, instance);
                     }
                     else
-                    {
                         instance = s_dbProviderCache[MT] as IDbProvider<M>;
-                    }
                 }
             }
             else
-            {
                 instance = s_dbProviderCache[MT] as IDbProvider<M>;
-            }
 
             return instance;
         }

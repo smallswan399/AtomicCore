@@ -13,8 +13,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
     /// <summary>
     /// 生成缩略图服务
     /// </summary>
-    public class ThumbnailController : Controller
+    public class ThumbnailController : BizControllerBase
     {
+        #region Variable
+
         /// <summary>
         /// 全局Key,用于分配IO操作KEY
         /// </summary>
@@ -34,6 +36,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </summary>
         private readonly IBizPathSrvProvider _pathSrv;
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -44,6 +50,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             this._appSettings = appSettings;
             this._pathSrv = pathSrv;
         }
+
+        #endregion
+
+        #region Action Methods
 
         /// <summary>
         /// 获取缩略图(仅限定宽,不限定高)
@@ -231,6 +241,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             return this.File(fs, contentType);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// 是否是有效的图片地址
         /// </summary>
@@ -294,5 +308,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
 
             return s_iokeys[fileName];
         }
+
+        #endregion
     }
 }

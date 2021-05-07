@@ -18,7 +18,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
     /// 上传控制器
     /// https://www.jb51.net/article/174873.htm
     /// </summary>
-    public class ApiServiceController : Controller
+    public class ApiServiceController : BizControllerBase
     {
         #region Variable
 
@@ -60,6 +60,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadingStream(string bizFolder, string indexFolder)
         {
+            //权限判断
+            if(!this.HasPremission)
+                return Ok(new BizIOBatchUploadJsonResult("forbidden"));
+
             //基础判断
             if (string.IsNullOrEmpty(bizFolder))
                 return Ok(new BizIOBatchUploadJsonResult("业务文件夹不允许为空"));
@@ -149,6 +153,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadingFormFile(string bizFolder, string indexFolder)
         {
+            //权限判断
+            if (!this.HasPremission)
+                return Ok(new BizIOBatchUploadJsonResult("forbidden"));
+
             //基础判断
             if (null == this.Request.Form.Files || this.Request.Form.Files.Count <= 0)
                 return Ok(new BizIOSingleUploadJsonResult("未检测到上传数据流"));

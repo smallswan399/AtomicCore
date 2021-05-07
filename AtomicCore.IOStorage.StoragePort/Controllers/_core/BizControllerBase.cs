@@ -2,9 +2,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AtomicCore.IOStorage.StoragePort.Controllers
 {
@@ -17,7 +14,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 头部信息Token
         /// </summary>
         private const string c_head_token = "token";
-        
+
         private bool _hasReadConfig = false;
         private BizIOStorageConfig _ioStorageConfig = null;
 
@@ -40,17 +37,27 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         }
 
         /// <summary>
+        /// 是否有权限
+        /// </summary>
+        public bool HasPremission { get; private set; } = true;
+
+        /// <summary>
         /// 请求拦截处理
         /// </summary>
         /// <param name="requestContext"></param>
         public void OnIntercept(ActionContext requestContext)
         {
-            string token = this.IOStorageConfig.AppToken;
+            //判断系统是否配置了token权限
+            string cfgToken = null == this.IOStorageConfig ? string.Empty : this.IOStorageConfig.AppToken;
+            if (string.IsNullOrEmpty(cfgToken))
+                return;
 
-            if (requestContext.HttpContext.Request.Headers.TryGetValue(c_head_token, out StringValues headTK))
-            {
-
-            }
+            //判断头部是否包含token
+            bool hasHeadToken = requestContext.HttpContext.Request.Headers.TryGetValue(c_head_token, out StringValues headTK);
+            if (!hasHeadToken)
+                this.HasPremission = false;
+            else
+                this.HasPremission = cfgToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase);
         }
     }
 }

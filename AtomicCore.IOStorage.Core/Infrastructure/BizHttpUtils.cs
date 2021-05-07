@@ -17,7 +17,17 @@ namespace AtomicCore.IOStorage.Core
         /// <summary>
         /// 默认编码 UTF-8
         /// </summary>
-        private static readonly Encoding ENCODING = Encoding.UTF8;
+        public static readonly Encoding ENCODING = Encoding.UTF8;
+
+        /// <summary>
+        /// application/x-www-form-urlencoded
+        /// </summary>
+        public const string ContentType_XWWWFormUrlencoded = "application/x-www-form-urlencoded";
+
+        /// <summary>
+        /// application/json
+        /// </summary>
+        public const string ContentType_RawJson = "application/json";
 
         #endregion
 
@@ -85,16 +95,17 @@ namespace AtomicCore.IOStorage.Core
         /// </summary>
         /// <param name="url"></param>
         /// <param name="inputParams"></param>
+        /// <param name="heads"></param>
         /// <param name="chast"></param>
         /// <returns></returns>
-        public static string HttpPost(string url, IDictionary<string, string> inputParams, Encoding chast = null)
+        public static string HttpPost(string url, IDictionary<string, string> inputParams, Dictionary<string, string> heads = null, Encoding chast = null)
         {
             if (null == inputParams || inputParams.Count <= 0)
                 return HttpPost(url, string.Empty, null);
             else
             {
                 string data = string.Join("&", inputParams.Select(s => string.Format("{0}={1}", s.Key, s.Value)));
-                return HttpPost(url, data, null);
+                return HttpPost(url, data, ContentType_XWWWFormUrlencoded, heads, chast);
             }
         }
 
@@ -103,21 +114,28 @@ namespace AtomicCore.IOStorage.Core
         /// </summary>
         /// <param name="url"></param>
         /// <param name="data"></param>
+        /// <param name="contentType">application/json | application/x-www-form-urlencoded | .....</param>
+        /// <param name="heads"></param>
         /// <param name="chast"></param>
         /// <returns></returns>
-        public static string HttpPost(string url, string data, Encoding chast = null)
+        public static string HttpPost(string url, string data, string contentType = ContentType_XWWWFormUrlencoded, Dictionary<string, string> heads = null, Encoding chast = null)
         {
             if (null == chast)
-                chast = ENCODING;
+                chast = Encoding.UTF8;
 
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 SetCertificateValidationCallBack();//HTTPS证书验证
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
             request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentType = contentType;
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
             request.Timeout = 30 * 60 * 1000;
+
+            if (null != heads && heads.Count > 0)
+                foreach (var kv in heads)
+                    request.Headers.Add(kv.Key, kv.Value);
+
             if (!string.IsNullOrEmpty(data))
             {
                 byte[] buffer = chast.GetBytes(data.ToString());
@@ -134,7 +152,9 @@ namespace AtomicCore.IOStorage.Core
             {
                 response = (HttpWebResponse)request.GetResponse();
                 using (StreamReader sr = new StreamReader(response.GetResponseStream(), chast))
+                {
                     respText = sr.ReadToEnd();
+                }
             }
             catch (Exception ex)
             {
@@ -155,12 +175,13 @@ namespace AtomicCore.IOStorage.Core
         /// <param name="url"></param>
         /// <param name="files"></param>
         /// <param name="formDatas"></param>
+        /// <param name="heads"></param>
         /// <param name="chast"></param>
         /// <remarks>
         /// https://www.cnblogs.com/amylis_chen/p/9699766.html
         /// </remarks>
         /// <returns></returns>
-        public static string PostFile(string url, IDictionary<string, byte[]> files, IDictionary<string, string> formDatas, Encoding chast = null)
+        public static string PostFile(string url, IDictionary<string, byte[]> files, IDictionary<string, string> formDatas, Dictionary<string, string> heads = null, Encoding chast = null)
         {
             if (null == files || files.Count < 0)
                 return string.Empty;
@@ -183,6 +204,10 @@ namespace AtomicCore.IOStorage.Core
             request.Credentials = CredentialCache.DefaultCredentials;
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
             request.Timeout = 30 * 60 * 1000;
+
+            if (null != heads && heads.Count > 0)
+                foreach (var kv in heads)
+                    request.Headers.Add(kv.Key, kv.Value);
 
             using (var stream = request.GetRequestStream())
             {
@@ -244,12 +269,13 @@ namespace AtomicCore.IOStorage.Core
         /// </summary>
         /// <param name="url"></param>
         /// <param name="data"></param>
+        /// <param name="heads"></param>
         /// <param name="chast"></param>
         /// <returns></returns>
-        public static string HttpGet(string url, string data, Encoding chast = null)
+        public static string HttpGet(string url, string data, Dictionary<string, string> heads = null, Encoding chast = null)
         {
             if (null == chast)
-                chast = ENCODING;
+                chast = Encoding.UTF8;
 
             string get_url;
             if (string.IsNullOrEmpty(data))
@@ -257,10 +283,17 @@ namespace AtomicCore.IOStorage.Core
             else
                 get_url = string.Format("{0}?{1}", url, UrlEnconde(data));
 
+            if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+                SetCertificateValidationCallBack();//HTTPS证书验证
+
             HttpWebRequest request = WebRequest.Create(get_url) as HttpWebRequest;
             request.Method = "GET";
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
             request.Timeout = 30 * 60 * 1000;
+
+            if (null != heads && heads.Count > 0)
+                foreach (var kv in heads)
+                    request.Headers.Add(kv.Key, kv.Value);
 
             string respText = string.Empty;
             HttpWebResponse response = null;
@@ -268,7 +301,9 @@ namespace AtomicCore.IOStorage.Core
             {
                 response = (HttpWebResponse)request.GetResponse();
                 using (StreamReader sr = new StreamReader(response.GetResponseStream(), chast))
+                {
                     respText = sr.ReadToEnd();
+                }
             }
             catch (Exception ex)
             {

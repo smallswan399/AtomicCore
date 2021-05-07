@@ -10,6 +10,11 @@ namespace AtomicCore.IOStorage.Core
     public class BizIOStorageClient
     {
         /// <summary>
+        /// 头部信息Token
+        /// </summary>
+        private const string c_head_token = "token";
+
+        /// <summary>
         /// 单文件上传
         /// </summary>
         private const string c_singleFile = "/ApiService/UploadingFormFile";
@@ -50,6 +55,16 @@ namespace AtomicCore.IOStorage.Core
             if (null == input.FileStream || input.FileStream.Length <= 0)
                 return new BizIOSingleUploadJsonResult("文件流不允许为空");
 
+            //判断是否有apiKey
+            Dictionary<string, string> heads = null;
+            if (!string.IsNullOrEmpty(input.APIKey))
+            {
+                heads = new Dictionary<string, string>()
+                {
+                    { c_head_token,input.APIKey }
+                };
+            }
+
             //拼接URL
             StringBuilder urlBuilder = new StringBuilder(string.Format(
                 "{0}{1}?bizFolder={2}",
@@ -71,7 +86,7 @@ namespace AtomicCore.IOStorage.Core
             };
 
             //请求服务端
-            string respText = BizHttpUtils.PostFile(urlBuilder.ToString(), fileDic, null);
+            string respText = BizHttpUtils.PostFile(urlBuilder.ToString(), fileDic, null, heads, null);
             if (string.IsNullOrEmpty(respText))
                 return new BizIOSingleUploadJsonResult("请求失败");
 
@@ -90,7 +105,7 @@ namespace AtomicCore.IOStorage.Core
         }
 
         /// <summary>
-        /// 多文件上传
+        /// 多文件上传(尚未完成！！！！！！)
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -104,6 +119,16 @@ namespace AtomicCore.IOStorage.Core
             if (null == input.MultipartStream || input.MultipartStream.Length <= 0)
                 return new BizIOBatchUploadJsonResult("文件流不允许为空");
 
+            //判断是否有apiKey
+            Dictionary<string, string> heads = null;
+            if (!string.IsNullOrEmpty(input.APIKey))
+            {
+                heads = new Dictionary<string, string>()
+                {
+                    { c_head_token,input.APIKey }
+                };
+            }
+
             //拼接URL
             string url = string.Format(
                 "{0}{1}",
@@ -115,7 +140,7 @@ namespace AtomicCore.IOStorage.Core
             byte[] buffer = input.MultipartStream.ToBuffer();
 
             //请求服务端
-            string respText = BizHttpUtils.PostFile(url, null, null);
+            string respText = BizHttpUtils.PostFile(url, null, null, heads, null);
             if (string.IsNullOrEmpty(respText))
                 return new BizIOBatchUploadJsonResult("请求失败");
 

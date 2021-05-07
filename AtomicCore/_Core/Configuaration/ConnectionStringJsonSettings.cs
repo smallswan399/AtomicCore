@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AtomicCore
+﻿namespace AtomicCore
 {
     /// <summary>
     /// 数据库链接字符串Json Settings

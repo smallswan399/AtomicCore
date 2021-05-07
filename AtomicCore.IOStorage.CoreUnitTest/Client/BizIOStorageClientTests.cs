@@ -31,6 +31,7 @@ namespace AtomicCore.IOStorage.Core.Tests
                 BizIOStorageClient client = new BizIOStorageClient("http://192.168.0.11:8777");
                 result = client.UploadFile(new BizIOUploadFileInput()
                 {
+                    //APIKey = "a6e2f27ee1f544cc889898e4397f7b07",
                     BizFolder = "Test",
                     FileStream = fs,
                     FileName = "test.jpg"

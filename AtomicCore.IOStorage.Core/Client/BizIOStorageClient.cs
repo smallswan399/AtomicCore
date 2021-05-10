@@ -59,7 +59,7 @@ namespace AtomicCore.IOStorage.Core
             Dictionary<string, string> heads = null;
             if (!string.IsNullOrEmpty(input.APIKey))
             {
-                heads = new Dictionary<string, string>()
+                heads = new Dictionary<string, string>
                 {
                     { c_head_token,input.APIKey }
                 };
@@ -123,7 +123,7 @@ namespace AtomicCore.IOStorage.Core
             Dictionary<string, string> heads = null;
             if (!string.IsNullOrEmpty(input.APIKey))
             {
-                heads = new Dictionary<string, string>()
+                heads = new Dictionary<string, string>
                 {
                     { c_head_token,input.APIKey }
                 };

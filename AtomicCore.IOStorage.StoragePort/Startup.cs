@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -167,16 +168,21 @@ namespace AtomicCore.IOStorage.StoragePort
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
+            /* 读取Mime拓展配置 */
+            IDictionary<string, string> mimeDic = BizMIMETypeConfig.ResolveTypes(this.Configuration);
+
             /* 激活静态资源访问(调试模式不缓存Cache) */
-            if (env.IsDevelopment())
-                app.UseStaticFiles();
-            else
-            {
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    OnPrepareResponse = SetCacheControl
-                });
-            }
+            FileServerOptions options = new FileServerOptions();
+            options.StaticFileOptions.OnPrepareResponse = SetCacheControl;
+            if (null != mimeDic && mimeDic.Count > 0)
+                options.StaticFileOptions.ContentTypeProvider = new FileExtensionContentTypeProvider(mimeDic);
+            //options.EnableDefaultFiles = true;
+            //options.DefaultFilesOptions.DefaultFileNames = new List<string>
+            //{
+            //    "index.html",
+            //    "index.htm"
+            //};
+            app.UseFileServer(options);
 
             /* 按顺序启动激活Mvc相关中间件 */
             app.UseSession();                               //激活Session

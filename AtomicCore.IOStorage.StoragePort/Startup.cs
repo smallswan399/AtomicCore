@@ -174,8 +174,12 @@ namespace AtomicCore.IOStorage.StoragePort
             /* 激活静态资源访问(调试模式不缓存Cache) */
             FileServerOptions options = new FileServerOptions();
             options.StaticFileOptions.OnPrepareResponse = SetCacheControl;
+            FileExtensionContentTypeProvider provider = new FileExtensionContentTypeProvider();
             if (null != mimeDic && mimeDic.Count > 0)
-                options.StaticFileOptions.ContentTypeProvider = new FileExtensionContentTypeProvider(mimeDic);
+                foreach (var kv in mimeDic)
+                    if (!provider.Mappings.ContainsKey(kv.Key))
+                        provider.Mappings.Add(kv);
+            options.StaticFileOptions.ContentTypeProvider = provider;
             //options.EnableDefaultFiles = true;
             //options.DefaultFilesOptions.DefaultFileNames = new List<string>
             //{

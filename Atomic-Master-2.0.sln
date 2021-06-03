@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.IOStorage.Storag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.IOStorage.CoreUnitTest", "AtomicCore.IOStorage.CoreUnitTest\AtomicCore.IOStorage.CoreUnitTest.csproj", "{7E0D0781-69FB-41EC-856F-0A974A759513}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Socket", "Socket", "{A47AB5F1-C4C7-401E-AD2D-A43B83EE2221}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.SocketIO.Emitter", "AtomicCore.SocketIO.Emitter\AtomicCore.SocketIO.Emitter.csproj", "{BB315B50-9773-48BE-98D3-003B43C2F489}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,10 @@ Global
 		{7E0D0781-69FB-41EC-856F-0A974A759513}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E0D0781-69FB-41EC-856F-0A974A759513}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E0D0781-69FB-41EC-856F-0A974A759513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB315B50-9773-48BE-98D3-003B43C2F489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB315B50-9773-48BE-98D3-003B43C2F489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB315B50-9773-48BE-98D3-003B43C2F489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB315B50-9773-48BE-98D3-003B43C2F489}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +84,7 @@ Global
 		{892D51D3-732B-44C9-8DA9-C7112F5369D7} = {2B525525-AA5C-4B1E-961A-EB384AC512D3}
 		{A67CAF65-F4F9-4437-877C-67F159717958} = {2B525525-AA5C-4B1E-961A-EB384AC512D3}
 		{7E0D0781-69FB-41EC-856F-0A974A759513} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
+		{BB315B50-9773-48BE-98D3-003B43C2F489} = {A47AB5F1-C4C7-401E-AD2D-A43B83EE2221}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {942DB662-B41D-4454-8FF9-2F118FA2B541}

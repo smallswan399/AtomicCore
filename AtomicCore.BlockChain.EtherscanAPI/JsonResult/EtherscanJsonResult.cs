@@ -3,10 +3,10 @@
 namespace AtomicCore.BlockChain.EtherscanAPI.JsonResult
 {
     /// <summary>
-    /// Etherscan unified return json results
+    /// Etherscan的统一返回结果集
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal sealed class EtherscanJsonResult<T>
+    public sealed class EtherscanJsonResult<T>
         where T : class, new()
     {
         /// <summary>

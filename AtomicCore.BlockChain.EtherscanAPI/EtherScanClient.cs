@@ -11,5 +11,13 @@ namespace AtomicCore.BlockChain.EtherscanAPI
     /// </summary>
     public class EtherScanClient : IEtherScanClient
     {
+        /// <summary>
+        /// 获取网络手续费（三档）
+        /// </summary>
+        /// <returns></returns>
+        public GasOracleJsonResult GetGasOracle()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

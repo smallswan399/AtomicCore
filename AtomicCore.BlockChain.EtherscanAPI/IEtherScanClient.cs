@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AtomicCore.BlockChain.EtherscanAPI
+﻿namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
     /// IEtherScanClient interface definition
@@ -15,6 +9,6 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// 获取网络手续费（三档）
         /// </summary>
         /// <returns></returns>
-        GasOracleJsonResult GetGasOracle();
+        EtherscanJsonResult<GasOracleJsonResult> GetGasOracle();
     }
 }

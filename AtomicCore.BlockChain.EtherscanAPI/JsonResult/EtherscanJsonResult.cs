@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AtomicCore.BlockChain.EtherscanAPI.JsonResult
+namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
     /// Etherscan的统一返回结果集

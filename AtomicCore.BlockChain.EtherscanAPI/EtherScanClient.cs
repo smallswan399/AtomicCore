@@ -48,7 +48,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         public EtherscanJsonResult<GasOracleJsonResult> GetGasOracle()
         {
             //拼接URL
-            string url = string.Format("{0}/api?module=gastracker&action=gasoracle", c_baseUrl);
+            string url = string.Format(
+                "{0}/api?apikey={1}&module=gastracker&action=gasoracle", 
+                c_baseUrl,
+                this._apiKey
+            );
 
             //请求API
             string resp;

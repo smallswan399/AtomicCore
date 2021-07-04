@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.IOStorage.CoreUn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Socket", "Socket", "{A47AB5F1-C4C7-401E-AD2D-A43B83EE2221}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.SocketIO.Emitter", "AtomicCore.SocketIO.Emitter\AtomicCore.SocketIO.Emitter.csproj", "{BB315B50-9773-48BE-98D3-003B43C2F489}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.SocketIO.Emitter", "AtomicCore.SocketIO.Emitter\AtomicCore.SocketIO.Emitter.csproj", "{BB315B50-9773-48BE-98D3-003B43C2F489}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlockChain", "BlockChain", "{5E75EB7D-DC21-47DF-9299-5D0F653D87C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.EtherscanAPI", "AtomicCore.BlockChain.EtherscanAPI\AtomicCore.BlockChain.EtherscanAPI.csproj", "{7BD0E343-D20F-4CE6-8A8D-1FA509435FDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +75,10 @@ Global
 		{BB315B50-9773-48BE-98D3-003B43C2F489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB315B50-9773-48BE-98D3-003B43C2F489}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB315B50-9773-48BE-98D3-003B43C2F489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BD0E343-D20F-4CE6-8A8D-1FA509435FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BD0E343-D20F-4CE6-8A8D-1FA509435FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BD0E343-D20F-4CE6-8A8D-1FA509435FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BD0E343-D20F-4CE6-8A8D-1FA509435FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +93,7 @@ Global
 		{A67CAF65-F4F9-4437-877C-67F159717958} = {2B525525-AA5C-4B1E-961A-EB384AC512D3}
 		{7E0D0781-69FB-41EC-856F-0A974A759513} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 		{BB315B50-9773-48BE-98D3-003B43C2F489} = {A47AB5F1-C4C7-401E-AD2D-A43B83EE2221}
+		{7BD0E343-D20F-4CE6-8A8D-1FA509435FDA} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {942DB662-B41D-4454-8FF9-2F118FA2B541}

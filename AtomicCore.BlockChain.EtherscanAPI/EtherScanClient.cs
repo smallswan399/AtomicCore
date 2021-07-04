@@ -19,6 +19,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         private const string c_baseUrl = "https://api.etherscan.io";
 
         /// <summary>
+        /// ApiKey Temp Append To End,eg => apikey={0}
+        /// </summary>
+        private const string c_apiKeyTemp = "&apikey={0}";
+
+        /// <summary>
         /// API KEY
         /// </summary>
         private readonly string _apiKey;
@@ -49,9 +54,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         {
             //拼接URL
             string url = string.Format(
-                "{0}/api?apikey={1}&module=gastracker&action=gasoracle", 
+                "{0}/api?module=gastracker&action=gasoracle{1}",
                 c_baseUrl,
-                this._apiKey
+                string.IsNullOrEmpty(this._apiKey) ? 
+                    string.Empty : 
+                    string.Format(c_apiKeyTemp, this._apiKey)
             );
 
             //请求API

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="JsonResult\Accounts\" />
+  </ItemGroup>
+
 </Project>

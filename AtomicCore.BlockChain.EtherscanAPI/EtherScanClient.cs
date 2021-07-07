@@ -43,25 +43,34 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
         #endregion
 
-        #region IEtherScanClient Methods
+        #region Private Methods
 
         /// <summary>
-        /// 获取网络手续费（三档）
-        /// https://api-cn.etherscan.com/api?module=gastracker&action=gasoracle
+        /// 创建Rest Url
         /// </summary>
+        /// <param name="module">模块名称</param>
+        /// <param name="action">行为名称</param>
         /// <returns></returns>
-        public EtherscanJsonResult<GasOracleJsonResult> GetGasOracle()
+        private string CreateRestUrl(string module, string action)
         {
-            //拼接URL
-            string url = string.Format(
-                "{0}/api?module=gastracker&action=gasoracle{1}",
+            return string.Format(
+                "{0}/api?module={1}&action={2}{3}",
                 c_baseUrl,
-                string.IsNullOrEmpty(this._apiKey) ? 
-                    string.Empty : 
+                module,
+                action,
+                string.IsNullOrEmpty(this._apiKey) ?
+                    string.Empty :
                     string.Format(c_apiKeyTemp, this._apiKey)
             );
+        }
 
-            //请求API
+        /// <summary>
+        /// Rest Get Request
+        /// </summary>
+        /// <param name="url">请求URL</param>
+        /// <returns></returns>
+        private string RestGet(string url)
+        {
             string resp;
             try
             {
@@ -72,16 +81,87 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 throw ex;
             }
 
-            //解析JSON
-            EtherscanJsonResult<GasOracleJsonResult> jsonResult;
+            return resp;
+        }
+
+        /// <summary>
+        /// JSON解析
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private EtherscanJsonResult<T> JsonParse<T>(string resp)
+            where T : class, new()
+        {
+            EtherscanJsonResult<T> jsonResult;
             try
             {
-                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanJsonResult<GasOracleJsonResult>>(resp);
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanJsonResult<T>>(resp);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+
+            return jsonResult;
+        }
+
+        #endregion
+
+        #region IEtherScanClient Methods
+
+        /// <summary>
+        /// 获取网络手续费（三档）
+        /// https://api-cn.etherscan.com/api?module=gastracker&action=gasoracle
+        /// </summary>
+        /// <returns></returns>
+        public EtherscanJsonResult<EthGasOracleJsonResult> GetGasOracle()
+        {
+            //拼接URL
+            string url = this.CreateRestUrl("gastracker", "gasoracle");
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            EtherscanJsonResult<EthGasOracleJsonResult> jsonResult = JsonParse<EthGasOracleJsonResult>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// 获取交易记录列表
+        /// </summary>
+        /// <param name="address">钱包地址</param>
+        /// <param name="startBlock">起始区块高度</param>
+        /// <param name="endBlock">截止区块高度</param>
+        /// <param name="sort">排序规则</param>
+        /// <param name="page">当前页码</param>
+        /// <param name="limit">每页多少条数据</param>
+        /// <returns></returns>
+        public EtherscanJsonResult<EthTransactionJsonResult> GetTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000)
+        {
+            //拼接URL
+            string url = this.CreateRestUrl("account", "txlist");
+
+            //请求参数拼接
+            StringBuilder urlBuilder = new StringBuilder(url);
+            urlBuilder.AppendFormat("&address={0}", address);
+            urlBuilder.AppendFormat("&sort={0}", sort.ToString());
+            if (null != startBlock && startBlock > 0)
+                urlBuilder.AppendFormat("&startblock={0}", startBlock);
+            if (null != endBlock && endBlock > 0)
+                urlBuilder.AppendFormat("&endblock={0}", endBlock);
+            if (null != page && page > 0)
+                urlBuilder.AppendFormat("&page={0}", page);
+            if (null != limit && limit > 0)
+                urlBuilder.AppendFormat("&offset={0}", limit);
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            EtherscanJsonResult<EthTransactionJsonResult> jsonResult = JsonParse<EthTransactionJsonResult>(resp);
 
             return jsonResult;
         }

@@ -7,7 +7,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
     /// https://cn.etherscan.com/apis#gastracker
     /// Get Gas Oracle
     /// </summary>
-    public class GasOracleJsonResult
+    public class EthGasOracleJsonResult
     {
         /// <summary>
         /// 区块高度

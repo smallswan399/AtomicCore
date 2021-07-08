@@ -102,7 +102,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <summary>
         /// 时间戳(1970-01-01 UTC)
         /// </summary>
-        [JsonProperty("timeStamp"), JsonConverter(typeof(BizTimestampJsonConverter))]
+        [JsonProperty("timeStamp"), JsonConverter(typeof(BizTimestampToDateTimeJsonConverter))]
         public DateTime TimeStamp { get; set; }
     }
 }

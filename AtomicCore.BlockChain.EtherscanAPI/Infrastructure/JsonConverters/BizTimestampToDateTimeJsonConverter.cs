@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace AtomicCore
+namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
-    /// UTC时间戳JSON反序列化转换
+    /// TimeStamp与DateTime互转JSON解析器
     /// </summary>
-    public sealed class BizTimestampJsonConverter : JsonConverter
+    public sealed class BizTimestampToDateTimeJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

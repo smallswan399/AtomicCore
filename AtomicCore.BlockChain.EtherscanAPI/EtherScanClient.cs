@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// 标记为最后一个TAG,查询余额等请求会用到该参数
         /// </summary>
         private const string c_latestTag = "&tag=latest";
+
+        /// <summary>
+        /// 追加地址
+        /// </summary>
+        private const string c_addressTemp = "&address={0}";
 
         /// <summary>
         /// 追加合约地址参数
@@ -117,6 +123,28 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         }
 
         /// <summary>
+        /// JSON解析结构体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private EtherscanStructResult<T> StructParse<T>(string resp)
+            where T : struct
+        {
+            EtherscanStructResult<T> jsonResult;
+            try
+            {
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanStructResult<T>>(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return jsonResult;
+        }
+
+        /// <summary>
         /// JSON解析单模型
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -190,11 +218,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
         /// <param name="contractDecimals">合约代码小数位</param>
         /// <returns></returns>
-        public decimal GetBalance(string address, string contractAddress = null, int contractDecimals = 0)
+        public EtherscanStructResult<decimal> GetBalance(string address, string contractAddress = null, int contractDecimals = 0)
         {
             //基础判断
             if (string.IsNullOrEmpty(address))
-                return decimal.Zero;
+                throw new ArgumentNullException("address");
 
             //URL拼接
             StringBuilder urlBuilder;
@@ -205,16 +233,26 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 urlBuilder = new StringBuilder(this.CreateRestUrl("account", "tokenbalance"));
                 urlBuilder.AppendFormat(c_contractAddressTemp, contractAddress);
             }
+            urlBuilder.AppendFormat(c_addressTemp, address);
             urlBuilder.Append(c_latestTag);
 
             //请求API
             string resp = this.RestGet(urlBuilder.ToString());
 
             //解析JSON
-            EthTokenBalanceJsonResult jsonResult = ObjectParse<EthTokenBalanceJsonResult>(resp);
+            EtherscanStructResult<BigInteger> jsonResult = StructParse<BigInteger>(resp);
+            if (jsonResult.Status != EtherscanJsonStatus.Success)
+            {
+                return new EtherscanStructResult<decimal>
+                {
+                    Status = jsonResult.Status,
+                    Message = jsonResult.Message,
+                    Result = decimal.Zero
+                };
+            }
 
             //定义返回值
-            decimal balance = decimal.Zero;
+            decimal balance;
             if (string.IsNullOrEmpty(contractAddress))
                 balance = Nethereum.Util.UnitConversion.Convert.FromWei(jsonResult.Result);
             else
@@ -225,7 +263,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                     balance = (decimal)jsonResult.Result;
             }
 
-            return balance;
+            return new EtherscanStructResult<decimal>
+            {
+                Status = jsonResult.Status,
+                Message = jsonResult.Message,
+                Result = balance
+            };
         }
 
         /// <summary>

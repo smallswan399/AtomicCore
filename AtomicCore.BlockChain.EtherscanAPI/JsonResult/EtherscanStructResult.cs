@@ -1,17 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System.Numerics;
 
 namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
-    /// 获取代币数量（最小单位的整数）
+    /// JSON解析返回结构体
     /// </summary>
-    public sealed class EthTokenBalanceJsonResult : EtherscanResultBase
+    /// <typeparam name="T"></typeparam>
+    public sealed class EtherscanStructResult<T> : EtherscanResultBase
+        where T : struct
     {
         /// <summary>
         /// 数据结果
         /// </summary>
         [JsonProperty("result")]
-        public BigInteger Result { get; set; }
+        public T Result { get; set; }
     }
 }

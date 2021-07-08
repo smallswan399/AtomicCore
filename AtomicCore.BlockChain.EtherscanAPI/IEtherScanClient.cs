@@ -1,10 +1,18 @@
-﻿namespace AtomicCore.BlockChain.EtherscanAPI
+﻿using System.Collections.Generic;
+
+namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
     /// IEtherScanClient interface definition
     /// </summary>
     public interface IEtherScanClient
     {
+        /// <summary>
+        /// 获取网络手续费（三档）
+        /// </summary>
+        /// <returns></returns>
+        EtherscanJsonResult<EthGasOracleJsonResult> GetGasOracle();
+
         /// <summary>
         /// 获取交易列表（根据地址）
         /// </summary>
@@ -15,12 +23,6 @@
         /// <param name="page">当前页码</param>
         /// <param name="limit">每页容量</param>
         /// <returns></returns>
-        EtherscanJsonResult<EthTransactionJsonResult> GetTransactions(string address, ulong? fromBlock = null, ulong? toBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
-
-        /// <summary>
-        /// 获取网络手续费（三档）
-        /// </summary>
-        /// <returns></returns>
-        EtherscanJsonResult<EthGasOracleJsonResult> GetGasOracle();
+        EtherscanListResult<EthTransactionJsonResult> GetTransactions(string address, ulong? fromBlock = null, ulong? toBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
     }
 }

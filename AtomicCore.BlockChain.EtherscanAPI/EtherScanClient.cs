@@ -106,6 +106,28 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 列表解析
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private EtherscanListResult<T> ListParse<T>(string resp)
+            where T : class, new()
+        {
+            EtherscanListResult<T> jsonResult;
+            try
+            {
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanListResult<T>>(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return jsonResult;
+        }
+
         #endregion
 
         #region IEtherScanClient Methods
@@ -139,7 +161,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="page">当前页码</param>
         /// <param name="limit">每页多少条数据</param>
         /// <returns></returns>
-        public EtherscanJsonResult<EthTransactionJsonResult> GetTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000)
+        public EtherscanListResult<EthTransactionJsonResult> GetTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000)
         {
             //拼接URL
             string url = this.CreateRestUrl("account", "txlist");
@@ -158,10 +180,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 urlBuilder.AppendFormat("&offset={0}", limit);
 
             //请求API
-            string resp = this.RestGet(url);
+            string resp = this.RestGet(urlBuilder.ToString());
 
             //解析JSON
-            EtherscanJsonResult<EthTransactionJsonResult> jsonResult = JsonParse<EthTransactionJsonResult>(resp);
+            EtherscanListResult<EthTransactionJsonResult> jsonResult = ListParse<EthTransactionJsonResult>(resp);
 
             return jsonResult;
         }

@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Numerics;
 
 namespace AtomicCore.BlockChain.EtherscanAPI
 {
@@ -10,8 +12,8 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <summary>
         /// 是否正常
         /// </summary>
-        [JsonProperty("isError")]
-        public int IsError { get; set; }
+        [JsonProperty("isError"),JsonConverter(typeof(BizStringIntToBoolJsonConverter))]
+        public bool IsError { get; set; }
 
         /// <summary>
         /// 交易HASH
@@ -32,28 +34,28 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         public string To { get; set; }
 
         /// <summary>
-        /// 金额
+        /// 交易额度,以太坊单位为WEI,代币单位为deciamls约定
         /// </summary>
         [JsonProperty("value")]
-        public decimal Value { get; set; }
+        public BigInteger Value { get; set; }
 
         /// <summary>
         /// 燃气价
         /// </summary>
         [JsonProperty("gasPrice")]
-        public int GasPrice { get; set; }
+        public BigInteger GasPrice { get; set; }
 
         /// <summary>
         /// 燃气量
         /// </summary>
         [JsonProperty("gas")]
-        public int Gas { get; set; }
+        public BigInteger Gas { get; set; }
 
         /// <summary>
         /// 已使用燃料量
         /// </summary>
         [JsonProperty("gasUsed")]
-        public int GasUsed { get; set; }
+        public BigInteger GasUsed { get; set; }
 
         /// <summary>
         /// 交易拓展数据
@@ -70,8 +72,8 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <summary>
         /// 交易确认状态
         /// </summary>
-        [JsonProperty("txreceipt_status")]
-        public int TxReceiptStatus { get; set; }
+        [JsonProperty("txreceipt_status"), JsonConverter(typeof(BizStringIntToBoolJsonConverter))]
+        public bool TxReceiptStatus { get; set; }
 
         /// <summary>
         ///  交易所在区块的索引位
@@ -94,13 +96,13 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <summary>
         /// 区块高度
         /// </summary>
-        [JsonProperty("blockNumber")]
-        public string BlockNumber { get; set; }
+        [JsonProperty("blockNumber"),JsonConverter(typeof(BizStringToULongJsonConverter))]
+        public ulong BlockNumber { get; set; }
 
         /// <summary>
-        /// 时间戳
+        /// 时间戳(1970-01-01 UTC)
         /// </summary>
-        [JsonProperty("timeStamp")]
-        public string TimeStamp { get; set; }
+        [JsonProperty("timeStamp"), JsonConverter(typeof(BizTimestampJsonConverter))]
+        public DateTime TimeStamp { get; set; }
     }
 }

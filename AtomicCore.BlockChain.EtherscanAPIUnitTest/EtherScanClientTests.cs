@@ -20,5 +20,13 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
 
             Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
         }
+
+        [TestMethod()]
+        public void GetTransactionsTest()
+        {
+            EtherscanListResult<EthTransactionJsonResult> result = this._client.GetTransactions("0xcF62baF1237124d11740D4c89eF088C501FA102A");
+
+            Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
+        }
     }
 }

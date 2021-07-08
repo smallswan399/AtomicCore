@@ -1,19 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
-    /// Etherscan列表列表结果集
+    /// Etherscan的统一返回单个实体对象结果集
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class EtherscanListResult<T> : EtherscanResultBase
+    public sealed class EtherscanSingleResult<T> : EtherscanResultBase
         where T : class, new()
     {
         /// <summary>
-        /// 列表结果
+        /// 数据结果
         /// </summary>
         [JsonProperty("result")]
-        public List<T> Result { get; set; }
+        public T Result { get; set; }
     }
 }

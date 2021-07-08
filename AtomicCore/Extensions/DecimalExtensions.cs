@@ -21,9 +21,7 @@ namespace AtomicCore
             {
                 format.Append('.');
                 for (int i = 0; i < digit; i++)
-                {
                     format.Append('#');
-                }
             }
 
             return value.ToString(format.ToString());

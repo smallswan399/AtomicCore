@@ -3,11 +3,9 @@
 namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
-    /// Etherscan的统一返回结果集
+    /// Etherscan Result Base
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public sealed class EtherscanJsonResult<T>
-        where T : class, new()
+    public abstract class EtherscanResultBase
     {
         /// <summary>
         /// 消息状态(1 true)
@@ -20,11 +18,5 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// </summary>
         [JsonProperty("message")]
         public string Message { get; set; }
-
-        /// <summary>
-        /// 数据结果
-        /// </summary>
-        [JsonProperty("result")]
-        public T Result { get; set; }
     }
 }

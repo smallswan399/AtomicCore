@@ -24,6 +24,16 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         private const string c_apiKeyTemp = "&apikey={0}";
 
         /// <summary>
+        /// 标记为最后一个TAG,查询余额等请求会用到该参数
+        /// </summary>
+        private const string c_latestTag = "&tag=latest";
+
+        /// <summary>
+        /// 追加合约地址参数
+        /// </summary>
+        private const string c_contractAddressTemp = "&contractaddress={0}";
+
+        /// <summary>
         /// API KEY
         /// </summary>
         private readonly string _apiKey;
@@ -85,18 +95,18 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         }
 
         /// <summary>
-        /// JSON解析
+        /// JSON解析OBJECT
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="resp"></param>
         /// <returns></returns>
-        private EtherscanJsonResult<T> JsonParse<T>(string resp)
+        private T ObjectParse<T>(string resp)
             where T : class, new()
         {
-            EtherscanJsonResult<T> jsonResult;
+            T jsonResult;
             try
             {
-                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanJsonResult<T>>(resp);
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resp);
             }
             catch (Exception ex)
             {
@@ -107,7 +117,29 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         }
 
         /// <summary>
-        /// 列表解析
+        /// JSON解析单模型
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private EtherscanSingleResult<T> SingleParse<T>(string resp)
+            where T : class, new()
+        {
+            EtherscanSingleResult<T> jsonResult;
+            try
+            {
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanSingleResult<T>>(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// JSON解析列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="resp"></param>
@@ -137,7 +169,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// https://api-cn.etherscan.com/api?module=gastracker&action=gasoracle
         /// </summary>
         /// <returns></returns>
-        public EtherscanJsonResult<EthGasOracleJsonResult> GetGasOracle()
+        public EtherscanSingleResult<EthGasOracleJsonResult> GetGasOracle()
         {
             //拼接URL
             string url = this.CreateRestUrl("gastracker", "gasoracle");
@@ -146,9 +178,54 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             string resp = this.RestGet(url);
 
             //解析JSON
-            EtherscanJsonResult<EthGasOracleJsonResult> jsonResult = JsonParse<EthGasOracleJsonResult>(resp);
+            EtherscanSingleResult<EthGasOracleJsonResult> jsonResult = SingleParse<EthGasOracleJsonResult>(resp);
 
             return jsonResult;
+        }
+
+        /// <summary>
+        /// 获取地址余额
+        /// </summary>
+        /// <param name="address">钱包地址</param>
+        /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
+        /// <param name="contractDecimals">合约代码小数位</param>
+        /// <returns></returns>
+        public decimal GetBalance(string address, string contractAddress = null, int contractDecimals = 0)
+        {
+            //基础判断
+            if (string.IsNullOrEmpty(address))
+                return decimal.Zero;
+
+            //URL拼接
+            StringBuilder urlBuilder;
+            if (string.IsNullOrEmpty(contractAddress))
+                urlBuilder = new StringBuilder(this.CreateRestUrl("account", "balance"));
+            else
+            {
+                urlBuilder = new StringBuilder(this.CreateRestUrl("account", "tokenbalance"));
+                urlBuilder.AppendFormat(c_contractAddressTemp, contractAddress);
+            }
+            urlBuilder.Append(c_latestTag);
+
+            //请求API
+            string resp = this.RestGet(urlBuilder.ToString());
+
+            //解析JSON
+            EthTokenBalanceJsonResult jsonResult = ObjectParse<EthTokenBalanceJsonResult>(resp);
+
+            //定义返回值
+            decimal balance = decimal.Zero;
+            if (string.IsNullOrEmpty(contractAddress))
+                balance = Nethereum.Util.UnitConversion.Convert.FromWei(jsonResult.Result);
+            else
+            {
+                if (contractDecimals > 0)
+                    balance = Nethereum.Util.UnitConversion.Convert.FromWei(jsonResult.Result, contractDecimals);
+                else
+                    balance = (decimal)jsonResult.Result;
+            }
+
+            return balance;
         }
 
         /// <summary>
@@ -187,6 +264,8 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
             return jsonResult;
         }
+
+
 
         #endregion
     }

@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         [TestMethod()]
         public void GetGasOracleTest()
         {
-            EtherscanJsonResult<EthGasOracleJsonResult> result = this._client.GetGasOracle();
+            EtherscanSingleResult<EthGasOracleJsonResult> result = this._client.GetGasOracle();
 
             Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
         }

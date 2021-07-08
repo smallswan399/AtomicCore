@@ -11,7 +11,16 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// 获取网络手续费（三档）
         /// </summary>
         /// <returns></returns>
-        EtherscanJsonResult<EthGasOracleJsonResult> GetGasOracle();
+        EtherscanSingleResult<EthGasOracleJsonResult> GetGasOracle();
+
+        /// <summary>
+        /// 获取地址余额
+        /// </summary>
+        /// <param name="address">钱包地址</param>
+        /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
+        /// <param name="contractDecimals">合约代码小数位</param>
+        /// <returns></returns>
+        decimal GetBalance(string address, string contractAddress = null, int contractDecimals = 0);
 
         /// <summary>
         /// 获取交易列表（根据地址）

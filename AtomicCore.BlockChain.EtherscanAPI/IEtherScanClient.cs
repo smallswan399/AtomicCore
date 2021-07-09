@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AtomicCore.BlockChain.EtherscanAPI
+﻿namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
     /// IEtherScanClient interface definition
@@ -46,10 +44,17 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <returns></returns>
         EtherscanListResult<EthInternalTransactionJsonResult> GetInternalTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
 
-
-
-
-
-
+        /// <summary>
+        /// 获取指定地址的ERC20交易
+        /// </summary>
+        /// <param name="address">钱包地址</param>
+        /// <param name="contract">合约地址,若不传则查询所有与该地址有关系的合约交易</param>
+        /// <param name="startBlock">起始区块</param>
+        /// <param name="endBlock">结束区块</param>
+        /// <param name="sort">排序规则</param>
+        /// <param name="page">当前页码</param>
+        /// <param name="limit">每页容量</param>
+        /// <returns></returns>
+        EtherscanListResult<EthErc20TransactionJsonResult> GetERC20Transactions(string address, string contract = null, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
     }
 }

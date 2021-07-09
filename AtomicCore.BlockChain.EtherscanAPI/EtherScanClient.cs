@@ -15,9 +15,34 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         #region Variables
 
         /// <summary>
-        /// 基础URL模版
+        /// eth
         /// </summary>
-        private const string c_baseUrl = "https://api.etherscan.io";
+        public const string c_eth_main = "https://api.etherscan.io";
+
+        /// <summary>
+        /// eth-cn代理
+        /// </summary>
+        public const string c_eth_cn = "https://api-cn.etherscan.com";
+
+        /// <summary>
+        /// ropsten
+        /// </summary>
+        public const string c_eth_ropsten = "https://api-ropsten.etherscan.io";
+
+        /// <summary>
+        /// kovan
+        /// </summary>
+        public const string c_eth_kovan = "https://api-kovan.etherscan.io";
+
+        /// <summary>
+        /// rinkeby
+        /// </summary>
+        public const string c_eth_rinkeby = "https://api-rinkeby.etherscan.io";
+
+        /// <summary>
+        /// goerli
+        /// </summary>
+        public const string c_eth_goerli = "https://api-goerli.etherscan.io";
 
         /// <summary>
         /// ApiKey Temp Append To End,eg => apikey={0}
@@ -44,6 +69,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// </summary>
         private readonly string _apiKey;
 
+        /// <summary>
+        /// base url
+        /// </summary>
+        private readonly string _baseUrl;
+
         #endregion
 
         #region Constructor
@@ -52,9 +82,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// 构造函数
         /// </summary>
         /// <param name="apiKey"></param>
-        public EtherScanClient(string apiKey)
+        public EtherScanClient(string apiKey, string baseUrl = c_eth_cn)
         {
             this._apiKey = apiKey;
+            this._baseUrl = baseUrl;
         }
 
         #endregion
@@ -71,7 +102,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         {
             return string.Format(
                 "{0}/api?module={1}&action={2}{3}",
-                c_baseUrl,
+                this._baseUrl,
                 module,
                 action,
                 string.IsNullOrEmpty(this._apiKey) ?

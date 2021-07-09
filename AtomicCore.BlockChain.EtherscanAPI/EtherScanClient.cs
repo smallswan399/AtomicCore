@@ -308,6 +308,43 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 获取指定地址的内部交易
+        /// </summary>
+        /// <param name="address">指定地址的内部交易,一般为合约地址</param>
+        /// <param name="startBlock">起始区块</param>
+        /// <param name="endBlock">结束区块</param>
+        /// <param name="sort">排序规则</param>
+        /// <param name="page">当前页码</param>
+        /// <param name="limit">每页容量</param>
+        /// <returns></returns>
+        public EtherscanListResult<EthInternalTransactionJsonResult> GetInternalTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000)
+        {
+            //拼接URL
+            string url = this.CreateRestUrl("account", "txlistinternal");
+
+            //请求参数拼接
+            StringBuilder urlBuilder = new StringBuilder(url);
+            urlBuilder.AppendFormat("&address={0}", address);
+            urlBuilder.AppendFormat("&sort={0}", sort.ToString());
+            if (null != startBlock && startBlock > 0)
+                urlBuilder.AppendFormat("&startblock={0}", startBlock);
+            if (null != endBlock && endBlock > 0)
+                urlBuilder.AppendFormat("&endblock={0}", endBlock);
+            if (null != page && page > 0)
+                urlBuilder.AppendFormat("&page={0}", page);
+            if (null != limit && limit > 0)
+                urlBuilder.AppendFormat("&offset={0}", limit);
+
+            //请求API
+            string resp = this.RestGet(urlBuilder.ToString());
+
+            //解析JSON
+            EtherscanListResult<EthInternalTransactionJsonResult> jsonResult = ListParse<EthInternalTransactionJsonResult>(resp);
+
+            return jsonResult;
+        }
+
 
 
         #endregion

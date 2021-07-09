@@ -26,12 +26,30 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// 获取交易列表（根据地址）
         /// </summary>
         /// <param name="address">地址</param>
-        /// <param name="fromBlock">起始区块</param>
-        /// <param name="toBlock">结束区块</param>
+        /// <param name="startBlock">起始区块</param>
+        /// <param name="endBlock">结束区块</param>
         /// <param name="sort">排序规则</param>
         /// <param name="page">当前页码</param>
         /// <param name="limit">每页容量</param>
         /// <returns></returns>
-        EtherscanListResult<EthTransactionJsonResult> GetTransactions(string address, ulong? fromBlock = null, ulong? toBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
+        EtherscanListResult<EthTransactionJsonResult> GetTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
+
+        /// <summary>
+        /// 获取指定地址的内部交易
+        /// </summary>
+        /// <param name="address">指定地址的内部交易,一般为合约地址</param>
+        /// <param name="startBlock">起始区块</param>
+        /// <param name="endBlock">结束区块</param>
+        /// <param name="sort">排序规则</param>
+        /// <param name="page">当前页码</param>
+        /// <param name="limit">每页容量</param>
+        /// <returns></returns>
+        EtherscanListResult<EthInternalTransactionJsonResult> GetInternalTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
+
+
+
+
+
+
     }
 }

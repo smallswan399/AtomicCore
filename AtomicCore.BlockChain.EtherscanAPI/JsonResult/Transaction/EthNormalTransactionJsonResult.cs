@@ -8,6 +8,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
     public class EthNormalTransactionJsonResult : EthTransactionJsonResult
     {
         /// <summary>
+        /// 地址Nonce
+        /// </summary>
+        [JsonProperty("nonce")]
+        public int Nonce { get; set; }
+
+        /// <summary>
         ///  交易所在区块的索引位
         /// </summary>
         [JsonProperty("transactionIndex")]

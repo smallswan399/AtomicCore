@@ -76,12 +76,6 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         public bool TxReceiptStatus { get; set; }
 
         /// <summary>
-        /// 地址Nonce
-        /// </summary>
-        [JsonProperty("nonce")]
-        public int Nonce { get; set; }
-
-        /// <summary>
         /// 区块高度
         /// </summary>
         [JsonProperty("blockNumber"), JsonConverter(typeof(BizStringToULongJsonConverter))]

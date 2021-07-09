@@ -5,14 +5,14 @@ using System.Numerics;
 namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
-    /// 交易信息JSON结果集
+    /// ETH交易基础抽象JSON结果集
     /// </summary>
-    public class EthTransactionJsonResult
+    public abstract class EthTransactionJsonResult
     {
         /// <summary>
         /// 是否正常
         /// </summary>
-        [JsonProperty("isError"),JsonConverter(typeof(BizStringIntToBoolJsonConverter))]
+        [JsonProperty("isError"), JsonConverter(typeof(BizStringIntToBoolJsonConverter))]
         public bool IsError { get; set; }
 
         /// <summary>
@@ -76,27 +76,15 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         public bool TxReceiptStatus { get; set; }
 
         /// <summary>
-        ///  交易所在区块的索引位
-        /// </summary>
-        [JsonProperty("transactionIndex")]
-        public int TransactionIndex { get; set; }
-
-        /// <summary>
         /// 地址Nonce
         /// </summary>
         [JsonProperty("nonce")]
         public int Nonce { get; set; }
 
         /// <summary>
-        /// 区块哈希
-        /// </summary>
-        [JsonProperty("blockHash")]
-        public string BlockHash { get; set; }
-
-        /// <summary>
         /// 区块高度
         /// </summary>
-        [JsonProperty("blockNumber"),JsonConverter(typeof(BizStringToULongJsonConverter))]
+        [JsonProperty("blockNumber"), JsonConverter(typeof(BizStringToULongJsonConverter))]
         public ulong BlockNumber { get; set; }
 
         /// <summary>

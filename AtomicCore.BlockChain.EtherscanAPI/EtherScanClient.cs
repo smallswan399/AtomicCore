@@ -281,7 +281,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="page">当前页码</param>
         /// <param name="limit">每页多少条数据</param>
         /// <returns></returns>
-        public EtherscanListResult<EthTransactionJsonResult> GetTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000)
+        public EtherscanListResult<EthNormalTransactionJsonResult> GetNormalTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000)
         {
             //拼接URL
             string url = this.CreateRestUrl("account", "txlist");
@@ -303,7 +303,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             string resp = this.RestGet(urlBuilder.ToString());
 
             //解析JSON
-            EtherscanListResult<EthTransactionJsonResult> jsonResult = ListParse<EthTransactionJsonResult>(resp);
+            EtherscanListResult<EthNormalTransactionJsonResult> jsonResult = ListParse<EthNormalTransactionJsonResult>(resp);
 
             return jsonResult;
         }

@@ -32,7 +32,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="page">当前页码</param>
         /// <param name="limit">每页容量</param>
         /// <returns></returns>
-        EtherscanListResult<EthTransactionJsonResult> GetTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
+        EtherscanListResult<EthNormalTransactionJsonResult> GetNormalTransactions(string address, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
 
         /// <summary>
         /// 获取指定地址的内部交易

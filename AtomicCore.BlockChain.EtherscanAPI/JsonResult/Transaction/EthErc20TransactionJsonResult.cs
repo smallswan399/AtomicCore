@@ -23,6 +23,6 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// 合约代币小数位
         /// </summary>
         [JsonProperty("tokenDecimal")]
-        public string TokenDecimal { get; set; }
+        public int TokenDecimal { get; set; }
     }
 }

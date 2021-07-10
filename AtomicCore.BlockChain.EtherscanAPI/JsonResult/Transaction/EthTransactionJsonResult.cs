@@ -82,9 +82,9 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         public ulong BlockNumber { get; set; }
 
         /// <summary>
-        /// 时间戳(1970-01-01 UTC)
+        /// 时间戳(1970-01-01 UTC) => 区块出块UTC时间
         /// </summary>
         [JsonProperty("timeStamp"), JsonConverter(typeof(BizTimestampToDateTimeJsonConverter))]
-        public DateTime TimeStamp { get; set; }
+        public DateTime BlockTime { get; set; }
     }
 }

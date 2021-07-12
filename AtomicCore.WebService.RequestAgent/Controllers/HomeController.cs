@@ -4,6 +4,7 @@ namespace AtomicCore.WebService.RequestAgent.Controllers
 {
     /// <summary>
     /// 起始控制器
+    /// https://www.coder.work/article/446141
     /// </summary>
     public class HomeController : Controller
     {

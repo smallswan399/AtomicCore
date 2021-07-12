@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace AtomicCore.IOStorage.StoragePort
+namespace AtomicCore.WebService.RequestAgent
 {
     public class Program
     {

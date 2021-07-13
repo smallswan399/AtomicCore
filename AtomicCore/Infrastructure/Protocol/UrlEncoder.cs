@@ -9,6 +9,8 @@ namespace AtomicCore
     /// </summary>
     public static class UrlEncoder
     {
+        #region Public Methods
+
         /// <summary>
         /// Url Encoder编码
         /// </summary>
@@ -105,6 +107,10 @@ namespace AtomicCore
                 ? (byte[])encoded.Clone()
                 : encoded;
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Url Encoder编码
@@ -262,6 +268,13 @@ namespace AtomicCore
             return c >= CharToHexLookup.Length ? 0xFF : CharToHexLookup[c];
         }
 
+        #endregion
+
+        #region Child Class
+
+        /// <summary>
+        /// UrlDecoder
+        /// </summary>
         private sealed class UrlDecoder
         {
             private readonly int _bufferSize;
@@ -330,6 +343,9 @@ namespace AtomicCore
             }
         }
 
+        /// <summary>
+        /// Utf16StringValidator
+        /// </summary>
         private static class Utf16StringValidator
         {
             private const char UnicodeReplacementChar = '\uFFFD';
@@ -391,5 +407,7 @@ namespace AtomicCore
                 return new string(chars);
             }
         }
+
+        #endregion
     }
 }

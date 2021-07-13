@@ -14,6 +14,16 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         private IEtherScanClient _client = new EtherScanClient("N4KR7R89K78AWKPBZY6WD27DDTTDB8YJ8W");
 
         [TestMethod()]
+        public void UseWebAgent()
+        {
+            IEtherScanClient _client = new EtherScanClient("N4KR7R89K78AWKPBZY6WD27DDTTDB8YJ8W", EtherScanClient.c_eth_goerli, "http://129.226.189.12/Remote/Get?url={0}");
+
+            var result = _client.GetBalance("0x29aAe16abfDC4C6F119E86D09ab8603D491c5d5F");
+
+            Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
         public void GetGasOracleTest()
         {
             EtherscanSingleResult<EthGasOracleJsonResult> result = this._client.GetGasOracle();

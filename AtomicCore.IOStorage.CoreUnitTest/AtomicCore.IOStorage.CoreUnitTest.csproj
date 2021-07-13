@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AtomicCore.IOStorage.Core\AtomicCore.IOStorage.Core.csproj" />
+    <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>
 
 </Project>

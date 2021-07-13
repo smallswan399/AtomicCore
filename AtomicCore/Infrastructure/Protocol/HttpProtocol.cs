@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace AtomicCore
@@ -105,7 +103,7 @@ namespace AtomicCore
             if (string.IsNullOrEmpty(data))
                 get_url = url;
             else
-                get_url = string.Format("{0}?{1}", url, UrlEnconde(data));
+                get_url = string.Format("{0}?{1}", url, UrlEncoder.UrlEncode(data, chast));
 
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 SetCertificateValidationCallBack();//HTTPS证书验证
@@ -228,119 +226,6 @@ namespace AtomicCore
         {
             return true;
         }
-
-        #endregion
-
-        #region URL Enconde
-
-        /// <summary>
-        /// Url参数编码
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static string UrlEnconde(string data)
-        {
-            StringBuilder queryBuilder = new StringBuilder();
-            foreach (var param in data.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                string[] kv_arr = param.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-
-                queryBuilder.AppendFormat("{0}={1}&", kv_arr.First(), UrlEncode(kv_arr.Last()));
-            }
-            if (queryBuilder.Length > 1)
-                queryBuilder.Remove(queryBuilder.Length - 1, 1);
-
-            return queryBuilder.ToString();
-        }
-
-        /// <summary>
-        /// URL编码
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static string UrlEncode(string str, Encoding e = null)
-        {
-            if (null == e)
-                e = Encoding.UTF8;
-
-            byte[] bytes = e.GetBytes(str);
-            byte[] encodedBytes = UrlEncodeNonAscii(bytes, 0, bytes.Length);
-            return Encoding.ASCII.GetString(encodedBytes);
-        }
-
-        /// <summary>
-        /// URL Encode NonAscii
-        /// </summary>
-        /// <param name="bytes"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        private static byte[] UrlEncodeNonAscii(byte[] bytes, int offset, int count)
-        {
-            int cNonAscii = 0;
-
-            // count them first
-            for (int i = 0; i < count; i++)
-            {
-                if (IsNonAsciiByte(bytes[offset + i]))
-                {
-                    cNonAscii++;
-                }
-            }
-
-            // nothing to expand?
-            if (cNonAscii == 0)
-            {
-                return bytes;
-            }
-
-            // expand not 'safe' characters into %XX, spaces to +s
-            byte[] expandedBytes = new byte[count + cNonAscii * 2];
-            int pos = 0;
-
-            for (int i = 0; i < count; i++)
-            {
-                byte b = bytes[offset + i];
-
-                if (IsNonAsciiByte(b))
-                {
-                    expandedBytes[pos++] = (byte)'%';
-                    expandedBytes[pos++] = (byte)ToCharLower(b >> 4);
-                    expandedBytes[pos++] = (byte)ToCharLower(b);
-                }
-                else
-                {
-                    expandedBytes[pos++] = b;
-                }
-            }
-
-            return expandedBytes;
-        }
-
-        /// <summary>
-        /// Char转小写
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static char ToCharLower(int value)
-        {
-            value &= 0xF;
-            value += '0';
-
-            if (value > '9')
-                value += ('a' - ('9' + 1));
-
-            return (char)value;
-        }
-
-        /// <summary>
-        /// 判断是否包含Ascii Byte
-        /// </summary>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        private static bool IsNonAsciiByte(byte b) => b >= 0x7F || b < 0x20;
 
         #endregion
 

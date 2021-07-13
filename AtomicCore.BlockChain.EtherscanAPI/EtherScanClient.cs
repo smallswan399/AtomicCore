@@ -129,7 +129,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 if (string.IsNullOrEmpty(this._agentGetTmp))
                     resp = HttpProtocol.HttpGet(url);
                 else
-                    resp = HttpProtocol.HttpGet(string.Format(this._agentGetTmp, HttpProtocol.UrlEnconde(url)));
+                {
+                    string encodeUrl = UrlEncoder.UrlEncode(url);
+                    string remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
+
+                    resp = HttpProtocol.HttpGet(remoteUrl);
+                }
             }
             catch (Exception ex)
             {

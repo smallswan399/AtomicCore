@@ -142,26 +142,6 @@ namespace AtomicCore
         }
 
         /// <summary>
-        /// 图片ContentType
-        /// </summary>
-        private static Dictionary<string, string> s_imgContentTypeDics = new Dictionary<string, string>()
-        {
-            {".fax"," image/fax " },
-            {".gif","image/gif" },
-            {".ico","image/x-icon" },
-            {".jfif" ,"image/jpeg"},
-            {".jpe","image/jpeg" },
-            { ".jpeg","image/jpeg"},
-            { ".jpg","image/jpg"},
-            { ".net","image/pnetvue"},
-            { ".png","image/png"},
-            {".rp","image/vnd.rn-realpix" },
-            {".tif","image/tiff" },
-            { ".tiff","image/tiff"},
-            {".wbmp"," image/vnd.wap.wbmp " }
-        };
-
-        /// <summary>
         /// 下载图片流至内存缓冲字节数组中
         /// </summary>
         /// <param name="url"></param>
@@ -222,27 +202,7 @@ namespace AtomicCore
 
         #endregion
 
-        #region Private Methods
-
-        /// <summary>
-        /// Url参数编码
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private static string UrlEnconde(string data)
-        {
-            StringBuilder queryBuilder = new StringBuilder();
-            foreach (var param in data.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                string[] kv_arr = param.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-
-                queryBuilder.AppendFormat("{0}={1}&", kv_arr.First(), UrlEncode(kv_arr.Last()));
-            }
-            if (queryBuilder.Length > 1)
-                queryBuilder.Remove(queryBuilder.Length - 1, 1);
-
-            return queryBuilder.ToString();
-        }
+        #region SSL Certificate Validatrion
 
         /// <summary>
         /// 设置服务器证书验证回调
@@ -269,7 +229,37 @@ namespace AtomicCore
             return true;
         }
 
-        private static string UrlEncode(string str, Encoding e = null)
+        #endregion
+
+        #region URL Enconde
+
+        /// <summary>
+        /// Url参数编码
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string UrlEnconde(string data)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            foreach (var param in data.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] kv_arr = param.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+
+                queryBuilder.AppendFormat("{0}={1}&", kv_arr.First(), UrlEncode(kv_arr.Last()));
+            }
+            if (queryBuilder.Length > 1)
+                queryBuilder.Remove(queryBuilder.Length - 1, 1);
+
+            return queryBuilder.ToString();
+        }
+
+        /// <summary>
+        /// URL编码
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static string UrlEncode(string str, Encoding e = null)
         {
             if (null == e)
                 e = Encoding.UTF8;
@@ -334,7 +324,7 @@ namespace AtomicCore
         /// <param name="value"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static char ToCharLower(int value)
+        private static char ToCharLower(int value)
         {
             value &= 0xF;
             value += '0';
@@ -351,6 +341,30 @@ namespace AtomicCore
         /// <param name="b"></param>
         /// <returns></returns>
         private static bool IsNonAsciiByte(byte b) => b >= 0x7F || b < 0x20;
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// 图片ContentType
+        /// </summary>
+        private static Dictionary<string, string> s_imgContentTypeDics = new Dictionary<string, string>()
+        {
+            {".fax"," image/fax " },
+            {".gif","image/gif" },
+            {".ico","image/x-icon" },
+            {".jfif" ,"image/jpeg"},
+            {".jpe","image/jpeg" },
+            { ".jpeg","image/jpeg"},
+            { ".jpg","image/jpg"},
+            { ".net","image/pnetvue"},
+            { ".png","image/png"},
+            {".rp","image/vnd.rn-realpix" },
+            {".tif","image/tiff" },
+            { ".tiff","image/tiff"},
+            {".wbmp"," image/vnd.wap.wbmp " }
+        };
 
         #endregion
     }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.EtherscanAPI
 {
@@ -74,6 +71,11 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// </summary>
         private readonly string _baseUrl;
 
+        /// <summary>
+        /// agent url tmp
+        /// </summary>
+        private readonly string _agentGetTmp;
+
         #endregion
 
         #region Constructor
@@ -81,11 +83,14 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="apiKey"></param>
-        public EtherScanClient(string apiKey, string baseUrl = c_eth_cn)
+        /// <param name="apiKey">API-KEY</param>
+        /// <param name="baseUrl">基础URL</param>
+        /// <param name="agentGetTmp">代理模版</param>
+        public EtherScanClient(string apiKey, string baseUrl = c_eth_cn, string agentGetTmp = null)
         {
             this._apiKey = apiKey;
             this._baseUrl = baseUrl;
+            this._agentGetTmp = agentGetTmp;
         }
 
         #endregion
@@ -121,7 +126,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             string resp;
             try
             {
-                resp = HttpProtocol.HttpGet(url);
+                if (string.IsNullOrEmpty(this._agentGetTmp))
+                    resp = HttpProtocol.HttpGet(url);
+                else
+                    resp = HttpProtocol.HttpGet(string.Format(this._agentGetTmp, HttpProtocol.UrlEnconde(url)));
             }
             catch (Exception ex)
             {

@@ -32,6 +32,15 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         }
 
         [TestMethod()]
+        public void GoerliTransactionTest()
+        {
+            IEtherScanClient _client = new EtherScanClient("N4KR7R89K78AWKPBZY6WD27DDTTDB8YJ8W", EtherScanClient.c_eth_goerli);
+            var result = _client.GetNormalTransactions("0x29aAe16abfDC4C6F119E86D09ab8603D491c5d5F");
+
+            Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
         public void GetBalanceTest()
         {
             EtherscanStructResult<decimal> result = this._client.GetBalance("0xcF62baF1237124d11740D4c89eF088C501FA102A");

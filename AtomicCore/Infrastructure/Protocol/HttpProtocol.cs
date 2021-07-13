@@ -69,9 +69,7 @@ namespace AtomicCore
             {
                 response = (HttpWebResponse)request.GetResponse();
                 using (StreamReader sr = new StreamReader(response.GetResponseStream(), chast))
-                {
                     respText = sr.ReadToEnd();
-                }
             }
             catch (Exception ex)
             {
@@ -122,9 +120,7 @@ namespace AtomicCore
             {
                 response = (HttpWebResponse)request.GetResponse();
                 using (StreamReader sr = new StreamReader(response.GetResponseStream(), chast))
-                {
                     respText = sr.ReadToEnd();
-                }
             }
             catch (Exception ex)
             {
@@ -178,9 +174,7 @@ namespace AtomicCore
                 using (System.IO.MemoryStream ms = new MemoryStream())
                 {
                     using (System.Drawing.Image img = System.Drawing.Image.FromStream(response.GetResponseStream()))
-                    {
                         img.Save(ms, img.RawFormat);
-                    }
 
                     bys = ms.ToArray();
                 }

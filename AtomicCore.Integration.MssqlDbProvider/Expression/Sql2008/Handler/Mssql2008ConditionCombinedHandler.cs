@@ -30,12 +30,12 @@ namespace AtomicCore.Integration.MssqlDbProvider
         /// <summary>
         /// 数据字段映射接口
         /// </summary>
-        private IDbMappingHandler _dbMappingHandler = null;
+        private readonly IDbMappingHandler _dbMappingHandler = null;
 
         /// <summary>
         /// 字段前缀(DbSubQuery中使用到了)
         /// </summary>
-        private bool _isFieldWithTableName = false;
+        private readonly bool _isFieldWithTableName = false;
 
         /// <summary>
         /// 构造函数
@@ -78,7 +78,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
         {
             this.ExpressionChains.Push(node);
 
-            Expression expression = null;
+            Expression expression;
             if (node.NodeType == ExpressionType.AndAlso)
             {
                 #region AndAlso解析
@@ -181,14 +181,13 @@ namespace AtomicCore.Integration.MssqlDbProvider
                     expression = base.VisitBinary(node, false);
                 }
                 else
-                {
                     expression = base.VisitBinary(node, false);
-                }
 
                 #endregion
             }
 
             this.ExpressionChains.Pop();
+
             return expression;
         }
 
@@ -214,7 +213,9 @@ namespace AtomicCore.Integration.MssqlDbProvider
                     this.Visit(binaryExp);
 
                     this.ExpressionChains.Pop();
-                    return node.Reduce();//这里直接return即可,因为下面再继续解析也只是解析到表达式的参数级,直接返回更加快速有效
+
+                    //这里直接return即可,因为下面再继续解析也只是解析到表达式的参数级,直接返回更加快速有效
+                    return node.Reduce();
                 }
                 //Query查询（eg : d => d.isdel）
                 else if (exp.NodeType == ExpressionType.Lambda && node.Member.MemberType == MemberTypes.Property && (node.Member as PropertyInfo).PropertyType == typeof(bool))
@@ -225,7 +226,9 @@ namespace AtomicCore.Integration.MssqlDbProvider
                     this.Visit(binaryExp);
 
                     this.ExpressionChains.Pop();
-                    return node.Reduce();//这里直接return即可,因为下面再继续解析也只是解析到表达式的参数级,直接返回更加快速有效
+
+                    //这里直接return即可,因为下面再继续解析也只是解析到表达式的参数级,直接返回更加快速有效
+                    return node.Reduce();
                 }
             }
 
@@ -295,13 +298,10 @@ namespace AtomicCore.Integration.MssqlDbProvider
                         //获取指定的字段
                         MemberExpression sqlin_memberExp = null;
                         if (methodCallExp.Arguments[1].NodeType == ExpressionType.MemberAccess)
-                        {
                             sqlin_memberExp = methodCallExp.Arguments[1] as MemberExpression;
-                        }
                         else if (methodCallExp.Arguments[1].NodeType == ExpressionType.Convert)
                         {
-                            UnaryExpression sqlin_assignExp = methodCallExp.Arguments[1] as UnaryExpression;
-                            if (sqlin_assignExp == null)
+                            if (!(methodCallExp.Arguments[1] is UnaryExpression sqlin_assignExp))
                             {
                                 this._result.AppendError("方法的第一个参数必须为指定的具体实例的参数类型");
                                 return base.VisitMethodCall(methodCallExp, false);
@@ -355,8 +355,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                         }
                         else if (methodCallExp.Arguments[1].NodeType == ExpressionType.Convert)
                         {
-                            UnaryExpression sqlin_assignExp = methodCallExp.Arguments[1] as UnaryExpression;
-                            if (sqlin_assignExp == null)
+                            if (!(methodCallExp.Arguments[1] is UnaryExpression sqlin_assignExp))
                             {
                                 this._result.AppendError("方法的第一个参数必须为指定的具体实例的参数类型");
                                 return base.VisitMethodCall(methodCallExp, false);
@@ -416,8 +415,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                                 Expression itemExp = itemParam.Value;
 
                                 //判断该表达式是否包含参数，采用不同的解析方式
-                                Type modelType = null;
-                                if (ExpressionCalculater.IsExistsParameters(itemExp, out modelType))
+                                if (ExpressionCalculater.IsExistsParameters(itemExp, out Type modelType))
                                 {
                                     #region 如果包含参数，采用包含参数的解析方式进行解析
 
@@ -602,6 +600,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
         {
             Mssql2008ConditionCombinedHandler entity = new Mssql2008ConditionCombinedHandler(dbMappingHandler, isFieldWithTableName);
             entity.Visit(expression);
+
             return entity.Result;
         }
 
@@ -638,6 +637,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 BinaryExpression curExp = exp as BinaryExpression;
                 return curExp.NodeType == ExpressionType.AndAlso || curExp.NodeType == ExpressionType.OrElse;
             }
+
             return false;
         }
 
@@ -676,6 +676,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             {
                 replaceObject = original;
             }
+
             return flag;
         }
 

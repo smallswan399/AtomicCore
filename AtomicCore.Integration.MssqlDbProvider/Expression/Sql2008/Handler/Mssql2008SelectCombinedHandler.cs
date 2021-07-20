@@ -54,9 +54,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             if (bindings.Count() > 0)
             {
                 foreach (var item in bindings)
-                {
                     this._result.AddFieldMember(item.Member);
-                }
 
                 return node.Reduce();
             }
@@ -79,6 +77,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             //执行表达式解析 要被查询的字段
             Mssql2008SelectCombinedHandler entity = new Mssql2008SelectCombinedHandler(dbMappingHandler);
             entity.Visit(exp);
+
             return entity.Result;
         }
 

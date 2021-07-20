@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AtomicCore.DbProvider;
@@ -40,9 +39,8 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 //执行解析
                 Mssql2008ConditionCombinedResult resolver = Mssql2008ConditionCombinedHandler.ExecuteResolver(exp, dbMappingHandler, isFieldWithTableName);
                 if (!resolver.IsAvailable())
-                {
                     result.CopyStatus(resolver);
-                }
+
                 string architectureTemp = resolver.ArchitectureTemp;
                 int architectureParamNumber = resolver.ArchitectureParams.Count();
                 if (architectureParamNumber > 0)
@@ -54,16 +52,14 @@ namespace AtomicCore.Integration.MssqlDbProvider
                         Expression itemExp = paramEnumerator.Current.Value;
 
                         //判断该表达式是否包含参数，采用不同的解析方式
-                        Type modelType = null;
-                        if (ExpressionCalculater.IsExistsParameters(itemExp, out modelType))
+                        if (ExpressionCalculater.IsExistsParameters(itemExp, out _))
                         {
                             #region 如果包含参数，采用包含参数的解析方式进行解析
 
                             Mssql2008ConditionNodeResult cur_node = Mssql2008ConditionNodeHandler.ExecuteResolver(dbMappingHandler, itemExp, isFieldWithTableName);
                             if (!cur_node.IsAvailable())
-                            {
                                 result.CopyStatus(cur_node);
-                            }
+
                             parseList.Add(cur_node.TextValue);
                             result.Parameters.InsertRange(0, cur_node.Parameters);
 
@@ -90,9 +86,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 result.AppendTextScript(architectureTemp);
             }
             else
-            {
                 result.AppendError("Lambda中参数必须为IModel接口实体，返回值必须是bool值");
-            }
 
             return result;
         }

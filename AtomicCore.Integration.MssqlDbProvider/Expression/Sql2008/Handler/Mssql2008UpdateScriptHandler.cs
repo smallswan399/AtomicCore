@@ -11,7 +11,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
     {
         #region Constructors
 
-        private IDbMappingHandler _dbMappingHanlder = null;
+        private readonly IDbMappingHandler _dbMappingHanlder = null;
 
         /// <summary>
         /// 构造函数
@@ -27,7 +27,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
 
         #region Propertys
 
-        private Mssql2008UpdateScriptResult _result = null;
+        private readonly Mssql2008UpdateScriptResult _result = null;
 
         /// <summary>
         /// 解析后的结果集
@@ -54,9 +54,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 //如果包含参数，则需要计算出更新表达式
                 Mssql2008ConditionNodeResult result = Mssql2008ConditionNodeHandler.ExecuteResolver(this._dbMappingHanlder, assignment.Expression, false);
                 if (result.IsAvailable())
-                {
                     this._result.AddFieldMember(assignment.Member, result.TextValue, result.Parameters);
-                }
             }
             else
             {
@@ -68,6 +66,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 MssqlParameterDesc item = new MssqlParameterDesc(paramName, updateValue);
                 this._result.AddFieldMember(assignment.Member, paramText, new List<MssqlParameterDesc>() { item });
             }
+
             return base.VisitMemberAssignment(assignment);
         }
 
@@ -87,6 +86,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             //执行表达式解析 要被查询的字段
             Mssql2008UpdateScriptHandler entity = new Mssql2008UpdateScriptHandler(dbMappingHanlder);
             entity.Visit(exp);
+
             return entity.Result;
         }
 

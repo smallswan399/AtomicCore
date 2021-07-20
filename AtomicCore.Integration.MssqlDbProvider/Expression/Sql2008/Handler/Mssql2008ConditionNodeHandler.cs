@@ -20,7 +20,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
         /// <summary>
         /// 是否在字段前面追加表名
         /// </summary>
-        private bool _isFieldWithTableName = false;
+        private readonly bool _isFieldWithTableName = false;
 
         /// <summary>
         /// 构造函数
@@ -64,10 +64,10 @@ namespace AtomicCore.Integration.MssqlDbProvider
         {
             this.ExpressionChains.Push(node);
 
-            string leftValueText = null;
-            string rightValueText = null;
-            List<MssqlParameterDesc> leftParamsList = null;
-            List<MssqlParameterDesc> rightParamsList = null;
+            string leftValueText;
+            string rightValueText;
+            List<MssqlParameterDesc> leftParamsList;
+            List<MssqlParameterDesc> rightParamsList;
 
             #region 判断左节点是否包含参数
 
@@ -127,37 +127,21 @@ namespace AtomicCore.Integration.MssqlDbProvider
 
             string textFormat = "({0}{1}{2})";
             if (node.NodeType == ExpressionType.Add)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "+", rightValueText));
-            }
             else if (node.NodeType == ExpressionType.Subtract)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "-", rightValueText));
-            }
             else if (node.NodeType == ExpressionType.Multiply)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "*", rightValueText));
-            }
             else if (node.NodeType == ExpressionType.Divide)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "/", rightValueText));
-            }
             else if (node.NodeType == ExpressionType.Modulo)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "%", rightValueText));
-            }
             else if (node.NodeType == ExpressionType.And)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "&", rightValueText));
-            }
             else if (node.NodeType == ExpressionType.Or)
-            {
                 this.Result.AppendText(string.Format(textFormat, leftValueText, "|", rightValueText));
-            }
             else
-            {
                 this.Result.AppendError("暂不支持" + node.NodeType.ToString() + "方法的解析");
-            }
 
             #endregion
 
@@ -169,6 +153,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             #endregion
 
             this.ExpressionChains.Pop();
+
             return node.Reduce();
         }
 
@@ -188,9 +173,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 {
                     string tablePreName = null;
                     if (this._isFieldWithTableName)
-                    {
                         tablePreName = this.DBMapperProvider.GetDbTableName((node.Expression as ParameterExpression).Type);
-                    }
 
                     this.Result.AppendText(MssqlGrammarRule.GenerateFieldWrapped(columnAttr.DbColumnName, tablePreName));
                 }
@@ -215,6 +198,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             //构造解析者执行解析
             Mssql2008ConditionNodeHandler entity = new Mssql2008ConditionNodeHandler(dbMappingHandler, isFieldWithTableName);
             entity.Visit(expression);
+
             return entity.Result;
         }
 

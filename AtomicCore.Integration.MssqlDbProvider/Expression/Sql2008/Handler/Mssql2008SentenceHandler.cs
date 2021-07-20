@@ -17,7 +17,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
         private int _max_asNameIndex = 0;
         private int _min_asNameIndex = 0;
 
-        private IDbMappingHandler _dbMappingHandler = null;
+        private readonly IDbMappingHandler _dbMappingHandler = null;
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
 
         #region Propertys
 
-        private Mssql2008SentenceResult _result = null;
+        private readonly Mssql2008SentenceResult _result = null;
 
         /// <summary>
         /// 最终解析的结果
@@ -78,9 +78,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             select_func_lambdaExp = select_unary_temp.Operand as LambdaExpression;
                         }
                         else
-                        {
                             this._result.AppendError("尚未实现直接解析" + select_exp.NodeType.ToString() + "的特例");
-                        }
 
                         //判断之前是否解析成功
                         if (this._result.IsAvailable())
@@ -96,17 +94,14 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 case "Pager":
                     #region Pager
 
-                    IEnumerable<Expression> pager_args = base.VisitExpressionList(methodCallExp.Arguments);//执行该语句开始参数递归解析
+                    //执行该语句开始参数递归解析
+                    IEnumerable<Expression> pager_args = base.VisitExpressionList(methodCallExp.Arguments);
                     int currentPage = (int)ExpressionCalculater.GetValue(pager_args.First());
                     int pageSize = (int)ExpressionCalculater.GetValue(pager_args.Last());
                     if (currentPage <= 0)
-                    {
                         currentPage = 1;
-                    }
                     if (pageSize <= 0)
-                    {
                         pageSize = 20;
-                    }
 
                     //初始化解析容器
                     this._result.SetPageCondition(currentPage, pageSize);
@@ -134,9 +129,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             where_func_lambdaExp = lambdaObject as Expression;
                         }
                         else
-                        {
                             this._result.AppendError("尚未实现直接解析" + where_exp.NodeType.ToString() + "的特例");
-                        }
 
                         //判断之前是否解析成功
                         if (this._result.IsAvailable())
@@ -144,13 +137,9 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             //获取Where条件解析后的条件模版与参数
                             Mssql2008WhereScriptResult result = Mssql2008WhereScriptHandler.ExecuteResolver(where_func_lambdaExp, this._dbMappingHandler, false);
                             if (result.IsAvailable())
-                            {
                                 this._result.SetWhereCondition(result.TextScript, result.Parameters);
-                            }
                             else
-                            {
                                 this._result.CopyStatus(result);
-                            }
                         }
                     }
                     break;
@@ -229,9 +218,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             }
 
                             if (!string.IsNullOrEmpty(tempQuery))
-                            {
                                 this._result.SetGroupCondition(tempQuery);
-                            }
                         }
                     }
                     break;
@@ -240,9 +227,12 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 case "Count":
                     #region Count
 
-                    IEnumerable<Expression> count_args = base.VisitExpressionList(methodCallExp.Arguments);//执行该语句开始参数递归解析
-                    Expression count_exp = count_args.First();//Count表达式
-                    Expression count_alias = count_args.Last();//Count别名
+                    //执行该语句开始参数递归解析
+                    IEnumerable<Expression> count_args = base.VisitExpressionList(methodCallExp.Arguments);
+                    //Count表达式
+                    Expression count_exp = count_args.First();
+                    //Count别名
+                    Expression count_alias = count_args.Last();
 
                     if (count_exp != null)
                     {
@@ -273,15 +263,13 @@ namespace AtomicCore.Integration.MssqlDbProvider
                                 tempQuery = column.DbColumnName;
                             }
                             else if (lambdaExp.Body is ConstantExpression)
-                            {
                                 tempQuery = ExpressionCalculater.GetValue(lambdaExp.Body).ToString();
-                            }
 
                             if (!string.IsNullOrEmpty(tempQuery))
                             {
                                 MssqlSelectField item = new MssqlSelectField();
                                 item.DBFieldAsName = string.IsNullOrEmpty(aliasValue) ? ("count_" + (this._count_asNameIndex++)) : aliasValue;
-                                item.DBSelectFragment = "count(" + tempQuery + ")";
+                                item.DBSelectFragment = "isnull(count(" + tempQuery + "),0)";
                                 this._result.SetSelectField(item);
                             }
                         }
@@ -328,7 +316,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             {
                                 MssqlSelectField item = new MssqlSelectField();
                                 item.DBFieldAsName = string.IsNullOrEmpty(aliasValue) ? ("sum_" + (this._sum_asNameIndex++)) : aliasValue;
-                                item.DBSelectFragment = "sum(" + tempQuery + ")";
+                                item.DBSelectFragment = "isnull(sum(" + tempQuery + "),0)";
                                 this._result.SetSelectField(item);
                             }
                         }
@@ -374,7 +362,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             {
                                 MssqlSelectField item = new MssqlSelectField();
                                 item.DBFieldAsName = string.IsNullOrEmpty(aliasValue) ? ("max_" + (this._max_asNameIndex++)) : aliasValue;
-                                item.DBSelectFragment = "max(" + tempQuery + ")";
+                                item.DBSelectFragment = "isnull(max(" + tempQuery + "),0)";
                                 this._result.SetSelectField(item);
                             }
                         }
@@ -420,7 +408,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             {
                                 MssqlSelectField item = new MssqlSelectField();
                                 item.DBFieldAsName = string.IsNullOrEmpty(aliasValue) ? ("min_" + (this._min_asNameIndex++)) : aliasValue;
-                                item.DBSelectFragment = "min(" + tempQuery + ")";
+                                item.DBSelectFragment = "isnull(min(" + tempQuery + "))";
                                 this._result.SetSelectField(item);
                             }
                         }
@@ -431,6 +419,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                 default:
                     break;
             }
+
             //必须調用父类访问,否则无法继续表达式深度解析
             return base.VisitMethodCall(methodCallExp);
         }
@@ -450,6 +439,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
             //执行表达式解析 要被查询的字段
             Mssql2008SentenceHandler entity = new Mssql2008SentenceHandler(dbMappingHandler);
             entity.Visit(exp);
+
             return entity.Result;
         }
 

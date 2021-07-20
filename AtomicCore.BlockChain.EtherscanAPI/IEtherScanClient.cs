@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.EtherscanAPI
+﻿using System.Numerics;
+
+namespace AtomicCore.BlockChain.EtherscanAPI
 {
     /// <summary>
     /// IEtherScanClient interface definition
@@ -19,6 +21,14 @@
         /// <param name="contractDecimals">合约代码小数位</param>
         /// <returns></returns>
         EtherscanStructResult<decimal> GetBalance(string address, string contractAddress = null, int contractDecimals = 0);
+
+        /// <summary>
+        /// 获取地址余额(真实最小小数位)
+        /// </summary>
+        /// <param name="address">钱包地址</param>
+        /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
+        /// <returns></returns>
+        EtherscanStructResult<BigInteger> GetBalanceRaw(string address, string contractAddress = null);
 
         /// <summary>
         /// 获取交易列表（根据地址）

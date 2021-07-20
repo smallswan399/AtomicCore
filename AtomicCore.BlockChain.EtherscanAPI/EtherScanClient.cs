@@ -256,7 +256,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         }
 
         /// <summary>
-        /// 获取地址余额
+        /// 获取地址余额(若数额超过decimal的最大值会抛出数据异常)
         /// </summary>
         /// <param name="address">钱包地址</param>
         /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
@@ -312,6 +312,53 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 Status = jsonResult.Status,
                 Message = jsonResult.Message,
                 Result = balance
+            };
+        }
+
+        /// <summary>
+        /// 获取地址余额(真实最小小数位)
+        /// </summary>
+        /// <param name="address">钱包地址</param>
+        /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
+        /// <returns></returns>
+        public EtherscanStructResult<BigInteger> GetBalanceRaw(string address, string contractAddress = null)
+        {
+            //基础判断
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException("address");
+
+            //URL拼接
+            StringBuilder urlBuilder;
+            if (string.IsNullOrEmpty(contractAddress))
+                urlBuilder = new StringBuilder(this.CreateRestUrl("account", "balance"));
+            else
+            {
+                urlBuilder = new StringBuilder(this.CreateRestUrl("account", "tokenbalance"));
+                urlBuilder.AppendFormat(c_contractAddressTemp, contractAddress);
+            }
+            urlBuilder.AppendFormat(c_addressTemp, address);
+            urlBuilder.Append(c_latestTag);
+
+            //请求API
+            string resp = this.RestGet(urlBuilder.ToString());
+
+            //解析JSON
+            EtherscanStructResult<BigInteger> jsonResult = StructParse<BigInteger>(resp);
+            if (jsonResult.Status != EtherscanJsonStatus.Success)
+            {
+                return new EtherscanStructResult<BigInteger>
+                {
+                    Status = jsonResult.Status,
+                    Message = jsonResult.Message,
+                    Result = BigInteger.Zero
+                };
+            }
+
+            return new EtherscanStructResult<BigInteger>
+            {
+                Status = jsonResult.Status,
+                Message = jsonResult.Message,
+                Result = jsonResult.Result
             };
         }
 

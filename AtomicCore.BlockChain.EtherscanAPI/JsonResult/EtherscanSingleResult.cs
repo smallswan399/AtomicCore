@@ -7,7 +7,6 @@ namespace AtomicCore.BlockChain.EtherscanAPI
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public sealed class EtherscanSingleResult<T> : EtherscanResultBase
-        where T : class, new()
     {
         /// <summary>
         /// 数据结果

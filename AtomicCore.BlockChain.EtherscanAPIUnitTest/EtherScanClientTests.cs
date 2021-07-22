@@ -43,7 +43,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         [TestMethod()]
         public void GetBalanceTest()
         {
-            EtherscanStructResult<decimal> result = this._client.GetBalance("0xcF62baF1237124d11740D4c89eF088C501FA102A");
+            EtherscanSingleResult<decimal> result = this._client.GetBalance("0xcF62baF1237124d11740D4c89eF088C501FA102A");
 
             Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
 

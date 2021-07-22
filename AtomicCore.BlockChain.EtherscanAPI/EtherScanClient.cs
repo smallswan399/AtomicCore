@@ -167,35 +167,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         }
 
         /// <summary>
-        /// JSON解析结构体
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="resp"></param>
-        /// <returns></returns>
-        private EtherscanStructResult<T> StructParse<T>(string resp)
-            where T : struct
-        {
-            EtherscanStructResult<T> jsonResult;
-            try
-            {
-                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanStructResult<T>>(resp);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return jsonResult;
-        }
-
-        /// <summary>
         /// JSON解析单模型
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="resp"></param>
         /// <returns></returns>
         private EtherscanSingleResult<T> SingleParse<T>(string resp)
-            where T : class, new()
         {
             EtherscanSingleResult<T> jsonResult;
             try
@@ -262,7 +239,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
         /// <param name="contractDecimals">合约代码小数位</param>
         /// <returns></returns>
-        public EtherscanStructResult<decimal> GetBalance(string address, string contractAddress = null, int contractDecimals = 0)
+        public EtherscanSingleResult<decimal> GetBalance(string address, string contractAddress = null, int contractDecimals = 0)
         {
             //基础判断
             if (string.IsNullOrEmpty(address))
@@ -284,10 +261,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             string resp = this.RestGet(urlBuilder.ToString());
 
             //解析JSON
-            EtherscanStructResult<BigInteger> jsonResult = StructParse<BigInteger>(resp);
+            EtherscanSingleResult<BigInteger> jsonResult = SingleParse<BigInteger>(resp);
             if (jsonResult.Status != EtherscanJsonStatus.Success)
             {
-                return new EtherscanStructResult<decimal>
+                return new EtherscanSingleResult<decimal>
                 {
                     Status = jsonResult.Status,
                     Message = jsonResult.Message,
@@ -307,7 +284,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                     balance = (decimal)jsonResult.Result;
             }
 
-            return new EtherscanStructResult<decimal>
+            return new EtherscanSingleResult<decimal>
             {
                 Status = jsonResult.Status,
                 Message = jsonResult.Message,
@@ -321,7 +298,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="address">钱包地址</param>
         /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
         /// <returns></returns>
-        public EtherscanStructResult<BigInteger> GetBalanceRaw(string address, string contractAddress = null)
+        public EtherscanSingleResult<BigInteger> GetBalanceRaw(string address, string contractAddress = null)
         {
             //基础判断
             if (string.IsNullOrEmpty(address))
@@ -343,10 +320,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             string resp = this.RestGet(urlBuilder.ToString());
 
             //解析JSON
-            EtherscanStructResult<BigInteger> jsonResult = StructParse<BigInteger>(resp);
+            EtherscanSingleResult<BigInteger> jsonResult = SingleParse<BigInteger>(resp);
             if (jsonResult.Status != EtherscanJsonStatus.Success)
             {
-                return new EtherscanStructResult<BigInteger>
+                return new EtherscanSingleResult<BigInteger>
                 {
                     Status = jsonResult.Status,
                     Message = jsonResult.Message,
@@ -354,7 +331,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 };
             }
 
-            return new EtherscanStructResult<BigInteger>
+            return new EtherscanSingleResult<BigInteger>
             {
                 Status = jsonResult.Status,
                 Message = jsonResult.Message,
@@ -475,6 +452,21 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
             return jsonResult;
         }
+
+        /// <summary>
+        /// 获取合约ABI接口
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public EtherscanSingleResult<string> GetContractAbi(string address)
+        {
+            //基础判断
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException("address");
+
+            throw new NotImplementedException();
+        }
+
 
         #endregion
     }

@@ -20,7 +20,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
         /// <param name="contractDecimals">合约代码小数位</param>
         /// <returns></returns>
-        EtherscanStructResult<decimal> GetBalance(string address, string contractAddress = null, int contractDecimals = 0);
+        EtherscanSingleResult<decimal> GetBalance(string address, string contractAddress = null, int contractDecimals = 0);
 
         /// <summary>
         /// 获取地址余额(真实最小小数位)
@@ -28,7 +28,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="address">钱包地址</param>
         /// <param name="contractAddress">合约地址,若为空则表示为查询主链行为</param>
         /// <returns></returns>
-        EtherscanStructResult<BigInteger> GetBalanceRaw(string address, string contractAddress = null);
+        EtherscanSingleResult<BigInteger> GetBalanceRaw(string address, string contractAddress = null);
 
         /// <summary>
         /// 获取交易列表（根据地址）
@@ -66,5 +66,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// <param name="limit">每页容量</param>
         /// <returns></returns>
         EtherscanListResult<EthErc20TransactionJsonResult> GetERC20Transactions(string address, string contract = null, ulong? startBlock = null, ulong? endBlock = null, EtherscanSort sort = EtherscanSort.Asc, int? page = 1, int? limit = 1000);
+
+        /// <summary>
+        /// 获取合约ABI编码
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        EtherscanSingleResult<string> GetContractAbi(string address);
     }
 }

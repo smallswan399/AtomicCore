@@ -75,5 +75,13 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
 
             Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
         }
+
+        [TestMethod()]
+        public void GetContractAbiTest()
+        {
+            EtherscanSingleResult<string> result = this._client.GetContractAbi("0xfeffbc959961b6e24cbaf8a91a6ca6abd1c3ffc5");
+
+            Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
+        }
     }
 }

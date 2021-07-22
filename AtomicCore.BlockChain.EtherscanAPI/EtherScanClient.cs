@@ -464,7 +464,17 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException("address");
 
-            throw new NotImplementedException();
+            //拼接URL
+            StringBuilder urlBuilder = new StringBuilder(this.CreateRestUrl("contract", "getabi"));
+            urlBuilder.AppendFormat(c_addressTemp, address);
+
+            //请求API
+            string resp = this.RestGet(urlBuilder.ToString());
+
+            //解析JSON
+            EtherscanSingleResult<string> jsonResult = SingleParse<string>(resp);
+
+            return jsonResult;
         }
 
 

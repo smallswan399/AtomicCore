@@ -9,7 +9,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// TRON SCAN CLIENT
     /// </summary>
-    public class TronScanClient : ITronScanClient
+    public class TronScanClient //: ITronScanClient
     {
     }
 }

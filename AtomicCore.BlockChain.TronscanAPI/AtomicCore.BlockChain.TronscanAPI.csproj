@@ -15,9 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="JsonResult\" />
-    <Folder Include="Infrastructure\" />
-    <Folder Include="Enum\" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>

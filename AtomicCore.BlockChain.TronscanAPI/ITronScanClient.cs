@@ -11,5 +11,9 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// </summary>
     public interface ITronScanClient
     {
+
+        void GetAddressAssets(string address);
+
+        void GetNormalTransactions();
     }
 }

@@ -167,7 +167,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Block Overview
         /// </summary>
         /// <returns></returns>
-        public TronBlockOverviewJsonResult BlockOverview()
+        public TronOverviewJsonResult BlockOverview()
         {
             //拼接URL
             string url = this.CreateRestUrl("system/status");
@@ -176,7 +176,25 @@ namespace AtomicCore.BlockChain.TronscanAPI
             string resp = this.RestGet(url);
 
             //解析JSON
-            TronBlockOverviewJsonResult jsonResult = ObjectParse<TronBlockOverviewJsonResult>(resp);
+            TronOverviewJsonResult jsonResult = ObjectParse<TronOverviewJsonResult>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// Get Last Block
+        /// </summary>
+        /// <returns></returns>
+        public TronBlockJsonResult GetLastBlock()
+        {
+            //拼接URL
+            string url = this.CreateRestUrl("block/latest");
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            TronBlockJsonResult jsonResult = ObjectParse<TronBlockJsonResult>(resp);
 
             return jsonResult;
         }

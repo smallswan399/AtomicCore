@@ -4,13 +4,13 @@ using System;
 namespace AtomicCore.BlockChain.TronscanAPI
 {
     /// <summary>
-    /// Json Value to TronscanJsonStatus
+    /// Tron Boolean Json Converter
     /// </summary>
-    public sealed class BizTronJsonStatusConverter : JsonConverter
+    public sealed class BizTronBitBooleanJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(TronscanJsonStatus);
+            return objectType == typeof(bool);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -18,15 +18,12 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (reader.Value == null)
                 return null;
 
-            if (reader.Value.ToString().Equals("0", StringComparison.OrdinalIgnoreCase))
-                return TronscanJsonStatus.Success;
-            else
-                return TronscanJsonStatus.Failure;
+            return reader.Value.ToString() == "1";
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(((int)value).ToString());
+            writer.WriteValue((bool)value ? "1" : "0");
         }
     }
 }

@@ -167,16 +167,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Block Overview
         /// </summary>
         /// <returns></returns>
-        public TronOverviewJsonResult BlockOverview()
+        public TronChainOverviewJson BlockOverview()
         {
-            //拼接URL
             string url = this.CreateRestUrl("system/status");
-
-            //请求API
             string resp = this.RestGet(url);
-
-            //解析JSON
-            TronOverviewJsonResult jsonResult = ObjectParse<TronOverviewJsonResult>(resp);
+            TronChainOverviewJson jsonResult = ObjectParse<TronChainOverviewJson>(resp);
 
             return jsonResult;
         }
@@ -185,16 +180,25 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Get Last Block
         /// </summary>
         /// <returns></returns>
-        public TronBlockJsonResult GetLastBlock()
+        public TronBlockBasicJson GetLastBlock()
         {
-            //拼接URL
             string url = this.CreateRestUrl("block/latest");
-
-            //请求API
             string resp = this.RestGet(url);
+            TronBlockBasicJson jsonResult = ObjectParse<TronBlockBasicJson>(resp);
 
-            //解析JSON
-            TronBlockJsonResult jsonResult = ObjectParse<TronBlockJsonResult>(resp);
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public TronAccountAssetJson GetAccountAssets(string address)
+        {
+            string url = this.CreateRestUrl(string.Format("account?address={0}", address));
+            string resp = this.RestGet(url);
+            TronAccountAssetJson jsonResult = ObjectParse<TronAccountAssetJson>(resp);
 
             return jsonResult;
         }

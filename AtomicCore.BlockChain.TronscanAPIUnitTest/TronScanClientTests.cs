@@ -15,7 +15,7 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         public void BlockOverviewTest()
         {
             ITronScanClient client = new TronScanClient();
-            TronOverviewJsonResult result = client.BlockOverview();
+            var result = client.BlockOverview();
 
             Assert.IsTrue(null != result);
         }
@@ -24,7 +24,16 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         public void GetLastBlockTest()
         {
             ITronScanClient client = new TronScanClient();
-            TronBlockJsonResult result = client.GetLastBlock();
+            var result = client.GetLastBlock();
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
+        public void GetAccountAssetsTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetAccountAssets("TWd4WrZ9wn84f5x1hZhL4DHvk738ns5jwb");
 
             Assert.IsTrue(null != result);
         }

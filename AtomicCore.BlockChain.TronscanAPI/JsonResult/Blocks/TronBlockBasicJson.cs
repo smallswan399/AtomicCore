@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// Tron Block Json Result
     /// </summary>
-    public class TronBlockJsonResult
+    public class TronBlockBasicJson
     {
         /// <summary>
         /// block hash

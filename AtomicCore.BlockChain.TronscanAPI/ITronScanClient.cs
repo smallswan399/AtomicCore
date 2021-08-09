@@ -12,16 +12,23 @@ namespace AtomicCore.BlockChain.TronscanAPI
     public interface ITronScanClient
     {
         /// <summary>
-        /// Block Overview
+        /// 1.Block Overview
         /// </summary>
         /// <returns></returns>
-        TronOverviewJsonResult BlockOverview();
+        TronChainOverviewJson BlockOverview();
 
         /// <summary>
-        /// Get Last Block
+        /// 2.Get Last Block
         /// </summary>
         /// <returns></returns>
-        TronBlockJsonResult GetLastBlock();
+        TronBlockBasicJson GetLastBlock();
+
+        /// <summary>
+        /// Get Account Assets list
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        TronAccountAssetJson GetAccountAssets(string address);
 
         //void GetAddressAssets(string address);
 

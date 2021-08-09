@@ -24,13 +24,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
         TronBlockBasicJson GetLastBlock();
 
         /// <summary>
-        /// Get Account Assets list
+        /// 4.Get Account Assets list
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
         TronAccountAssetJson GetAccountAssets(string address);
-
-        //void GetAddressAssets(string address);
 
         //void GetNormalTransactions();
     }

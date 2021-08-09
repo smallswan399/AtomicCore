@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// tron sync overview
     /// </summary>
-    public class TronSyncOverviewJsonResult
+    public class TronSyncOverviewJson
     {
         /// <summary>
         /// sync progress

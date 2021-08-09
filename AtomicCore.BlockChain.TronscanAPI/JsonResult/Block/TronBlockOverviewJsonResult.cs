@@ -11,30 +11,30 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// database object
         /// </summary>
         [JsonProperty("database")]
-        public TronDatabaseOverviewJsonResult DatabaseOverview { get; set; }
+        public TronDatabaseOverviewJson DatabaseOverview { get; set; }
 
         /// <summary>
         /// sync object
         /// </summary>
         [JsonProperty("sync")]
-        public TronSyncOverviewJsonResult SyncOverview { get; set; }
+        public TronSyncOverviewJson SyncOverview { get; set; }
 
         /// <summary>
         /// network object
         /// </summary>
         [JsonProperty("network")]
-        public object NetworkOverview { get; set; }
+        public TronNetworkOverviewJson NetworkOverview { get; set; }
 
         /// <summary>
         /// full object
         /// </summary>
         [JsonProperty("full")]
-        public object FullOverview { get; set; }
+        public TronFullNodeOverviewJson FullOverview { get; set; }
 
         /// <summary>
         /// solidity object
         /// </summary>
         [JsonProperty("solidity")]
-        public object SolidityOverview { get; set; }
+        public TronSolidityNodeOverviewJson SolidityOverview { get; set; }
     }
 }

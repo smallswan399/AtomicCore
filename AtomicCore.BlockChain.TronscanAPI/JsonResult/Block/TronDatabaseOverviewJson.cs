@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// tron databse overview
     /// </summary>
-    public class TronDatabaseOverviewJsonResult
+    public class TronDatabaseOverviewJson
     {
         /// <summary>
         /// Block Height

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -24,6 +25,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// data list
         /// </summary>
         [JsonProperty("Data")]
-        public T Data { get; set; }
+        public List<T> Data { get; set; }
     }
 }

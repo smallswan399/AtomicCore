@@ -15,9 +15,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         public void BlockOverviewTest()
         {
             ITronScanClient client = new TronScanClient();
-            var result = client.BlockOverview();
+            TronBlockOverviewJsonResult result = client.BlockOverview();
 
-            Assert.IsTrue(result.Status == TronscanJsonStatus.Success);
+            Assert.IsTrue(null != result);
         }
     }
 }

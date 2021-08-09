@@ -11,6 +11,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// sync progress
         /// </summary>
         [JsonProperty("progress")]
-        public long Progress { get; set; }
+        public decimal Progress { get; set; }
     }
 }

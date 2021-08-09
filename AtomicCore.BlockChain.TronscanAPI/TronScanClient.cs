@@ -95,6 +95,28 @@ namespace AtomicCore.BlockChain.TronscanAPI
         }
 
         /// <summary>
+        /// JSON解析OBJECT
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private T ObjectParse<T>(string resp)
+            where T : class, new()
+        {
+            T jsonResult;
+            try
+            {
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return jsonResult;
+        }
+
+        /// <summary>
         /// JSON解析单模型
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -145,7 +167,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Block Overview
         /// </summary>
         /// <returns></returns>
-        public TronscanSingleResult<TronBlockOverviewJsonResult> BlockOverview()
+        public TronBlockOverviewJsonResult BlockOverview()
         {
             //拼接URL
             string url = this.CreateRestUrl("system/status");
@@ -154,7 +176,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
             string resp = this.RestGet(url);
 
             //解析JSON
-            TronscanSingleResult<TronBlockOverviewJsonResult> jsonResult = SingleParse<TronBlockOverviewJsonResult>(resp);
+            TronBlockOverviewJsonResult jsonResult = ObjectParse<TronBlockOverviewJsonResult>(resp);
 
             return jsonResult;
         }

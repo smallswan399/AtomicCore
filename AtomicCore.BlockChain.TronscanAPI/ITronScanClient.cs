@@ -15,7 +15,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Block Overview
         /// </summary>
         /// <returns></returns>
-        TronscanSingleResult<TronBlockOverviewJsonResult> BlockOverview();
+        TronBlockOverviewJsonResult BlockOverview();
 
         //void GetAddressAssets(string address);
 

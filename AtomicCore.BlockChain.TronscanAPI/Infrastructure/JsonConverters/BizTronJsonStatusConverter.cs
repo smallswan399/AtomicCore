@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.Value == null)
-                return null;
+                return TronscanJsonStatus.Failure;
 
             if (reader.Value.ToString().Equals("0", StringComparison.OrdinalIgnoreCase))
                 return TronscanJsonStatus.Success;

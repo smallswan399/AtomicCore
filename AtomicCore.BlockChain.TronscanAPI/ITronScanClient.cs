@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AtomicCore.BlockChain.TronscanAPI
+﻿namespace AtomicCore.BlockChain.TronscanAPI
 {
     /// <summary>
     /// TRON SCAN INTERFACE
@@ -30,6 +24,17 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         TronAccountAssetJson GetAccountAssets(string address);
 
-        //void GetNormalTransactions();
+        /// <summary>
+        /// List the transfers related to a specified TRC10 token(Order by Desc)
+        /// ps:only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="address">token creation address</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="name">token name</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <returns>TRC10 token transfers list</returns>
+        TronPageListJson<TronTransactionJson> GetTRC10Transactions(string address, int start = 0, int limit = 20, string name = null, ulong? start_timestamp = null, ulong? end_timestamp = null);
     }
 }

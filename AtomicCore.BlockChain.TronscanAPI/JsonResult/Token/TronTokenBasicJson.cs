@@ -48,5 +48,17 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("tokenLogo")]
         public string TokenLogo { get; set; }
+
+        /// <summary>
+        /// Token Level
+        /// </summary>
+        [JsonProperty("tokenLevel")]
+        public string TokenLevel { get; set; }
+
+        /// <summary>
+        /// vip
+        /// </summary>
+        [JsonProperty("vip")]
+        public bool IsVip { get; set; }
     }
 }

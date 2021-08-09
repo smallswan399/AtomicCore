@@ -24,11 +24,5 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("transferCount")]
         public ulong TransferCount { get; set; }
-
-        /// <summary>
-        /// vip
-        /// </summary>
-        [JsonProperty("vip")]
-        public bool IsVip { get; set; }
     }
 }

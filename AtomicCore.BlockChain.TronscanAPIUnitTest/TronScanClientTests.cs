@@ -42,7 +42,14 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         public void GetTRC10TransactionsTest()
         {
             ITronScanClient client = new TronScanClient();
-            var result = client.GetTRC10Transactions("TSbhZijH2t7Qn1UAHAu7PBHQdVAvRwSyYr");
+            var result = client.GetTRC10Transactions(
+                "TSbhZijH2t7Qn1UAHAu7PBHQdVAvRwSyYr",
+                0,
+                20,
+                "IGG",
+                1529856000000,
+                1552549912537
+            );
 
             Assert.IsTrue(null != result);
         }

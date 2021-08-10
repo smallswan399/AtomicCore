@@ -224,24 +224,25 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
             //Params Builder
             StringBuilder paramBuilder = new StringBuilder();
-            paramBuilder.AppendFormat("issueAddress={0}", issueAddress);
+            if (!string.IsNullOrEmpty(issueAddress))
+                paramBuilder.AppendFormat("issueAddress={0}&", issueAddress);
             if (start > -1)
-                paramBuilder.AppendFormat("&start={0}", start);
+                paramBuilder.AppendFormat("start={0}&", start);
             else
-                paramBuilder.Append("&start=0");
+                paramBuilder.Append("start=0&");
             if (limit > 0)
-                paramBuilder.AppendFormat("&limit={0}", limit);
+                paramBuilder.AppendFormat("limit={0}&", limit);
             else
-                paramBuilder.Append("&limit=20");
+                paramBuilder.Append("limit=20&");
             if (!string.IsNullOrEmpty(name))
-                paramBuilder.AppendFormat("&name={0}", name);
+                paramBuilder.AppendFormat("name={0}&", name);
             if (null != start_timestamp && start_timestamp > 0UL)
-                paramBuilder.AppendFormat("&start_timestamp={0}", start_timestamp);
+                paramBuilder.AppendFormat("start_timestamp={0}&", start_timestamp);
             if (null != end_timestamp && end_timestamp > 0UL)
-                paramBuilder.AppendFormat("&end_timestamp={0}", end_timestamp);
+                paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
 
             //create url
-            string url = this.CreateRestUrl(string.Format("asset/transfer?{0}", paramBuilder.ToString()));
+            string url = this.CreateRestUrl(string.Format("asset/transfer?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
 
             //http get
             string resp = this.RestGet(url);

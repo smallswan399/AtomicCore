@@ -3,45 +3,63 @@
 namespace AtomicCore.BlockChain.TronscanAPI
 {
     /// <summary>
-    /// Tron TRC10 Token Transfer Json
+    /// Tron TRC20 Transfer Json
     /// </summary>
-    public class TronTRC10TransferJson
+    public class TronTRC20TransferJson
     {
         /// <summary>
-        /// transaction Hash
+        /// transaction id
         /// </summary>
-        [JsonProperty("transactionHash")]
+        [JsonProperty("transaction_id")]
         public string TransactionHash { get; set; }
 
         /// <summary>
         /// transaction timestamp
         /// </summary>
-        [JsonProperty("timestamp"), JsonConverter(typeof(BizTronULongJsonConverter))]
+        [JsonProperty("block_ts"), JsonConverter(typeof(BizTronULongJsonConverter))]
         public ulong Timestamp { get; set; }
 
         /// <summary>
         /// transfer form address
         /// </summary>
-        [JsonProperty("transferFromAddress")]
+        [JsonProperty("from_address")]
         public string TransferFromAddress { get; set; }
 
         /// <summary>
         /// transfer to address
         /// </summary>
-        [JsonProperty("transferToAddress")]
+        [JsonProperty("to_address")]
         public string TransferToAddress { get; set; }
 
         /// <summary>
-        /// amount
+        /// contract address
         /// </summary>
-        [JsonProperty("amount")]
-        public decimal Amount { get; set; }
+        [JsonProperty("contract_address")]
+        public string ContractAddress { get; set; }
 
         /// <summary>
-        /// token name
+        /// quant amount
         /// </summary>
-        [JsonProperty("tokenName")]
-        public string TokenName { get; set; }
+        [JsonProperty("quant")]
+        public decimal Quant { get; set; }
+
+        /// <summary>
+        /// Approval Amount
+        /// </summary>
+        [JsonProperty("approval_amount")]
+        public decimal ApprovalAmount { get; set; }
+
+        /// <summary>
+        /// event type
+        /// </summary>
+        [JsonProperty("event_type")]
+        public string EventType { get; set; }
+
+        /// <summary>
+        /// Contract Type
+        /// </summary>
+        [JsonProperty("contract_type")]
+        public string ContractType { get; set; }
 
         /// <summary>
         /// final result
@@ -78,6 +96,12 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("toAddressIsContract")]
         public bool ToAddressIsContract { get; set; }
+
+        /// <summary>
+        /// revert
+        /// </summary>
+        [JsonProperty("revert")]
+        public bool Revert { get; set; }
 
         /// <summary>
         /// block height

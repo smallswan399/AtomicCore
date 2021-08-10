@@ -1,12 +1,23 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
-    class TronTRC20TransactionListJson
+    /// <summary>
+    /// Tron TRC20 Transaction List Json
+    /// </summary>
+    public class TronTRC20TransactionListJson : TronPageListJson
     {
+        /// <summary>
+        /// Contract Info
+        /// </summary>
+        [JsonProperty("contractInfo")]
+        public object ContractInfo { get; set; }
+
+        /// <summary>
+        /// Token Transfers
+        /// </summary>
+        [JsonProperty("token_transfers")]
+        public List<TronTRC20TransferJson> TokenTransfers { get; set; }
     }
 }

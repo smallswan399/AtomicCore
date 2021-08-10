@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -7,7 +6,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// Tron Page List Json
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class TronPageListJson<T>
+    public abstract class TronPageListJson
     {
         /// <summary>
         /// page limit
@@ -20,11 +19,5 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("rangeTotal")]
         public int TotalCount { get; set; }
-
-        /// <summary>
-        /// data list
-        /// </summary>
-        [JsonProperty("Data")]
-        public List<T> Data { get; set; }
     }
 }

@@ -35,6 +35,8 @@
         /// <param name="start_timestamp">query date range</param>
         /// <param name="end_timestamp">query date range</param>
         /// <returns>TRC10 token transfers list</returns>
-        TronPageListJson<TronTransactionJson> GetTRC10Transactions(string address, int start = 0, int limit = 20, string name = null, ulong? start_timestamp = null, ulong? end_timestamp = null);
+        TronTRC10TransactionListJson GetTRC10Transactions(string address, int start = 0, int limit = 20, string name = null, ulong? start_timestamp = null, ulong? end_timestamp = null);
+
+
     }
 }

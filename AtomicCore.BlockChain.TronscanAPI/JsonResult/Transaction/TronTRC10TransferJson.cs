@@ -3,9 +3,9 @@
 namespace AtomicCore.BlockChain.TronscanAPI
 {
     /// <summary>
-    /// Tron Transaction Json
+    /// Tron TRC10 Token Transfer Json
     /// </summary>
-    public class TronTransactionJson
+    public class TronTRC10TransferJson
     {
         /// <summary>
         /// transaction Hash

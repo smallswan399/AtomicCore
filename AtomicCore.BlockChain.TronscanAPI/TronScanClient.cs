@@ -210,21 +210,21 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// List the transfers related to a specified TRC10 token(Order by Desc)
         /// ps:only display the latest 10,000 data records in the query time range
         /// </summary>
-        /// <param name="address">token creation address</param>
+        /// <param name="issueAddress">token creation address</param>
         /// <param name="start">query index for pagination</param>
         /// <param name="limit">page size for pagination</param>
         /// <param name="name">token name</param>
         /// <param name="start_timestamp">query date range</param>
         /// <param name="end_timestamp">query date range</param>
         /// <returns>TRC10 token transfers list</returns>
-        public TronTRC10TransactionListJson GetTRC10Transactions(string address, int start = 0, int limit = 20, string name = null, ulong? start_timestamp = null, ulong? end_timestamp = null)
+        public TronTRC10TransactionListJson GetTRC10Transactions(string issueAddress, int start = 0, int limit = 20, string name = null, ulong? start_timestamp = null, ulong? end_timestamp = null)
         {
-            if (string.IsNullOrEmpty(address))
-                throw new ArgumentNullException(nameof(address));
+            if (string.IsNullOrEmpty(issueAddress))
+                throw new ArgumentNullException(nameof(issueAddress));
 
             //Params Builder
             StringBuilder paramBuilder = new StringBuilder();
-            paramBuilder.AppendFormat("issueAddress={0}", address);
+            paramBuilder.AppendFormat("issueAddress={0}", issueAddress);
             if (start > -1)
                 paramBuilder.AppendFormat("&start={0}", start);
             else
@@ -248,6 +248,47 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
             //json parse
             TronTRC10TransactionListJson jsonResult = ObjectParse<TronTRC10TransactionListJson>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// List the transfers related to a specified TRC20 token
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="contractAddress">contract address</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <returns>TRC20 token transfers list</returns>
+        public TronTRC20TransactionListJson GetTRC20Transactions(string contractAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null)
+        {
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(contractAddress))
+                paramBuilder.AppendFormat("contract_address={0}&", contractAddress);
+            if (start > -1)
+                paramBuilder.AppendFormat("start={0}&", start);
+            else
+                paramBuilder.Append("start=0&");
+            if (limit > 0)
+                paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+                paramBuilder.Append("limit=20&");
+            if (null != start_timestamp && start_timestamp > 0UL)
+                paramBuilder.AppendFormat("start_timestamp={0}&", start_timestamp);
+            if (null != end_timestamp && end_timestamp > 0UL)
+                paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("token_trc20/transfers?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronTRC20TransactionListJson jsonResult = ObjectParse<TronTRC20TransactionListJson>(resp);
 
             return jsonResult;
         }

@@ -18,6 +18,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// data
         /// </summary>
         [JsonProperty("data")]
-        public List<object> Data { get; set; }
+        public List<TronInternalTransferJson> Data { get; set; }
     }
 }

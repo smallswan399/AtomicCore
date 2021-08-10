@@ -19,5 +19,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("data")]
         public List<TronInternalTransferJson> Data { get; set; }
+
+        /// <summary>
+        /// Contract Info
+        /// </summary>
+        [JsonProperty("contractInfo")]
+        public Dictionary<string, TronContractTagJson> ContractInfo { get; set; }
     }
 }

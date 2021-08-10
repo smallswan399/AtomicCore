@@ -25,7 +25,7 @@
         TronAccountAssetJson GetAccountAssets(string address);
 
         /// <summary>
-        /// List the transfers related to a specified TRC10 token(Order by Desc)
+        /// 41.List the transfers related to a specified TRC10 token(Order by Desc)
         /// only display the latest 10,000 data records in the query time range
         /// </summary>
         /// <param name="issueAddress">token creation address</param>
@@ -38,7 +38,7 @@
         TronTRC10TransactionListJson GetTRC10Transactions(string issueAddress, int start = 0, int limit = 20, string name = null, ulong? start_timestamp = null, ulong? end_timestamp = null);
 
         /// <summary>
-        /// List the transfers related to a specified TRC20 token
+        /// 42.List the transfers related to a specified TRC20 token
         /// only display the latest 10,000 data records in the query time range
         /// </summary>
         /// <param name="contractAddress">contract address</param>

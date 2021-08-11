@@ -206,6 +206,40 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// List the TRC-20 transfers related to a specified account
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="address">an account</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        public TronTRC20TransferEventListJson GetTRC20TransferEvents(string address, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// List the internal transactions related to a specified account
         /// only display the latest 10,000 data records in the query time range
@@ -216,7 +250,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <param name="start_timestamp">query date range</param>
         /// <param name="end_timestamp">query date range</param>
         /// <returns></returns>
-        public TronInternalTransactionListJson GetInternalTransaction(string address, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null)
+        public TronInternalTransactionListJson GetInternalTransactions(string address, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));

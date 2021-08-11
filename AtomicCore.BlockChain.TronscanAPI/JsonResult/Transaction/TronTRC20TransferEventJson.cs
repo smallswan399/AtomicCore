@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -11,5 +7,10 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// </summary>
     public class TronTRC20TransferEventJson
     {
+        /// <summary>
+        /// transaction id
+        /// </summary>
+        [JsonProperty("transaction_id")]
+        public string TransactionHash { get; set; }
     }
 }

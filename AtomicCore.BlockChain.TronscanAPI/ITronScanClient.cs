@@ -34,6 +34,19 @@
         /// <returns></returns>
         TronAccountAssetJson GetAccountAssets(string address);
 
+        /// <summary>
+        /// 5.List the blocks in the blockchain
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronBlockInfoListJson GetLastBlocks(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-number");
+
 
 
         /// <summary>

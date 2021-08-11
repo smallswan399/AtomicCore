@@ -218,7 +218,37 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronInternalTransactionListJson GetInternalTransaction(string address, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(address))
+                paramBuilder.AppendFormat("address={0}&", address);
+            if (start > -1)
+                paramBuilder.AppendFormat("start={0}&", start);
+            else
+                paramBuilder.Append("start=0&");
+            if (limit > 0)
+                paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+                paramBuilder.Append("limit=20&");
+
+            if (null != start_timestamp && start_timestamp > 0UL)
+                paramBuilder.AppendFormat("start_timestamp={0}&", start_timestamp);
+            if (null != end_timestamp && end_timestamp > 0UL)
+                paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("internal-transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronInternalTransactionListJson jsonResult = ObjectParse<TronInternalTransactionListJson>(resp);
+
+            return jsonResult;
         }
 
         /// <summary>

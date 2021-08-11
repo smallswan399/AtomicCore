@@ -67,7 +67,22 @@
         /// <returns></returns>
         TronBlockDetailsJson GetBlockByNumber(ulong number);
 
-        
+        /// <summary>
+        /// 8.Get Last Transaction List
+        /// </summary>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronLastTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
+
+
+
+
+
 
         /// <summary>
         /// 39.List the TRC-20 transfers related to a specified account

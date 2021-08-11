@@ -75,7 +75,14 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        [TestMethod()]
+        public void GetLastTransactionsTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetLastTransactions();
 
+            Assert.IsTrue(null != result);
+        }
 
 
 
@@ -127,6 +134,7 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace AtomicCore.BlockChain.TronscanAPI.JsonResult.Transaction
+namespace AtomicCore.BlockChain.TronscanAPI
 {
     /// <summary>
     /// Tron Last Transaction List Json

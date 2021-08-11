@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -119,5 +114,23 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("amount")]
         public string Amount { get; set; }
+
+        /// <summary>
+        /// cost
+        /// </summary>
+        [JsonProperty("cost")]
+        public TronContractCostJson Cost { get; set; }
+
+        /// <summary>
+        /// tokenInfo
+        /// </summary>
+        [JsonProperty("tokenInfo")]
+        public TronTokenBasicJson TokenInfo { get; set; }
+
+        /// <summary>
+        /// TokenType
+        /// </summary>
+        [JsonProperty("tokenType")]
+        public string TokenType { get; set; }
     }
 }

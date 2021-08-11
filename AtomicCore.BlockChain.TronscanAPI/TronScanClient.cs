@@ -325,6 +325,23 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// Get a single block's detail
+        /// </summary>
+        /// <param name="number">block number</param>
+        /// <returns></returns>
+        public TronBlockDetailsJson GetBlockByNumber(ulong number)
+        {
+            string url = this.CreateRestUrl(string.Format("block?number={0}", number));
+            string resp = this.RestGet(url);
+
+            TronBlockInfoByNumberJson jsonResult = ObjectParse<TronBlockInfoByNumberJson>(resp);
+            if (null == jsonResult.Data)
+                return null;
+
+            return jsonResult.Data.FirstOrDefault();
+        }
+
 
         /// <summary>
         /// List the TRC-20 transfers related to a specified account

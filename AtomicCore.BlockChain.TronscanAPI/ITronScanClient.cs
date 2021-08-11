@@ -47,6 +47,21 @@
         /// <returns></returns>
         TronBlockInfoListJson GetLastBlocks(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-number");
 
+        /// <summary>
+        /// 6.List all the blocks produced by the specified SR in the blockchain
+        /// </summary>
+        /// <param name="srAddress">SR address</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronBlockInfoListJson GetSRBlocks(string srAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-number");
+
+
+
 
 
         /// <summary>

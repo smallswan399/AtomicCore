@@ -57,7 +57,14 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        [TestMethod()]
+        public void GetSRBlocksTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetSRBlocks("TMuA6YqfCeX8EhbfYEg5y7S4DqzSJireY9");
 
+            Assert.IsTrue(null != result);
+        }
 
 
 
@@ -113,6 +120,7 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
 
     }
 }

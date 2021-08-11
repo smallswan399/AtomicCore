@@ -30,6 +30,15 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         }
 
         [TestMethod()]
+        public void GetChainTopAddressTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetChainTopAddress();
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
         public void GetAccountAssetsTest()
         {
             ITronScanClient client = new TronScanClient();

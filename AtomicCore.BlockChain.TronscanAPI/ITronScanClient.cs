@@ -18,6 +18,16 @@
         TronBlockBasicJson GetLastBlock();
 
         /// <summary>
+        /// 3.List all the accounts in the blockchain
+        /// only 10,000 accounts are displayed, sorted by TRX balance from high to low
+        /// </summary>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronChainTopAddressListJson GetChainTopAddress(int start = 0, int limit = 20, string sort = "-balance");
+
+        /// <summary>
         /// 4.Get Account Assets list
         /// </summary>
         /// <param name="address"></param>
@@ -35,6 +45,7 @@
         /// <param name="limit">page size for pagination</param>
         /// <param name="start_timestamp">query date range</param>
         /// <param name="end_timestamp">query date range</param>
+        /// <returns></returns>
         TronTRC20TransferEventListJson GetTRC20TransferEvents(string address, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null);
 
         /// <summary>

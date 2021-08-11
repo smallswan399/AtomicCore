@@ -164,7 +164,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         #region Public Methods
 
         /// <summary>
-        /// Block Overview
+        /// 1.Block Overview
         /// </summary>
         /// <returns></returns>
         public TronChainOverviewJson BlockOverview()
@@ -177,7 +177,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         }
 
         /// <summary>
-        /// Get Last Block
+        /// 2.Get Last Block
         /// </summary>
         /// <returns></returns>
         public TronBlockBasicJson GetLastBlock()
@@ -190,7 +190,42 @@ namespace AtomicCore.BlockChain.TronscanAPI
         }
 
         /// <summary>
-        /// Get Account Assets
+        /// 3.List all the accounts in the blockchain
+        /// only 10,000 accounts are displayed, sorted by TRX balance from high to low
+        /// </summary>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        public TronChainTopAddressListJson GetChainTopAddress(int start = 0, int limit = 20, string sort = "-balance")
+        {
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            if (start > -1)
+                paramBuilder.AppendFormat("start={0}&", start);
+            else
+                paramBuilder.Append("start=0&");
+            if (limit > 0)
+                paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+                paramBuilder.Append("limit=20&");
+            if (!string.IsNullOrEmpty(sort))
+                paramBuilder.AppendFormat("sort={0}&", sort);
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("account/list?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronChainTopAddressListJson jsonResult = ObjectParse<TronChainTopAddressListJson>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// 4.Get Account Assets
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>

@@ -4,26 +4,25 @@ using System.Collections.Generic;
 namespace AtomicCore.BlockChain.TronscanAPI
 {
     /// <summary>
-    /// Tron Internal Transaction List Json
+    /// Tron Chain Top Account List Json
     /// </summary>
-    public class TronInternalTransactionListJson : TronPageListJson
+    public class TronChainTopAddressListJson : TronPageListJson
     {
-        /// <summary>
-        /// Contract Map
-        /// </summary>
-        [JsonProperty("contractMap")]
-        public Dictionary<string, string> ContractMap { get; set; }
-
         /// <summary>
         /// data
         /// </summary>
         [JsonProperty("data")]
-        public List<TronInternalTransactionJson> Data { get; set; }
+        public List<TronChainTopAddressJson> Data { get; set; }
+
+        /// <summary>
+        /// contract maps
+        /// </summary>
+        [JsonProperty("contractMap")]
+        public Dictionary<string, bool> ContractMap { get; set; }
 
         /// <summary>
         /// Contract Info
         /// </summary>
-        [JsonProperty("contractInfo")]
         public Dictionary<string, TronContractTagJson> ContractInfo { get; set; }
     }
 }

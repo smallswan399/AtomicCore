@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// Tron TRC20 Transfer Json
     /// </summary>
-    public class TronTRC20TransferJson
+    public class TronTRC20TransactionJson
     {
         /// <summary>
         /// transaction id

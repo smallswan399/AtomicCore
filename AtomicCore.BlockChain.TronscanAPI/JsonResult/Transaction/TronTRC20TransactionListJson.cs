@@ -18,6 +18,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Token Transfers
         /// </summary>
         [JsonProperty("token_transfers")]
-        public List<TronTRC20TransferJson> TokenTransfers { get; set; }
+        public List<TronTRC20TransactionJson> TokenTransfers { get; set; }
     }
 }

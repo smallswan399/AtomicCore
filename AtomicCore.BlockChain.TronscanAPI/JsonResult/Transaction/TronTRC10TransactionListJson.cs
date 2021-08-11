@@ -12,6 +12,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// trc10 transfer data list
         /// </summary>
         [JsonProperty("Data")]
-        public List<TronTRC10TransferJson> TRC10Transfers { get; set; }
+        public List<TronTRC10TransactionJson> TRC10Transfers { get; set; }
     }
 }

@@ -83,8 +83,8 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <summary>
         /// Call Value
         /// </summary>
-        [JsonProperty("call_value")]
-        public string CallValue { get; set; }
+        [JsonProperty("call_value"), JsonConverter(typeof(BizTronULongJsonConverter))]
+        public ulong CallValue { get; set; }
 
         /// <summary>
         /// block height

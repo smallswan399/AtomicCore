@@ -9,9 +9,9 @@ namespace AtomicCore.BlockChain.TronscanAPI
     public class TronTRC20TransferEventListJson : TronPageListJson
     {
         /// <summary>
-        /// data
+        /// TRC20 Transfer Event List Data
         /// </summary>
         [JsonProperty("Data")]
-        public List<TronTRC20TransferEventJson> MyProperty { get; set; }
+        public List<TronTRC20TransferEventJson> Data { get; set; }
     }
 }

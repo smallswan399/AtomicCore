@@ -61,13 +61,13 @@
         TronBlockInfoListJson GetSRBlocks(string srAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-number");
 
         /// <summary>
-        /// Get a single block's detail
+        /// 7.Get a single block's detail
         /// </summary>
         /// <param name="number">block number</param>
         /// <returns></returns>
         TronBlockDetailsJson GetBlockByNumber(ulong number);
 
-
+        
 
         /// <summary>
         /// 39.List the TRC-20 transfers related to a specified account

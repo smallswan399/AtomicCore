@@ -104,6 +104,14 @@
         /// <returns></returns>
         TronContractTransactionListJson GetContractTransactions(string contract, int start = 0, int limit = 20, bool count = true, string sort = "-timestamp");
 
+        /// <summary>
+        /// 11.List a transaction detail
+        /// </summary>
+        /// <param name="txHash">query transaction hash</param>
+        /// <returns></returns>
+        TronTransactionInfoJson GetTransactionByHash(string txHash);
+
+
 
 
 

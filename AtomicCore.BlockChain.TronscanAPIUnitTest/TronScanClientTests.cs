@@ -131,6 +131,22 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 11.List a transaction detail
+        /// </summary>
+        [TestMethod()]
+        public void GetTransactionByHashTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetTransactionByHash("1c25bc75d0bebac2f3aa71c350d67c4eed56ec2501b72302ae6d0110dc40cf96");
+
+            Assert.IsTrue(null != result);
+        }
+
+
+
+
+
 
 
         /// <summary>
@@ -187,7 +203,5 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
-
-
     }
 }

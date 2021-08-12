@@ -452,7 +452,24 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 11.List a transaction detail
+        /// </summary>
+        /// <param name="txHash">query transaction hash</param>
+        /// <returns></returns>
+        public TronTransactionInfoJson GetTransactionByHash(string txHash)
+        {
+            if (string.IsNullOrEmpty(txHash))
+                throw new ArgumentNullException(nameof(txHash));
 
+            //http get
+            string resp = this.RestGet(string.Format("transaction-info?hash={0}", txHash));
+
+            //json parse
+            TronTransactionInfoJson jsonResult = ObjectParse<TronTransactionInfoJson>(resp);
+
+            return jsonResult;
+        }
 
 
 

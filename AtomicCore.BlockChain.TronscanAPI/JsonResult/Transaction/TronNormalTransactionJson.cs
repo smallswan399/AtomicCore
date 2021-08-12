@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// Tron Last Transaction Json
     /// </summary>
-    public class TronLastTransactionJson
+    public class TronNormalTransactionJson
     {
         /// <summary>
         /// block height

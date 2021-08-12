@@ -77,9 +77,9 @@
         /// <param name="count">total number of records</param>
         /// <param name="sort">define the sequence of the records return</param>
         /// <returns></returns>
-        TronLastTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
+        TronNormalTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
 
-
+        //GetNormalTransactions
 
 
 

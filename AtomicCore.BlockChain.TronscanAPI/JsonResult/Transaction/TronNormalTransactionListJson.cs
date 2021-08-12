@@ -6,13 +6,13 @@ namespace AtomicCore.BlockChain.TronscanAPI
     /// <summary>
     /// Tron Last Transaction List Json
     /// </summary>
-    public class TronLastTransactionListJson : TronPageListJson
+    public class TronNormalTransactionListJson : TronPageListJson
     {
         /// <summary>
         /// transaction data list
         /// </summary>
         [JsonProperty("data")]
-        public List<TronLastTransactionJson> Data { get; set; }
+        public List<TronNormalTransactionJson> Data { get; set; }
 
         /// <summary>
         /// Whole Chain Tx Count Total

@@ -352,7 +352,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <param name="count">total number of records</param>
         /// <param name="sort">define the sequence of the records return</param>
         /// <returns></returns>
-        public TronLastTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp")
+        public TronNormalTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp")
         {
             //Params Builder
             StringBuilder paramBuilder = new StringBuilder();
@@ -376,7 +376,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
             string resp = this.RestGet(url);
 
             //json parse
-            TronLastTransactionListJson jsonResult = ObjectParse<TronLastTransactionListJson>(resp);
+            TronNormalTransactionListJson jsonResult = ObjectParse<TronNormalTransactionListJson>(resp);
 
             return jsonResult;
         }

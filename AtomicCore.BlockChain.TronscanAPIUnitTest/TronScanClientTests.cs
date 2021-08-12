@@ -143,7 +143,17 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 13.List the transfers related to an specified account
+        /// </summary>
+        [TestMethod()]
+        public void GetNormalTransfersTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetNormalTransfers("TMuA6YqfCeX8EhbfYEg5y7S4DqzSJireY9", "_");
 
+            Assert.IsTrue(null != result);
+        }
 
 
 
@@ -203,5 +213,7 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+
     }
 }

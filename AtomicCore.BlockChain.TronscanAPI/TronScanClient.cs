@@ -116,49 +116,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
-        /// <summary>
-        /// JSON解析单模型
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="resp"></param>
-        /// <returns></returns>
-        private TronscanSingleResult<T> SingleParse<T>(string resp)
-        {
-            TronscanSingleResult<T> jsonResult;
-            try
-            {
-                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<TronscanSingleResult<T>>(resp);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return jsonResult;
-        }
-
-        /// <summary>
-        /// JSON解析列表
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="resp"></param>
-        /// <returns></returns>
-        private TronscanListResult<T> ListParse<T>(string resp)
-            where T : class, new()
-        {
-            TronscanListResult<T> jsonResult;
-            try
-            {
-                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<TronscanListResult<T>>(resp);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return jsonResult;
-        }
-
         #endregion
 
         #region Public Methods
@@ -474,8 +431,58 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 13.List the transfers related to an specified account
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="address">transfers related address</param>
+        /// <param name="token">'_' shows only TRX transfers</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        public TronNormalTransferListJson GetNormalTransfers(string address = null, string token = null, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null,  bool count = true, string sort = "-timestamp")
+        {
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(address))
+                paramBuilder.AppendFormat("address={0}&", address);
+            if (!string.IsNullOrEmpty(token))
+                paramBuilder.AppendFormat("token={0}&", token);
 
+            if (start > -1)
+                paramBuilder.AppendFormat("start={0}&", start);
+            else
+                paramBuilder.Append("start=0&");
+            if (limit > 0)
+                paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+                paramBuilder.Append("limit=20&");
 
+            if (null != start_timestamp && start_timestamp > 0UL)
+                paramBuilder.AppendFormat("start_timestamp={0}&", start_timestamp);
+            if (null != end_timestamp && end_timestamp > 0UL)
+                paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
+
+            if (count)
+                paramBuilder.AppendFormat("count=true&");
+            if (!string.IsNullOrEmpty(sort))
+                paramBuilder.AppendFormat("sort={0}&", sort);
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("transfer?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronNormalTransferListJson jsonResult = ObjectParse<TronNormalTransferListJson>(resp);
+
+            return jsonResult;
+        }
 
 
         /// <summary>

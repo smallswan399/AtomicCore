@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -18,6 +17,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// srConfirmList
         /// </summary>
         [JsonProperty("srConfirmList")]
-        public List<TronBlockSRConfirmJson> SRConfirmList { get; set; }
+        public TronSRConfirmJson[] SRConfirmList { get; set; }
     }
 }

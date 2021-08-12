@@ -12,7 +12,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// transaction data list
         /// </summary>
         [JsonProperty("data")]
-        public List<TronNormalTransactionJson> Data { get; set; }
+        public TronNormalTransactionJson[] Data { get; set; }
 
         /// <summary>
         /// Whole Chain Tx Count Total
@@ -24,12 +24,12 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Contract Map
         /// </summary>
         [JsonProperty("contractMap")]
-        public Dictionary<string, string> ContractMap { get; set; }
+        public IReadOnlyDictionary<string, string> ContractMap { get; set; }
 
         /// <summary>
         /// Contract Info
         /// </summary>
         [JsonProperty("contractInfo")]
-        public Dictionary<string, TronContractTagJson> ContractInfo { get; set; }
+        public IReadOnlyDictionary<string, TronContractTagJson> ContractInfo { get; set; }
     }
 }

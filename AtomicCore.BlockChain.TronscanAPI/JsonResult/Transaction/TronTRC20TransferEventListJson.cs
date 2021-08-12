@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -12,6 +11,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// TRC20 Transfer Event List Data
         /// </summary>
         [JsonProperty("Data")]
-        public List<TronTRC20TransferEventJson> Data { get; set; }
+        public TronTRC20TransferEventJson[] Data { get; set; }
     }
 }

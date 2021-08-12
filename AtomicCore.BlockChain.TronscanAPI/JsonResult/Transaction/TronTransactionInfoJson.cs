@@ -98,11 +98,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
         [JsonProperty("trigger_info")]
         public TronContractTriggerInfoJson TriggerInfo { get; set; }
 
-        /// <summary>
-        /// internal transactions
-        /// </summary>
-        [JsonProperty("internal_transactions")]
-        public object InternalTransactions { get; set; }
+        /////// <summary>
+        /////// internal transactions
+        /////// </summary>
+        ////[JsonProperty("internal_transactions")]
+        ////public object InternalTransactions { get; set; }
 
         /// <summary>
         /// FeeLimit
@@ -128,16 +128,16 @@ namespace AtomicCore.BlockChain.TronscanAPI
         [JsonProperty("event_count")]
         public int EventCount { get; set; }
 
-        /// <summary>
-        /// info
-        /// </summary>
-        [JsonProperty("info")]
-        public object Info { get; set; }
+        ///////// <summary>
+        ///////// info
+        ///////// </summary>
+        //////[JsonProperty("info")]
+        //////public object Info { get; set; }
 
         /// <summary>
         /// Contract Map
         /// </summary>
         [JsonProperty("contractMap")]
-        public Dictionary<string, string> ContractMap { get; set; }
+        public IReadOnlyDictionary<string, string> ContractMap { get; set; }
     }
 }

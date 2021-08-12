@@ -12,17 +12,17 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// data
         /// </summary>
         [JsonProperty("data")]
-        public List<TronChainTopAddressJson> Data { get; set; }
+        public TronChainTopAddressJson[] Data { get; set; }
 
         /// <summary>
         /// contract maps
         /// </summary>
         [JsonProperty("contractMap")]
-        public Dictionary<string, bool> ContractMap { get; set; }
+        public IReadOnlyDictionary<string, bool> ContractMap { get; set; }
 
         /// <summary>
         /// Contract Info
         /// </summary>
-        public Dictionary<string, TronContractTagJson> ContractInfo { get; set; }
+        public IReadOnlyDictionary<string, TronContractTagJson> ContractInfo { get; set; }
     }
 }

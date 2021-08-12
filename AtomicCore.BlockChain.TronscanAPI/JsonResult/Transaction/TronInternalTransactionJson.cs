@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -72,7 +71,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// Value Info List
         /// </summary>
         [JsonProperty("valueInfoList")]
-        public List<TronTokenValueJson> ValueInfoList { get; set; }
+        public TronTokenValueJson[] ValueInfoList { get; set; }
 
         /// <summary>
         /// Token ID

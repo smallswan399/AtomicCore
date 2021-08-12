@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -12,6 +11,6 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// trc20 token balances
         /// </summary>
         [JsonProperty("trc20token_balances")]
-        public List<TronAssetBalanceJson> Trc20Balances { get; set; }
+        public TronAssetBalanceJson[] Trc20Balances { get; set; }
     }
 }

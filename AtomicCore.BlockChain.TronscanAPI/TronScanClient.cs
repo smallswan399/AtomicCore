@@ -462,8 +462,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (string.IsNullOrEmpty(txHash))
                 throw new ArgumentNullException(nameof(txHash));
 
+            //create url
+            string url = this.CreateRestUrl(string.Format("transaction-info?hash={0}", txHash));
+
             //http get
-            string resp = this.RestGet(string.Format("transaction-info?hash={0}", txHash));
+            string resp = this.RestGet(url);
 
             //json parse
             TronTransactionInfoJson jsonResult = ObjectParse<TronTransactionInfoJson>(resp);

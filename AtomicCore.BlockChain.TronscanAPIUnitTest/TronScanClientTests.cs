@@ -132,6 +132,28 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         }
 
 
+
+        /// <summary>
+        /// 40.List the internal transactions related to a specified account
+        /// </summary>
+        [TestMethod()]
+        public void GetInternalTransactionTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetInternalTransactions(
+                "TCN77KWWyUyi2A4Cu7vrh5dnmRyvUuME1E",
+                0,
+                20,
+                1529856000000,
+                1552550375474
+            );
+
+            Assert.IsTrue(null != result);
+        }
+
+        /// <summary>
+        /// 41.List the transfers related to a specified TRC10 token(Order by Desc)
+        /// </summary>
         [TestMethod()]
         public void GetTRC10TransactionsTest()
         {
@@ -148,26 +170,14 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 42.List the transfers related to a specified TRC20 token
+        /// </summary>
         [TestMethod()]
         public void GetTRC20TransactionsTest()
         {
             ITronScanClient client = new TronScanClient();
             var result = client.GetTRC20Transactions(
-                "TCN77KWWyUyi2A4Cu7vrh5dnmRyvUuME1E",
-                0,
-                20,
-                1529856000000,
-                1552550375474
-            );
-
-            Assert.IsTrue(null != result);
-        }
-
-        [TestMethod()]
-        public void GetInternalTransactionTest()
-        {
-            ITronScanClient client = new TronScanClient();
-            var result = client.GetInternalTransactions(
                 "TCN77KWWyUyi2A4Cu7vrh5dnmRyvUuME1E",
                 0,
                 20,

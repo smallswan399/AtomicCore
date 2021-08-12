@@ -112,6 +112,19 @@
         TronTransactionInfoJson GetTransactionByHash(string txHash);
 
         /// <summary>
+        /// 12.List the transfers in the blockchain
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronNormalTransferListJson GetLastTransfers(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
+
+        /// <summary>
         /// 13.List the transfers related to an specified account
         /// only display the latest 10,000 data records in the query time range
         /// </summary>

@@ -444,7 +444,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronNormalTransferListJson GetLastTransfers(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp")
         {
-            return this.GetNormalTransfers(null,null, start, limit, start_timestamp, end_timestamp, count, sort);
+            return this.GetNormalTransfers(null, null, start, limit, start_timestamp, end_timestamp, count, sort);
         }
 
         /// <summary>
@@ -496,6 +496,19 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
             //json parse
             TronNormalTransferListJson jsonResult = ObjectParse<TronNormalTransferListJson>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// 14.List all the nodes in the blockchain
+        /// </summary>
+        /// <returns></returns>
+        public TronChainNodeListJson GetChainNodes()
+        {
+            string url = this.CreateRestUrl("nodemap");
+            string resp = this.RestGet(url);
+            TronChainNodeListJson jsonResult = ObjectParse<TronChainNodeListJson>(resp);
 
             return jsonResult;
         }

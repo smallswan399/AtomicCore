@@ -167,7 +167,17 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 14.List all the nodes in the blockchain
+        /// </summary>
+        [TestMethod()]
+        public void GetChainNodesTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetChainNodes();
 
+            Assert.IsTrue(null != result);
+        }
 
 
 

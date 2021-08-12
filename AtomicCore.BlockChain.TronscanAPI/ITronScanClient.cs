@@ -79,7 +79,18 @@
         /// <returns></returns>
         TronNormalTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
 
-        //GetNormalTransactions
+        /// <summary>
+        /// 9.List the transactions related to a specified account
+        /// </summary>
+        /// <param name="address">address: an account(No address specified means all)</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronNormalTransactionListJson GetNormalTransactions(string address = null, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
 
 
 

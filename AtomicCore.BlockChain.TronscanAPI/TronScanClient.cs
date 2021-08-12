@@ -381,6 +381,55 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 9.List the transactions related to a specified account
+        /// </summary>
+        /// <param name="address">address: an account(No address specified means all)</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="start_timestamp">query date range</param>
+        /// <param name="end_timestamp">query date range</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        public TronNormalTransactionListJson GetNormalTransactions(string address = null, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp")
+        {
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(address))
+                paramBuilder.AppendFormat("address={0}&", address);
+
+            if (start > -1)
+                paramBuilder.AppendFormat("start={0}&", start);
+            else
+                paramBuilder.Append("start=0&");
+            if (limit > 0)
+                paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+                paramBuilder.Append("limit=20&");
+
+            if (null != start_timestamp && start_timestamp > 0UL)
+                paramBuilder.AppendFormat("start_timestamp={0}&", start_timestamp);
+            if (null != end_timestamp && end_timestamp > 0UL)
+                paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
+
+            if (count)
+                paramBuilder.AppendFormat("count=true&");
+            if (!string.IsNullOrEmpty(sort))
+                paramBuilder.AppendFormat("sort={0}&", sort);
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronNormalTransactionListJson jsonResult = ObjectParse<TronNormalTransactionListJson>(resp);
+
+            return jsonResult;
+        }
+
 
         /// <summary>
         /// 39.List the TRC-20 transfers related to a specified account

@@ -11,6 +11,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
     [TestClass()]
     public class TronScanClientTests
     {
+        /// <summary>
+        /// 1.Block Overview
+        /// </summary>
         [TestMethod()]
         public void BlockOverviewTest()
         {
@@ -20,6 +23,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 2.Get Last Block
+        /// </summary>
         [TestMethod()]
         public void GetLastBlockTest()
         {
@@ -29,6 +35,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 3.List all the accounts in the blockchain
+        /// </summary>
         [TestMethod()]
         public void GetChainTopAddressTest()
         {
@@ -38,6 +47,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 4.Get Account Assets
+        /// </summary>
         [TestMethod()]
         public void GetAccountAssetsTest()
         {
@@ -47,7 +59,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
-
+        /// <summary>
+        /// 5.List the blocks in the blockchain
+        /// </summary>
         [TestMethod()]
         public void GetLastBlocksTest()
         {
@@ -57,6 +71,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 6.List all the blocks produced by the specified SR in the blockchain
+        /// </summary>
         [TestMethod()]
         public void GetSRBlocksTest()
         {
@@ -66,6 +83,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 7.Get a single block's detail
+        /// </summary>
         [TestMethod()]
         public void GetBlockByNumberTest()
         {
@@ -75,6 +95,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 8.Get Last Transaction List
+        /// </summary>
         [TestMethod()]
         public void GetLastTransactionsTest()
         {
@@ -84,7 +107,17 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 9.List the transactions related to a specified account
+        /// </summary>
+        [TestMethod()]
+        public void GetNormalTransactionsTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetNormalTransactions("TMuA6YqfCeX8EhbfYEg5y7S4DqzSJireY9");
 
+            Assert.IsTrue(null != result);
+        }
 
 
 

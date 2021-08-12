@@ -354,31 +354,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronNormalTransactionListJson GetLastTransactions(int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp")
         {
-            //Params Builder
-            StringBuilder paramBuilder = new StringBuilder();
-            if (start > -1)
-                paramBuilder.AppendFormat("start={0}&", start);
-            else
-                paramBuilder.Append("start=0&");
-            if (limit > 0)
-                paramBuilder.AppendFormat("limit={0}&", limit);
-            else
-                paramBuilder.Append("limit=20&");
-            if (count)
-                paramBuilder.AppendFormat("count=true&");
-            if (!string.IsNullOrEmpty(sort))
-                paramBuilder.AppendFormat("sort={0}&", sort);
-
-            //create url
-            string url = this.CreateRestUrl(string.Format("transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
-
-            //http get
-            string resp = this.RestGet(url);
-
-            //json parse
-            TronNormalTransactionListJson jsonResult = ObjectParse<TronNormalTransactionListJson>(resp);
-
-            return jsonResult;
+            return this.GetNormalTransactions(null, start, limit, start_timestamp, end_timestamp, count, sort);
         }
 
         /// <summary>

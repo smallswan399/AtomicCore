@@ -92,6 +92,19 @@
         /// <returns></returns>
         TronNormalTransactionListJson GetNormalTransactions(string address = null, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
 
+        /// <summary>
+        /// 10.List the transactions related to an smart contract
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="contract">contract: contract address</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        TronContractTransactionListJson GetContractTransactions(string contract, int start = 0, int limit = 20, bool count = true, string sort = "-timestamp");
+
+
 
 
 

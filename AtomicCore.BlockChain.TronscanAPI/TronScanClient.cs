@@ -406,6 +406,57 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 10.List the transactions related to an smart contract
+        /// only display the latest 10,000 data records in the query time range
+        /// </summary>
+        /// <param name="contract">contract: contract address</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <param name="count">total number of records</param>
+        /// <param name="sort">define the sequence of the records return</param>
+        /// <returns></returns>
+        public TronContractTransactionListJson GetContractTransactions(string contract, int start = 0, int limit = 20, bool count = true, string sort = "-timestamp")
+        {
+            if (string.IsNullOrEmpty(contract))
+                throw new ArgumentNullException(nameof(contract));
+
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(contract))
+                paramBuilder.AppendFormat("contract={0}&", contract);
+
+            if (start > -1)
+                paramBuilder.AppendFormat("start={0}&", start);
+            else
+                paramBuilder.Append("start=0&");
+            if (limit > 0)
+                paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+                paramBuilder.Append("limit=20&");
+
+            if (count)
+                paramBuilder.AppendFormat("count=true&");
+            if (!string.IsNullOrEmpty(sort))
+                paramBuilder.AppendFormat("sort={0}&", sort);
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("contracts/transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronContractTransactionListJson jsonResult = ObjectParse<TronContractTransactionListJson>(resp);
+
+            return jsonResult;
+        }
+
+
+
+
+
+
 
         /// <summary>
         /// 39.List the TRC-20 transfers related to a specified account

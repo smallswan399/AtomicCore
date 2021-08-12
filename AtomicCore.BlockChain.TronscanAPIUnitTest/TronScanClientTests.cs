@@ -119,7 +119,17 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 10.List the transactions related to an smart contract
+        /// </summary>
+        [TestMethod()]
+        public void GetContractTransactionsTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetContractTransactions("TGfbkJww3x5cb9u4ekLtZ9hXvJo48nUSi4");
 
+            Assert.IsTrue(null != result);
+        }
 
 
         [TestMethod()]

@@ -179,6 +179,18 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// 20.Get a single contract's abi & byteCode
+        /// </summary>
+        [TestMethod()]
+        public void GetContractABITest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetContractABI("TEEXEWrkMFKapSMJ6mErg39ELFKDqEs6w3");
+
+            Assert.IsTrue(null != result);
+        }
+
 
 
         /// <summary>
@@ -235,7 +247,6 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
-
 
     }
 }

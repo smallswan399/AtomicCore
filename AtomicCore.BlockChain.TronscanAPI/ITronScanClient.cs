@@ -140,13 +140,23 @@
         TronNormalTransferListJson GetNormalTransfers(string address = null, string token = null, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, bool count = true, string sort = "-timestamp");
 
         /// <summary>
-        /// List all the nodes in the blockchain
+        /// 14.List all the nodes in the blockchain
         /// </summary>
         /// <returns></returns>
         TronChainNodeListJson GetChainNodes();
 
 
 
+
+
+
+
+        /// <summary>
+        /// 20.Get a single contract's abi & byteCode
+        /// </summary>
+        /// <param name="contract">contract address</param>
+        /// <returns></returns>
+        TronContractABICodeJson GetContractABI(string contract);
 
 
 

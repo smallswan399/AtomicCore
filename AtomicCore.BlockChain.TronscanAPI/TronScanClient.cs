@@ -515,6 +515,28 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
 
         /// <summary>
+        /// 20.Get a single contract's abi & byteCode
+        /// </summary>
+        /// <param name="contract">contract address</param>
+        /// <returns></returns>
+        public TronContractABICodeJson GetContractABI(string contract)
+        {
+            if (string.IsNullOrEmpty(contract))
+                throw new ArgumentNullException(nameof(contract));
+
+            string url = this.CreateRestUrl(string.Format("contracts/code?contract={0}", contract));
+            string resp = this.RestGet(url);
+
+            TronContractABICodeJson jsonResult = ObjectParse<TronContractABICodeJson>(resp);
+            if (null == jsonResult.Data)
+                return null;
+
+            return jsonResult;
+        }
+
+
+
+        /// <summary>
         /// 39.List the TRC-20 transfers related to a specified account
         /// only display the latest 10,000 data records in the query time range
         /// </summary>

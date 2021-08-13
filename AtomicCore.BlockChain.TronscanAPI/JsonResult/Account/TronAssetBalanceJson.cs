@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Numerics;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -11,7 +12,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// account balance
         /// </summary>
         [JsonProperty("balance")]
-        public decimal Balance { get; set; }
+        public BigInteger Balance { get; set; }
 
         /// <summary>
         /// converted trx value amount

@@ -119,7 +119,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// cost
         /// </summary>
         [JsonProperty("cost")]
-        public TronContractCostJson Cost { get; set; }
+        public TronTransactionCostJson Cost { get; set; }
 
         /// <summary>
         /// tokenInfo

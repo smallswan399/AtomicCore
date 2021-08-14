@@ -8,19 +8,25 @@ namespace AtomicCore.BlockChain.TronscanAPI
     public class TronContractDataJson
     {
         /// <summary>
-        /// contract data
-        /// </summary>
-        [JsonProperty("data")]
-        public string Data { get; set; }
-
-        /// <summary>
         /// Owner Address
         /// </summary>
         [JsonProperty("owner_address")]
         public string OwnerAddress { get; set; }
 
         /// <summary>
-        /// Contract Address
+        /// to address(only trx transfer exists)
+        /// </summary>
+        [JsonProperty("to_address")]
+        public string ToAddress { get; set; }
+
+        /// <summary>
+        /// amount(only trx transfer exists)
+        /// </summary>
+        [JsonProperty("amount"), JsonConverter(typeof(BizTronULongJsonConverter))]
+        public ulong Amount { get; set; }
+
+        /// <summary>
+        /// Contract Address(only trc20 or trc721 exists)
         /// </summary>
         [JsonProperty("contract_address")]
         public string ContractAddress { get; set; }
@@ -30,5 +36,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("call_value"), JsonConverter(typeof(BizTronULongJsonConverter))]
         public ulong CallValue { get; set; }
+
+        /// <summary>
+        /// contract data
+        /// </summary>
+        [JsonProperty("data")]
+        public string Data { get; set; }
     }
 }

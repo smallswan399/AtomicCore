@@ -111,9 +111,10 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
         /// <summary>
         /// amount
+        /// trx transfer amount,unit is sun
         /// </summary>
-        [JsonProperty("amount")]
-        public string Amount { get; set; }
+        [JsonProperty("amount"), JsonConverter(typeof(BizTronULongJsonConverter))]
+        public ulong Amount { get; set; }
 
         /// <summary>
         /// cost

@@ -4,7 +4,7 @@ package protocol;
 import "Protos/core/Tron.proto";
 
 option go_package = "github.com/tronprotocol/grpc-gateway/api";
-option csharp_namespace = "TronNet.Protocol";
+option csharp_namespace = "AtomicCore.BlockChain.TronNet";
 
 service TronZksnark {
   rpc CheckZksnarkProof (ZksnarkRequest) returns (ZksnarkResponse) {

@@ -16,7 +16,7 @@ import "Protos/core/contract/shield_contract.proto";
 
 
 option go_package = "github.com/tronprotocol/grpc-gateway/api";
-option csharp_namespace = "TronNet.Protocol";
+option csharp_namespace = "AtomicCore.BlockChain.TronNet";
 
 service Wallet {
 

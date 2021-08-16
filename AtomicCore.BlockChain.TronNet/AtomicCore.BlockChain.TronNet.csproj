@@ -14,7 +14,12 @@
     <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+    <DefineConstants>TRACE;SECP256K1_LIB;HAS_SPAN</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
     <PackageReference Include="Google.Api.CommonProtos" Version="2.3.0" />
     <PackageReference Include="Google.Protobuf" Version="3.17.3" />
     <PackageReference Include="Google.Protobuf.Tools" Version="3.17.2" />

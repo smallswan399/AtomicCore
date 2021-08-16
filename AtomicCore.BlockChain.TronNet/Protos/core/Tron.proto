@@ -6,7 +6,7 @@ import "Protos/core/Discover.proto";
 package protocol;
 
 
-option csharp_namespace = "TronNet.Protocol";
+option csharp_namespace = "AtomicCore.BlockChain.TronNet";
 option go_package = "github.com/tronprotocol/grpc-gateway/core";
 
 enum AccountType {

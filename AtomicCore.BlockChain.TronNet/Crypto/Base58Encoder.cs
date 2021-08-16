@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace TronNet.Crypto
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Base58 Encoder Provider

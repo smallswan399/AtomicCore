@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TronNet
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Byte Array Class

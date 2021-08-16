@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TronNet.Crypto
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Missing PrivateKey Exception

@@ -10,7 +10,7 @@ using System.Linq;
 using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace TronNet.Crypto
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// ECKey based on the implementation of bitcoinj, NBitcoin

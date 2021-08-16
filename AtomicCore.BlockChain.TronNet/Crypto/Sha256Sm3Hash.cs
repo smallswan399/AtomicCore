@@ -2,7 +2,7 @@
 using Org.BouncyCastle.Crypto.Digests;
 using System;
 
-namespace TronNet.Crypto
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Sha256 Sm3 Hash

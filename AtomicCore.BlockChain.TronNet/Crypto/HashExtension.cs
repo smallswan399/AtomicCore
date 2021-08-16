@@ -1,7 +1,7 @@
 ﻿using Org.BouncyCastle.Crypto.Digests;
 using System.Text;
 
-namespace TronNet.Crypto
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Hash Extension

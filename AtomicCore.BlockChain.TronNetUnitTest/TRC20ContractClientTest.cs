@@ -25,17 +25,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public async Task TestTransferAsync()
         {
-            string privateKey = "1bf5134ffaedae943b8d2b2d5a19fd067210dd7ebf9ead392681a651b53eef75";
+            //Main Account
+            string privateKey = TronTestAccountCollection.TestMain.PirvateKey;
             ITronAccount account = _wallet.GetAccount(privateKey);
-            //Assert.True(!string.IsNullOrEmpty(account.Address));
 
-            string contractAddress = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"; //USDT Contract Address
-            string to = "TYBp938TjQyndAcmmHVoq6eJBXoqi1yDuZ";
+            //USDT Contract Address
+            string contractAddress = TronTestAccountCollection.TestNetUsdtAddress;
+
+            //to address
+            string to = TronTestAccountCollection.TestA.Address;
             decimal amount = 10M; //USDT Amount
             long feeAmount = 5L * 1000000L;
 
+            //contract client
             var contractClient = _contractClientFactory.CreateClient(ContractProtocol.TRC20);
 
+            //transfer
             var result = await contractClient.TransferAsync(contractAddress, account, to, amount, string.Empty, feeAmount);
 
             Assert.IsNotNull(result);

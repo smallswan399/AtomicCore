@@ -39,7 +39,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             string currentBlockHash = block.GetBlockHash();
 
-            Assert.IsNull(blockID.Equals(currentBlockHash, StringComparison.OrdinalIgnoreCase));
+            Assert.IsTrue(blockID.Equals(currentBlockHash, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

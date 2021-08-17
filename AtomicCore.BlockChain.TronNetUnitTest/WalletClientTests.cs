@@ -74,6 +74,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         /// <summary>
         /// Get Transaction
+        /// GRPC not available, use REST API
         /// </summary>
         [TestMethod()]
         public void GetTransaction()

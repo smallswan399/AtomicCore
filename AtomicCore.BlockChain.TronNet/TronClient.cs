@@ -10,6 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
         #region Variables
 
         private readonly IOptions<TronNetOptions> _options;
+        private readonly ITronRestAPI _restApiClient;
         private readonly IGrpcChannelClient _channelClient;
         private readonly IWalletClient _walletClient;
         private readonly ITransactionClient _transactionClient;
@@ -22,17 +23,20 @@ namespace AtomicCore.BlockChain.TronNet
         /// Constructor
         /// </summary>
         /// <param name="options"></param>
+        /// <param name="restApiClient"></param>
         /// <param name="channelClient"></param>
         /// <param name="walletClient"></param>
         /// <param name="transactionClient"></param>
         public TronClient(
             IOptions<TronNetOptions> options,
+            ITronRestAPI restApiClient,
             IGrpcChannelClient channelClient,
             IWalletClient walletClient,
             ITransactionClient transactionClient
         )
         {
             _options = options;
+            _restApiClient = restApiClient;
             _channelClient = channelClient;
             _walletClient = walletClient;
             _transactionClient = transactionClient;
@@ -76,6 +80,15 @@ namespace AtomicCore.BlockChain.TronNet
         public ITransactionClient GetTransaction()
         {
             return _transactionClient;
+        }
+
+        /// <summary>
+        /// Get Rest API
+        /// </summary>
+        /// <returns></returns>
+        public ITronRestAPI GetRestAPI()
+        {
+            return _restApiClient;
         }
 
         #endregion

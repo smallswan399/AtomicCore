@@ -13,6 +13,21 @@ namespace AtomicCore.BlockChain.TronNet
         public TronNetwork Network { get; set; }
 
         /// <summary>
+        /// Full Node Rest Api
+        /// </summary>
+        public string FullNodeRestAPI { get; set; }
+
+        /// <summary>
+        /// Solidity Node Rest Api
+        /// </summary>
+        public string SolidityNodeRestAPI { get; set; }
+
+        /// <summary>
+        /// Event Srv Api
+        /// </summary>
+        public string EventSrvAPI { get; set; }
+
+        /// <summary>
         /// Grpc Channel
         /// </summary>
         public GrpcChannelOption Channel { get; set; }

@@ -33,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\api\api.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\api\zksnark.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\core\contract\account_contract.proto" GrpcServices="Client" />

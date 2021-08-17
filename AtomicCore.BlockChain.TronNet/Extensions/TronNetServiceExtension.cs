@@ -16,10 +16,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public static IServiceCollection AddTronNet(this IServiceCollection services, Action<TronNetOptions> setupAction)
         {
-            var options = new TronNetOptions();
-
+            //Load options
+            TronNetOptions options = new TronNetOptions();
             setupAction(options);
 
+            //Register Interface
+            services.AddTransient<ITronRestAPI, TronRestAPI>();
             services.AddTransient<ITransactionClient, TransactionClient>();
             services.AddTransient<IGrpcChannelClient, GrpcChannelClient>();
             services.AddTransient<ITronClient, TronClient>();

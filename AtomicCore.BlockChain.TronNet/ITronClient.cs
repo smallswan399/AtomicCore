@@ -11,6 +11,12 @@
         TronNetwork TronNetwork { get; }
 
         /// <summary>
+        /// Get Rest Api
+        /// </summary>
+        /// <returns></returns>
+        ITronRestAPI GetRestAPI();
+
+        /// <summary>
         /// Grpc Channel Client
         /// </summary>
         /// <returns></returns>

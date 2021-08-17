@@ -24,6 +24,19 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         /// <summary>
+        /// Get Current Block
+        /// </summary>
+        [TestMethod()]
+        public void GetCurrentBlock()
+        {
+            BlockExtention block = _walletProtocol.GetNowBlock2(new EmptyMessage());
+
+            string blockHash = block.Blockid.ToByteArray().ToHex();
+
+            Assert.IsTrue(!string.IsNullOrEmpty(blockHash));
+        }
+
+        /// <summary>
         /// Get Block By Number 
         /// </summary>
         [TestMethod()]

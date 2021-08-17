@@ -38,10 +38,10 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             long feeAmount = 5L * 1000000L;
 
             //contract client
-            var contractClient = _contractClientFactory.CreateClient(ContractProtocol.TRC20);
+            IContractClient contractClient = _contractClientFactory.CreateClient(ContractProtocol.TRC20);
 
             //transfer
-            var result = await contractClient.TransferAsync(contractAddress, account, to, amount, string.Empty, feeAmount);
+            string result = await contractClient.TransferAsync(contractAddress, account, to, amount, string.Empty, feeAmount);
 
             Assert.IsNotNull(result);
         }

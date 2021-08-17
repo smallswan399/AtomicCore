@@ -29,17 +29,34 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetBlockByNumber()
         {
-            string blockID = "0000000001f618ad6a2d6492db91395ee6cb9c1ea8c4a38c456aa3aa57b592e5";
-            long blockNumber = 32905389;
+            string blk_hash_mainnet = "0000000001f618ad6a2d6492db91395ee6cb9c1ea8c4a38c456aa3aa57b592e5";
+            long bh_mainnet = 32905389;
 
             Block block = _walletProtocol.GetBlockByNum(new NumberMessage()
             {
-                Num = blockNumber
+                Num = bh_mainnet
             }, headers: _wallet.GetHeaders());
 
             string currentBlockHash = block.GetBlockHash();
 
-            Assert.IsTrue(blockID.Equals(currentBlockHash, StringComparison.OrdinalIgnoreCase));
+            Assert.IsTrue(blk_hash_mainnet.Equals(currentBlockHash, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Get Block By Hash
+        /// </summary>
+        [TestMethod()]
+        public void GetBlockByHash()
+        {
+            string blk_hash_mainnet = "0000000001f618ad6a2d6492db91395ee6cb9c1ea8c4a38c456aa3aa57b592e5";
+            long bh_mainnet = 32905389;
+
+            Block block = _walletProtocol.GetBlockById(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(blk_hash_mainnet.HexToByteArray())
+            });
+
+            Assert.IsTrue(block.BlockHeader.RawData.Number == bh_mainnet);
         }
     }
 }

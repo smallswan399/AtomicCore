@@ -83,5 +83,20 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             Assert.IsTrue(txInfo.TxID.Equals(txid_mainnet, StringComparison.OrdinalIgnoreCase));
         }
+
+        [TestMethod()]
+        public void LongParse()
+        {
+            //32905389
+            long bh = 32905389;
+            //0000000001f618ad6a2d6492db91395ee6cb9c1ea8c4a38c456aa3aa57b592e5
+            string blk_hash = "0000000001f618ad6a2d6492db91395ee6cb9c1ea8c4a38c456aa3aa57b592e5";
+
+            byte[] bys = blk_hash.HexToByteArray();
+
+            
+
+            Assert.IsTrue(true);
+        }
     }
 }

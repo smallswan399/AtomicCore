@@ -47,7 +47,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// contractType
         /// </summary>
         [JsonProperty("contractType")]
-        public int ContractType { get; set; }
+        public TronscanContractType ContractType { get; set; }
 
         /// <summary>
         /// confirmed

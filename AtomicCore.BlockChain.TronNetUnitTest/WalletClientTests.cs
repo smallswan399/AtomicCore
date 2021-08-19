@@ -79,7 +79,11 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetTransaction()
         {
-            TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("cd85283e47a562a2a717b8858010b36808828b14d439c046677cc6b06063176d");
+            //TRX转账 7953d52b688acc5d5f04a97f0f922269d7c35dc9548c44f6c252f3894db4beb6
+            //TRC10转账 8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63
+            //TRC20转账 556f9d350dfae17fd79517b760358b37a1cb1dde95db0236ee85e64fd74f0eb5
+
+            TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("556f9d350dfae17fd79517b760358b37a1cb1dde95db0236ee85e64fd74f0eb5");
 
             Assert.IsTrue(txInfo.TxID.Equals(txid_mainnet, StringComparison.OrdinalIgnoreCase));
         }

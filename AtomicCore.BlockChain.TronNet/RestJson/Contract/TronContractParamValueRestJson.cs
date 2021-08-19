@@ -36,5 +36,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("contract_address")]
         public string ContractAddress { get; set; }
+
+        /// <summary>
+        /// Trc10 Asset Name
+        /// </summary>
+        [JsonProperty("asset_name")]
+        public string Trc10AssetName { get; set; }
     }
 }

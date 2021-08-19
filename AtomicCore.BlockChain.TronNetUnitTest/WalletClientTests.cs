@@ -15,6 +15,8 @@ namespace AtomicCore.BlockChain.TronNet.Tests
     [TestClass()]
     public class WalletClientTests
     {
+        #region Variables
+
         private const string blk_hash_mainnet = "0000000001f618ad6a2d6492db91395ee6cb9c1ea8c4a38c456aa3aa57b592e5";
         private const long bh_mainnet = 32905389;
         private const string txid_mainnet = "bfe65fb20e26225345ab6e20c9852ce5af411e5b18245b8a6abbeafb3582d802";
@@ -24,6 +26,13 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         private readonly IWalletClient _wallet;
         private readonly Wallet.WalletClient _walletProtocol;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public WalletClientTests()
         {
             _record = TronTestServiceExtension.GetMainRecord();
@@ -31,6 +40,10 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             _wallet = _record.TronClient.GetWallet();
             _walletProtocol = _wallet.GetProtocol();
         }
+
+        #endregion
+
+        #region Query Network
 
         /// <summary>
         /// Get Current Block
@@ -86,10 +99,23 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             //TRC10转账 8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63
             //TRC20转账 556f9d350dfae17fd79517b760358b37a1cb1dde95db0236ee85e64fd74f0eb5
 
-            TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63");
+            //APIREST
+            //TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63");
+            //Assert.IsTrue(!string.IsNullOrEmpty(txInfo.TxID));
 
-            Assert.IsTrue(!string.IsNullOrEmpty(txInfo.TxID));
+            //GRPC
+            string txid = "7953d52b688acc5d5f04a97f0f922269d7c35dc9548c44f6c252f3894db4beb6";
+            byte[] txidBuffer = txid.HexToByteArray();
+
+            var txInfo = _walletProtocol.GetTransactionById(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(txidBuffer)
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(!string.IsNullOrEmpty(txInfo.GetTxid()));
         }
+
+        #endregion
 
         #region TRC10 Token Test
 

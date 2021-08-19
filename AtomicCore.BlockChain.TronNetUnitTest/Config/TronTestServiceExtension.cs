@@ -38,7 +38,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             IServiceCollection services = new ServiceCollection();
             services.AddTronNet(x =>
             {
-                x.Network = TronNetwork.MainNet;
+                x.Network = TronNetwork.TestNet;
                 x.FullNodeRestAPI = "https://api.shasta.trongrid.io";
                 x.SolidityNodeRestAPI = "https://api.shasta.trongrid.io";
                 x.EventSrvAPI = "https://api.shasta.trongrid.io";

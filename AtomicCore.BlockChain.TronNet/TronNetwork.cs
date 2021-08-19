@@ -11,9 +11,9 @@
         /// </summary>
         MainNet = 0x41,
 
-        /////// <summary>
-        /////// Test Net
-        /////// </summary>
-        ////TestNet = 0xa0,
+        /// <summary>
+        /// Test Net
+        /// </summary>
+        TestNet = 0xa0
     }
 }

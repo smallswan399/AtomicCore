@@ -13,7 +13,7 @@ namespace AtomicCore.BlockChain.TronNet
 
         private readonly ECKey _ecKey;
         private string _publicAddress = null;
-        private readonly TronNetwork _network = TronNetwork.MainNet;
+        private readonly TronNetwork _network;
         private string _privateKeyHex = null;
 
         #endregion
@@ -25,7 +25,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="network">network Type Enum</param>
-        public TronECKey(string privateKey, TronNetwork network)
+        public TronECKey(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = new ECKey(privateKey.HexToByteArray(), true);
             _network = network;
@@ -37,7 +37,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="vch"></param>
         /// <param name="isPrivate"></param>
         /// <param name="network">network Type Enum</param>
-        public TronECKey(byte[] vch, bool isPrivate, TronNetwork network)
+        public TronECKey(byte[] vch, bool isPrivate, TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = new ECKey(vch, isPrivate);
             _network = network;
@@ -48,7 +48,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="ecKey"></param>
         /// <param name="network">network Type Enum</param>
-        internal TronECKey(ECKey ecKey, TronNetwork network)
+        internal TronECKey(ECKey ecKey, TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = ecKey;
             _network = network;
@@ -58,7 +58,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// Constructor(new ECKey instane)
         /// </summary>
         /// <param name="network">network Type Enum</param>
-        internal TronECKey(TronNetwork network)
+        internal TronECKey(TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = new ECKey();
             _network = network;
@@ -73,7 +73,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="network"></param>
         /// <returns></returns>
-        public static TronECKey GenerateKey(TronNetwork network)
+        public static TronECKey GenerateKey(TronNetwork network = TronNetwork.MainNet)
         {
             return new TronECKey(network);
         }
@@ -86,7 +86,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public static string GetPublicAddress(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
-            var key = new TronECKey(privateKey.HexToByteArray(), true, network);
+            TronECKey key = new TronECKey(privateKey.HexToByteArray(), true, network);
 
             return key.GetPublicAddress();
         }
@@ -138,7 +138,7 @@ namespace AtomicCore.BlockChain.TronNet
 
             byte[] address = new byte[21];
             Array.Copy(addrByte20, 0, address, 1, 20);
-            address[0] = (byte)network;
+            address[0] = GetNetworkPrefix(network);
 
             byte[] hash = Base58Encoder.TwiceHash(address);
             byte[] bytes = new byte[4];
@@ -152,6 +152,7 @@ namespace AtomicCore.BlockChain.TronNet
             switch (network)
             {
                 case TronNetwork.MainNet:
+                case TronNetwork.TestNet:
                     tronAddress = Base58Encoder.Encode(addressChecksum);
                     break;
                 default:
@@ -160,6 +161,23 @@ namespace AtomicCore.BlockChain.TronNet
             }
 
             return tronAddress;
+        }
+
+        /// <summary>
+        /// Get Network Prefix
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        public static byte GetNetworkPrefix(TronNetwork network = TronNetwork.MainNet)
+        {
+            switch (network)
+            {
+                case TronNetwork.MainNet:
+                case TronNetwork.TestNet:
+                    return 0x41;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         #endregion
@@ -172,7 +190,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public byte GetPublicAddressPrefix()
         {
-            return (byte)_network;
+            return GetNetworkPrefix(_network);
         }
 
         /// <summary>
@@ -216,10 +234,16 @@ namespace AtomicCore.BlockChain.TronNet
             Array.Copy(address, 0, addressChecksum, 0, 21);
             Array.Copy(bytes, 0, addressChecksum, 21, 4);
 
-            if (_network == TronNetwork.MainNet)
-                _publicAddress = Base58Encoder.Encode(addressChecksum);
-            else
-                _publicAddress = addressChecksum.ToHex();
+            switch(_network)
+            {
+                case TronNetwork.MainNet:
+                case TronNetwork.TestNet:
+                    _publicAddress = Base58Encoder.Encode(addressChecksum);
+                    break;
+                default:
+                    _publicAddress = addressChecksum.ToHex();
+                    break;
+            }
 
             return _publicAddress;
         }

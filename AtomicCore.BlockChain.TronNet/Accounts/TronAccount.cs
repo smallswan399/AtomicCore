@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="network"></param>
-        public TronAccount(string privateKey, TronNetwork network)
+        public TronAccount(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
             Initialise(new TronECKey(privateKey, network));
         }

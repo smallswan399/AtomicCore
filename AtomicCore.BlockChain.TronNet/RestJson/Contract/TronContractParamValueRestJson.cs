@@ -20,6 +20,18 @@ namespace AtomicCore.BlockChain.TronNet
         public string OwnerAddress { get; set; }
 
         /// <summary>
+        /// to_address(Trx && Trc10)
+        /// </summary>
+        [JsonProperty("to_address")]
+        public string ToAddress { get; set; }
+
+        /// <summary>
+        /// amount(Trx && Trc10)
+        /// </summary>
+        [JsonProperty("amount"),JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        public ulong Amount { get; set; }
+
+        /// <summary>
         /// contract_address
         /// </summary>
         [JsonProperty("contract_address")]

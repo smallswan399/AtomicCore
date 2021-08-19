@@ -9,6 +9,9 @@ using Google.Protobuf;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
+    /// <summary>
+    /// https://developers.tron.network/reference#get-contract
+    /// </summary>
     [TestClass()]
     public class WalletClientTests
     {
@@ -83,9 +86,50 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             //TRC10转账 8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63
             //TRC20转账 556f9d350dfae17fd79517b760358b37a1cb1dde95db0236ee85e64fd74f0eb5
 
-            TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("556f9d350dfae17fd79517b760358b37a1cb1dde95db0236ee85e64fd74f0eb5");
+            TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63");
 
-            Assert.IsTrue(txInfo.TxID.Equals(txid_mainnet, StringComparison.OrdinalIgnoreCase));
+            Assert.IsTrue(!string.IsNullOrEmpty(txInfo.TxID));
         }
+
+        #region TRC10 Token Test
+
+        /// <summary>
+        /// Get Asset Issue By ID
+        /// </summary>
+        [TestMethod()]
+        public void GetAssetIssueById()
+        {
+            string mainnet_trc10_assert_id = "31303033353333";
+            var trc10 = _walletProtocol.GetAssetIssueById(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(mainnet_trc10_assert_id.HexToByteArray())
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(trc10.Precision > 0);
+        }
+
+        #endregion
+
+        #region Smart Contracts
+
+        /// <summary>
+        /// Get Contract
+        /// </summary>
+        [TestMethod()]
+        public void GetContract()
+        {
+            string mainnet_trc20_usdt_address = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
+            byte[] addressBuffer = Base58Encoder.DecodeFromBase58Check(mainnet_trc20_usdt_address);
+            //string addressHex = addressBuffer.ToHex();
+
+            SmartContract contract = _walletProtocol.GetContract(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(addressBuffer)
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(true);
+        }
+
+        #endregion
     }
 }

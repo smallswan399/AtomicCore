@@ -1,9 +1,9 @@
 ﻿namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// Tron Rest API
+    /// Tron Query Network
     /// </summary>
-    public interface ITronRestAPI
+    public interface ITronQueryNetworkRestAPI
     {
         /// <summary>
         /// Get Transaction By Txid

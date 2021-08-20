@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using System.Text.RegularExpressions;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
@@ -170,6 +171,40 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             }, headers: _wallet.GetHeaders());
 
             Assert.IsTrue(true);
+        }
+
+        /// <summary>
+        /// Tigger Contract
+        /// Call USDT Deciaml
+        /// </summary>
+        [TestMethod()]
+        public void TiggerContract()
+        {
+            //variables
+            string methodName = "decimals()";
+            string mainnet_trc20_usdt_address = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
+            string methodTop8 = Nethereum.Web3.Web3.Sha3(methodName).Substring(0, 8);
+
+            //my address hex
+            string myAddressHex = Base58Encoder.DecodeFromBase58Check(TronTestAccountCollection.TestA.Address).ToHex();
+
+            //contract address hex(shatanet contract address)
+            string contractAddressHex = Base58Encoder.DecodeFromBase58Check("TB7whW3J9jb5Amoi4R6WgTtMbWPeqMBjSw").ToHex();
+
+            var invokeResult = _walletProtocol.TriggerConstantContract(new TriggerSmartContract()
+            {
+                OwnerAddress = ByteString.CopyFrom(Base58Encoder.DecodeFromBase58Check(TronTestAccountCollection.TestA.Address)),
+                ContractAddress = ByteString.CopyFrom(Base58Encoder.DecodeFromBase58Check(mainnet_trc20_usdt_address)),
+                Data = ByteString.CopyFrom(methodTop8.HexToByteArray())
+            }, headers: _wallet.GetHeaders());
+
+            ByteString decimalBytestring = invokeResult.ConstantResult.FirstOrDefault();
+            byte[] deciaml_byte = decimalBytestring.ToByteArray();
+            string deciaml_hex = string.Format("0x{0}", Regex.Replace(deciaml_byte.ToHex(), "^0*", string.Empty));
+
+            int token_decimal = int.Parse(Regex.Replace(deciaml_byte.ToHex(), "^0*", string.Empty), System.Globalization.NumberStyles.HexNumber);
+
+            Assert.IsTrue(6 == token_decimal);
         }
 
         #endregion

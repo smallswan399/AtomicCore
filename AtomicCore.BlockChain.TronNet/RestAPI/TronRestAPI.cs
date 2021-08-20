@@ -108,7 +108,7 @@ namespace AtomicCore.BlockChain.TronNet
 
         #endregion
 
-        #region ITronQueryNetworkRestAPI Methods
+        #region ITronQueryNetworkRestAPI
 
         /// <summary>
         /// Get Transaction By Txid

@@ -115,6 +115,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(txInfo.GetTxid()));
         }
 
+        [TestMethod()]
+        public void GetTransactionInfo()
+        {
+            //GRPC
+            string txid = "7953d52b688acc5d5f04a97f0f922269d7c35dc9548c44f6c252f3894db4beb6";
+            byte[] txidBuffer = txid.HexToByteArray();
+
+            //GRPC
+            var txInfo = _walletProtocol.GetTransactionInfoById(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(txidBuffer)
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(txInfo != null);
+        }
+
         #endregion
 
         #region TRC10 Token Test

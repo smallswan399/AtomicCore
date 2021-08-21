@@ -164,11 +164,21 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
-        /// script address is byte21 with network prefix flag,hex format
+        /// Tron Address Convert to Script Address
+        /// </summary>
+        /// <param name="tronAddress"></param>
+        /// <returns></returns>
+        public static string ConvertToScriptAddress(string tronAddress)
+        {
+            return Base58Encoder.DecodeFromBase58Check(tronAddress).ToHex();
+        }
+
+        /// <summary>
+        /// script address is 21 bytes with network prefix flag,hex format
         /// </summary>
         /// <param name="scrpitAddress"></param>
         /// <returns></returns>
-        public static string ConvertToTronAddressFromContract(string scrpitAddress)
+        public static string ConvertToTronAddressFromScriptAddress(string scrpitAddress)
         {
             if (string.IsNullOrEmpty(scrpitAddress))
                 throw new ArgumentNullException(nameof(scrpitAddress));

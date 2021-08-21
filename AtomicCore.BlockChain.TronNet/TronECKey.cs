@@ -164,6 +164,29 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// script address is byte21 with network prefix flag,hex format
+        /// </summary>
+        /// <param name="scrpitAddress"></param>
+        /// <returns></returns>
+        public static string ConvertToTronAddressFromContract(string scrpitAddress)
+        {
+            if (string.IsNullOrEmpty(scrpitAddress))
+                throw new ArgumentNullException(nameof(scrpitAddress));
+
+            byte[] address = scrpitAddress.RemoveHexPrefix().HexToByteArray();
+
+            byte[] hash = Base58Encoder.TwiceHash(address);
+            byte[] bytes = new byte[4];
+            Array.Copy(hash, bytes, 4);
+
+            byte[] addressChecksum = new byte[25];
+            Array.Copy(address, 0, addressChecksum, 0, 21);
+            Array.Copy(bytes, 0, addressChecksum, 21, 4);
+
+            return Base58Encoder.Encode(addressChecksum);
+        }
+
+        /// <summary>
         /// Get Network Prefix
         /// </summary>
         /// <param name="network"></param>
@@ -234,7 +257,7 @@ namespace AtomicCore.BlockChain.TronNet
             Array.Copy(address, 0, addressChecksum, 0, 21);
             Array.Copy(bytes, 0, addressChecksum, 21, 4);
 
-            switch(_network)
+            switch (_network)
             {
                 case TronNetwork.MainNet:
                 case TronNetwork.TestNet:

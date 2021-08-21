@@ -100,20 +100,21 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             //TRC10转账 8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63
             //TRC20转账 556f9d350dfae17fd79517b760358b37a1cb1dde95db0236ee85e64fd74f0eb5
 
+            string txid = "76525fd3b9f92765ea30dc574dfd40997dc78588506994c9d724ab851445d8e8";
+
+
+
             //APIREST
-            //TronTransactionRestJson txInfo = _restAPI.GetTransactionByID("8f3d90cf3c3c09a74329afc537c9f8d6bce9a71461de2d864751a6afaf2bac63");
-            //Assert.IsTrue(!string.IsNullOrEmpty(txInfo.TxID));
+            TronTransactionRestJson rest_txInfo = _restAPI.GetTransactionByID(txid);
+            Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
 
             //GRPC
-            string txid = "7953d52b688acc5d5f04a97f0f922269d7c35dc9548c44f6c252f3894db4beb6";
-            byte[] txidBuffer = txid.HexToByteArray();
-
-            var txInfo = _walletProtocol.GetTransactionById(new BytesMessage()
+            var grpc_txInfo = _walletProtocol.GetTransactionById(new BytesMessage()
             {
-                Value = ByteString.CopyFrom(txidBuffer)
+                Value = ByteString.CopyFrom(txid.HexToByteArray())
             }, headers: _wallet.GetHeaders());
 
-            Assert.IsTrue(!string.IsNullOrEmpty(txInfo.GetTxid()));
+            Assert.IsTrue(!string.IsNullOrEmpty(grpc_txInfo.GetTxid()));
         }
 
         [TestMethod()]
@@ -130,6 +131,23 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             }, headers: _wallet.GetHeaders());
 
             Assert.IsTrue(txInfo != null);
+        }
+
+        #endregion
+
+        #region Address Untils
+
+        /// <summary>
+        /// hex address to tron address
+        /// </summary>
+        [TestMethod()]
+        public void AddressHexToTron()
+        {
+            string scriptAddress = "41a614f803b6fd780986a42c78ec9c7f77e6ded13c";
+
+            string tronAddress = TronECKey.ConvertToTronAddressFromContract(scriptAddress);
+
+            Assert.IsTrue("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t".Equals(tronAddress, StringComparison.OrdinalIgnoreCase));
         }
 
         #endregion

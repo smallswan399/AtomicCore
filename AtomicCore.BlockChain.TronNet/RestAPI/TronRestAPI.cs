@@ -49,19 +49,52 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// Rest Get Json Result
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private string RestGetJson(string url)
+        {
+            string resp;
+            try
+            {
+                //head api key
+                Dictionary<string, string> heads = null;
+                string apiKey = this._options.Value.ApiKey;
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    heads = new Dictionary<string, string>()
+                    {
+                        { c_apiKeyName,apiKey}
+                    };
+                }
+
+                resp = HttpProtocol.HttpGet(url, heads: heads);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return resp;
+        }
+
+        /// <summary>
         /// Rest Post Json Request
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">rest url</param>
         /// <param name="json">json data</param>
         /// <returns></returns>
-        private string RestPostJson<T>(string url, T json)
+        private string RestPostJson<T>(string url, T json = default)
         {
             string resp;
             try
             {
                 //post data
-                string post_data = Newtonsoft.Json.JsonConvert.SerializeObject(json);
+                string post_data = null;
+                if (!default(T).Equals(json))
+                    post_data = Newtonsoft.Json.JsonConvert.SerializeObject(json);
 
                 //head api key
                 Dictionary<string, string> heads = null;
@@ -108,6 +141,65 @@ namespace AtomicCore.BlockChain.TronNet
 
         #endregion
 
+        #region ITronAddressUtilitiesRestAPI
+
+        /// <summary>
+        /// Generates a random private key and address pair. 
+        /// Risk Warning : there is a security risk. 
+        /// This interface service has been shutdown by the Trongrid. 
+        /// Please use the offline mode or the node deployed by yourself.
+        /// </summary>
+        /// <returns>Returns a private key, the corresponding address in hex,and base58</returns>
+        public TronAddressKeyPairRestJson GenerateAddress()
+        {
+            string url = CreateFullNodeRestUrl("/wallet/generateaddress");
+            string resp = this.RestGetJson(url);
+            TronAddressKeyPairRestJson restJson = ObjectParse<TronAddressKeyPairRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Create address from a specified password string (NOT PRIVATE KEY)
+        /// Risk Warning : there is a security risk. 
+        /// This interface service has been shutdown by the Trongrid. 
+        /// Please use the offline mode or the node deployed by yourself.
+        /// </summary>
+        /// <param name="passphrase"></param>
+        /// <returns></returns>
+        public TronAddressBase58CheckRestJson CreateAddress(string passphrase)
+        {
+            if (string.IsNullOrEmpty(passphrase))
+                throw new ArgumentNullException(nameof(passphrase));
+
+            string passphraseHex = Encoding.UTF8.GetBytes(passphrase).ToHex();
+            string url = CreateFullNodeRestUrl("/wallet/createaddress");
+            string resp = this.RestPostJson(url, new { value = passphraseHex });
+            TronAddressBase58CheckRestJson restJson = ObjectParse<TronAddressBase58CheckRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Validates address, returns either true or false.
+        /// </summary>
+        /// <param name="address">Tron Address</param>
+        /// <returns></returns>
+        public TronAddressValidRestJson ValidateAddress(string address)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            string addressHex = Encoding.UTF8.GetBytes(address).ToHex();
+            string url = CreateFullNodeRestUrl("/wallet/validateaddress");
+            string resp = this.RestPostJson(url, new { value = addressHex });
+            TronAddressValidRestJson restJson = ObjectParse<TronAddressValidRestJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
+
         #region ITronQueryNetworkRestAPI
 
         /// <summary>
@@ -126,6 +218,8 @@ namespace AtomicCore.BlockChain.TronNet
 
             return restJson;
         }
+
+
 
         #endregion
     }

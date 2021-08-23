@@ -32,6 +32,12 @@ namespace AtomicCore.BlockChain.TronscanAPI
         public string ContractAddress { get; set; }
 
         /// <summary>
+        /// Asset Name
+        /// </summary>
+        [JsonProperty("asset_name")]
+        public string AssetName { get; set; }
+
+        /// <summary>
         /// call value
         /// </summary>
         [JsonProperty("call_value"), JsonConverter(typeof(BizTronULongJsonConverter))]
@@ -42,5 +48,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// </summary>
         [JsonProperty("data")]
         public string Data { get; set; }
+
+        /// <summary>
+        /// tokenInfo
+        /// </summary>
+        [JsonProperty("tokenInfo")]
+        public TronTokenBasicJson TokenInfo { get; set; }
     }
 }

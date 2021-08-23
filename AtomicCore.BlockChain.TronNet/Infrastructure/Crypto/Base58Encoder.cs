@@ -96,7 +96,7 @@ namespace AtomicCore.BlockChain.TronNet
         #region Public Methods
 
         /// <summary>
-        /// Decode From Base58Check
+        /// Decode From Base58Check (bytes length is 21)
         /// </summary>
         /// <param name="addressBase58"></param>
         /// <returns></returns>
@@ -251,7 +251,7 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
-        /// Decode
+        /// Decode (bytes length is 25)
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>

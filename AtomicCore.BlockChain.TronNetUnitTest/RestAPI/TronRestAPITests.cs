@@ -34,22 +34,6 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         #region ITronAddressUtilitiesRestAPI
 
         [TestMethod()]
-        public void GenerateAddressTest()
-        {
-            var result = _restAPI.GenerateAddress();
-
-            Assert.IsTrue(string.IsNullOrEmpty(result.Address));
-        }
-
-        [TestMethod()]
-        public void CreateAddressTest()
-        {
-            var result = _restAPI.CreateAddress("123456");
-
-            Assert.IsTrue(string.IsNullOrEmpty(result.Value));
-        }
-
-        [TestMethod()]
         public void ValidateAddressTest()
         {
             var result = _restAPI.ValidateAddress("TEfiVcH2MF43NDXLpxmy6wRpaMxnZuc4iX");

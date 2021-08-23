@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.TronNet
+﻿using System;
+
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Tron Address Utilities Rest API
@@ -12,6 +14,7 @@
         /// Please use the offline mode or the node deployed by yourself.
         /// </summary>
         /// <returns>Returns a private key, the corresponding address in hex,and base58</returns>
+        [Obsolete("Remote service has been removed")]
         TronAddressKeyPairRestJson GenerateAddress();
 
         /// <summary>
@@ -22,6 +25,7 @@
         /// </summary>
         /// <param name="passphrase"></param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         TronAddressBase58CheckRestJson CreateAddress(string passphrase);
 
         /// <summary>

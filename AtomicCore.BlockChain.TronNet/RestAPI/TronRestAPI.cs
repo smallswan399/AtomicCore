@@ -59,17 +59,45 @@ namespace AtomicCore.BlockChain.TronNet
             try
             {
                 //head api key
+                Dictionary<string, string> heads = new Dictionary<string, string>()
+                {
+                    { "Accept","application/json"}
+                };
+
+                string apiKey = this._options.Value.ApiKey;
+                if (!string.IsNullOrEmpty(apiKey))
+                    heads.Add(c_apiKeyName, apiKey);
+
+                resp = HttpProtocol.HttpGet(url, heads: heads);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return resp;
+        }
+
+        /// <summary>
+        /// Rest Post Json Request
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private string RestPostJson(string url)
+        {
+            string resp;
+            try
+            {
+                //head api key
                 Dictionary<string, string> heads = null;
                 string apiKey = this._options.Value.ApiKey;
                 if (!string.IsNullOrEmpty(apiKey))
-                {
                     heads = new Dictionary<string, string>()
                     {
                         { c_apiKeyName,apiKey}
                     };
-                }
 
-                resp = HttpProtocol.HttpGet(url, heads: heads);
+                resp = HttpProtocol.HttpPost(url, null, heads: heads);
             }
             catch (Exception ex)
             {
@@ -86,26 +114,22 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="url">rest url</param>
         /// <param name="json">json data</param>
         /// <returns></returns>
-        private string RestPostJson<T>(string url, T json = default)
+        private string RestPostJson<T>(string url, T json)
         {
             string resp;
             try
             {
                 //post data
-                string post_data = null;
-                if (!default(T).Equals(json))
-                    post_data = Newtonsoft.Json.JsonConvert.SerializeObject(json);
+                string post_data = Newtonsoft.Json.JsonConvert.SerializeObject(json);
 
                 //head api key
                 Dictionary<string, string> heads = null;
                 string apiKey = this._options.Value.ApiKey;
                 if (!string.IsNullOrEmpty(apiKey))
-                {
                     heads = new Dictionary<string, string>()
                     {
                         { c_apiKeyName,apiKey}
                     };
-                }
 
                 resp = HttpProtocol.HttpPost(url, post_data, heads: heads);
             }
@@ -150,6 +174,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// Please use the offline mode or the node deployed by yourself.
         /// </summary>
         /// <returns>Returns a private key, the corresponding address in hex,and base58</returns>
+        [Obsolete("Remote service has been removed")]
         public TronAddressKeyPairRestJson GenerateAddress()
         {
             string url = CreateFullNodeRestUrl("/wallet/generateaddress");
@@ -167,6 +192,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="passphrase"></param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         public TronAddressBase58CheckRestJson CreateAddress(string passphrase)
         {
             if (string.IsNullOrEmpty(passphrase))
@@ -190,9 +216,9 @@ namespace AtomicCore.BlockChain.TronNet
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
-            string addressHex = Encoding.UTF8.GetBytes(address).ToHex();
+            string addressHex = Base58Encoder.DecodeFromBase58Check(address).ToHex();
             string url = CreateFullNodeRestUrl("/wallet/validateaddress");
-            string resp = this.RestPostJson(url, new { value = addressHex });
+            string resp = this.RestPostJson(url, new { address = addressHex });
             TronAddressValidRestJson restJson = ObjectParse<TronAddressValidRestJson>(resp);
 
             return restJson;

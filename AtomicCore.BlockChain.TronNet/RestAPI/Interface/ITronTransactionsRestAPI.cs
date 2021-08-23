@@ -21,6 +21,16 @@ namespace AtomicCore.BlockChain.TronNet
 
         void EasyTransferByPrivate();
 
-        void CreateTransaction(string ownerAddress, string toAddress, ulong amount, int? permissionID, bool? visible);
+        /// <summary>
+        /// Create a TRX transfer transaction. 
+        /// If to_address does not exist, then create the account on the blockchain.
+        /// </summary>
+        /// <param name="ownerAddress">To_address is the transfer address</param>
+        /// <param name="toAddress">Owner_address is the transfer address</param>
+        /// <param name="amount">Amount is the transfer amount,the unit is trx</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional.Whehter the address is in base58 format</param>
+        /// <returns></returns>
+        TronCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID, bool? visible);
     }
 }

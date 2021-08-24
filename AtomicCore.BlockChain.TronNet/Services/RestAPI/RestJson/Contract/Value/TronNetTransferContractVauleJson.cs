@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -8,6 +9,8 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public class TronNetTransferContractVauleJson : TronNetContractBaseValueJson
     {
+        #region Propertys
+
         /// <summary>
         /// toAddress
         /// </summary>
@@ -19,5 +22,21 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("amount"), JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong Amount { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Get Amount of decimal
+        /// </summary>
+        /// <param name="decimals"></param>
+        /// <returns></returns>
+        public decimal GetAmount(int decimals = 6)
+        {
+            return Amount / (decimal)Math.Pow(10, decimals);
+        }
+
+        #endregion
     }
 }

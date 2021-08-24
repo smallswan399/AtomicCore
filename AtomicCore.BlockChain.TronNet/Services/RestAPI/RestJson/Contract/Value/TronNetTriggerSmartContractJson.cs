@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Text.RegularExpressions;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -68,6 +69,25 @@ namespace AtomicCore.BlockChain.TronNet
             string hexAddress = this.Data.Substring(30, 42);
 
             return TronNetECKey.ConvertToEthAddressFromHexAddress(hexAddress, isUpper);
+        }
+
+        /// <summary>
+        /// Get Original Amount,unit is min
+        /// </summary>
+        /// <returns></returns>
+        public ulong GetOriginalAmount()
+        {
+            if (string.IsNullOrEmpty(Data))
+                return 0UL;
+            if (!Data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
+                return 0UL;
+            if ((Data.Length - 8) % 64 != 0)
+                return 0UL;
+
+            string removeMethodTopic = Data.Substring(8);
+            string amountHex = TronNetUntils.RemoveHexZero(removeMethodTopic.Substring(64, 64), TronNetHexCuteZeroStrategy.Left, 0, true);
+
+            return Convert.ToUInt64(amountHex,16);
         }
 
         #endregion

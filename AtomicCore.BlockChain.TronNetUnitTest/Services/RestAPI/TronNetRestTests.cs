@@ -64,6 +64,9 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             string toTronAddress = valueJson.GetToTronAddress();
             Assert.IsTrue("TBVaidbMvnXovzHJV7TTxeZ5Tkehxrx5UW".Equals(toTronAddress, StringComparison.OrdinalIgnoreCase));
 
+            ulong amount = valueJson.GetOriginalAmount();
+            Assert.IsTrue(amount > 0);
+
             Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
         }
 

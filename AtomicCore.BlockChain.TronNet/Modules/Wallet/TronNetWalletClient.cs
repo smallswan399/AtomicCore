@@ -8,7 +8,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Wallet Client Implementation Class
     /// </summary>
-    public class WalletClient : IWalletClient
+    public class TronNetWalletClient : ITronNetWalletClient
     {
         #region Variables
 
@@ -24,7 +24,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="channelClient"></param>
         /// <param name="options"></param>
-        public WalletClient(IGrpcChannelClient channelClient, IOptions<TronNetOptions> options)
+        public TronNetWalletClient(IGrpcChannelClient channelClient, IOptions<TronNetOptions> options)
         {
             _channelClient = channelClient;
             _options = options;
@@ -52,7 +52,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public ITronNetAccount GenerateAccount()
         {
-            TronECKey tronKey = TronECKey.GenerateKey(_options.Value.Network);
+            TronNetECKey tronKey = TronNetECKey.GenerateKey(_options.Value.Network);
 
             return new TronNetAccount(tronKey);
         }

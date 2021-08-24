@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
-    public record TronTestRecord(IServiceProvider ServiceProvider, ITronClient TronClient, IOptions<TronNetOptions> Options);
+    public record TronTestRecord(IServiceProvider ServiceProvider, ITronNetClient TronClient, IOptions<TronNetOptions> Options);
 
     public static class TronTestServiceExtension
     {
@@ -61,7 +61,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         public static TronTestRecord GetMainRecord()
         {
             IServiceProvider provider = AddTronMainNet();
-            var client = provider.GetService<ITronClient>();
+            var client = provider.GetService<ITronNetClient>();
             var options = provider.GetService<IOptions<TronNetOptions>>();
 
             return new TronTestRecord(provider, client, options);
@@ -70,7 +70,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         public static TronTestRecord GetTestRecord()
         {
             IServiceProvider provider = AddTronTestNet();
-            var client = provider.GetService<ITronClient>();
+            var client = provider.GetService<ITronNetClient>();
             var options = provider.GetService<IOptions<TronNetOptions>>();
 
             return new TronTestRecord(provider, client, options);

@@ -8,11 +8,11 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Transaction Client Provider
     /// </summary>
-    public class TransactionClient : ITransactionClient
+    public class TronNetTransactionClient : ITronNetTransactionClient
     {
         #region Variables
 
-        private readonly IWalletClient _walletClient;
+        private readonly ITronNetWalletClient _walletClient;
         private readonly IOptions<TronNetOptions> _options;
 
         #endregion
@@ -24,7 +24,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="walletClient"></param>
         /// <param name="options"></param>
-        public TransactionClient(IWalletClient walletClient, IOptions<TronNetOptions> options)
+        public TronNetTransactionClient(ITronNetWalletClient walletClient, IOptions<TronNetOptions> options)
         {
             _walletClient = walletClient;
             _options = options;

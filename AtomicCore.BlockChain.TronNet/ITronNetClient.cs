@@ -3,7 +3,7 @@
     /// <summary>
     /// Tron Client Interface
     /// </summary>
-    public interface ITronClient
+    public interface ITronNetClient
     {
         /// <summary>
         /// Tron Network Type Enum
@@ -26,12 +26,12 @@
         /// Get Wallet Interface Instance
         /// </summary>
         /// <returns></returns>
-        IWalletClient GetWallet();
+        ITronNetWalletClient GetWallet();
 
         /// <summary>
         /// Get Transaction Interface Instance
         /// </summary>
         /// <returns></returns>
-        ITransactionClient GetTransaction();
+        ITronNetTransactionClient GetTransaction();
     }
 }

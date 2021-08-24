@@ -10,7 +10,7 @@
         /// <summary>
         /// Tron ECKEY
         /// </summary>
-        private TronECKey _key = null;
+        private TronNetECKey _key = null;
 
         #endregion
 
@@ -23,14 +23,14 @@
         /// <param name="network"></param>
         public TronNetAccount(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
-            Initialise(new TronECKey(privateKey, network));
+            Initialise(new TronNetECKey(privateKey, network));
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="key"></param>
-        public TronNetAccount(TronECKey key)
+        public TronNetAccount(TronNetECKey key)
         {
             Initialise(key);
         }
@@ -75,7 +75,7 @@
         /// Initialise Instance
         /// </summary>
         /// <param name="key"></param>
-        private void Initialise(TronECKey key)
+        private void Initialise(TronNetECKey key)
         {
             this._key = key;
             this.PrivateKey = key.GetPrivateKey();

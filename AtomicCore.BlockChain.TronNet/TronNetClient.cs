@@ -5,15 +5,15 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// ITronClient Interface Impl
     /// </summary>
-    public class TronClient : ITronClient
+    public class TronNetClient : ITronNetClient
     {
         #region Variables
 
         private readonly IOptions<TronNetOptions> _options;
         private readonly ITronNetRest _restApiClient;
         private readonly IGrpcChannelClient _channelClient;
-        private readonly IWalletClient _walletClient;
-        private readonly ITransactionClient _transactionClient;
+        private readonly ITronNetWalletClient _walletClient;
+        private readonly ITronNetTransactionClient _transactionClient;
 
         #endregion
 
@@ -27,12 +27,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="channelClient"></param>
         /// <param name="walletClient"></param>
         /// <param name="transactionClient"></param>
-        public TronClient(
+        public TronNetClient(
             IOptions<TronNetOptions> options,
             ITronNetRest restApiClient,
             IGrpcChannelClient channelClient,
-            IWalletClient walletClient,
-            ITransactionClient transactionClient
+            ITronNetWalletClient walletClient,
+            ITronNetTransactionClient transactionClient
         )
         {
             _options = options;
@@ -68,7 +68,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// Get Wallet Interface Instance
         /// </summary>
         /// <returns></returns>
-        public IWalletClient GetWallet()
+        public ITronNetWalletClient GetWallet()
         {
             return _walletClient;
         }
@@ -77,7 +77,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// Get Transaction Interface Instance
         /// </summary>
         /// <returns></returns>
-        public ITransactionClient GetTransaction()
+        public ITronNetTransactionClient GetTransaction()
         {
             return _transactionClient;
         }

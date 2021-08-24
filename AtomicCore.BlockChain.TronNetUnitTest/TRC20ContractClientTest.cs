@@ -12,13 +12,13 @@ namespace AtomicCore.BlockChain.TronNet.Tests
     public class TRC20ContractClientTest
     {
         private TronTestRecord _record;
-        private IWalletClient _wallet;
+        private ITronNetWalletClient _wallet;
         private IContractClientFactory _contractClientFactory;
 
         public TRC20ContractClientTest()
         {
             _record = TronTestServiceExtension.GetTestRecord();
-            _wallet = _record.ServiceProvider.GetService<IWalletClient>();
+            _wallet = _record.ServiceProvider.GetService<ITronNetWalletClient>();
             _contractClientFactory = _record.ServiceProvider.GetService<IContractClientFactory>();
         }
 

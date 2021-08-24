@@ -27,7 +27,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public async Task TestTransferAsync()
         {
-            var transactionClient = _record.ServiceProvider.GetService<ITransactionClient>();
+            var transactionClient = _record.ServiceProvider.GetService<ITronNetTransactionClient>();
             var privateKey = TronTestAccountCollection.TestMain.PirvateKey;
             var tronKey = new TronECKey(privateKey, _record.Options.Value.Network);
             var from = tronKey.GetPublicAddress();
@@ -58,7 +58,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public async Task TestSignAsync()
         {
-            var transactionClient = _record.ServiceProvider.GetService<ITransactionClient>();
+            var transactionClient = _record.ServiceProvider.GetService<ITronNetTransactionClient>();
             var privateKey = TronTestAccountCollection.TestMain.PirvateKey;
             var ecKey = new TronECKey(privateKey, _record.Options.Value.Network);
             var from = ecKey.GetPublicAddress();

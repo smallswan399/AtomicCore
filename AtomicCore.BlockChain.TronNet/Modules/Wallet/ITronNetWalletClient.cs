@@ -6,7 +6,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Wallet Client Interface
     /// </summary>
-    public interface IWalletClient
+    public interface ITronNetWalletClient
     {
         /// <summary>
         /// Get Protocol

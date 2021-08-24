@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Transaction Client Interface
     /// </summary>
-    public interface ITransactionClient
+    public interface ITronNetTransactionClient
     {
         /// <summary>
         /// Create Raw Transaction

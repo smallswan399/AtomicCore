@@ -7,7 +7,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron ECKey
     /// </summary>
-    public class TronECKey
+    public class TronNetECKey
     {
         #region Variables
 
@@ -25,7 +25,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="network">network Type Enum</param>
-        public TronECKey(string privateKey, TronNetwork network = TronNetwork.MainNet)
+        public TronNetECKey(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = new ECKey(privateKey.HexToByteArray(), true);
             _network = network;
@@ -37,7 +37,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="vch"></param>
         /// <param name="isPrivate"></param>
         /// <param name="network">network Type Enum</param>
-        public TronECKey(byte[] vch, bool isPrivate, TronNetwork network = TronNetwork.MainNet)
+        public TronNetECKey(byte[] vch, bool isPrivate, TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = new ECKey(vch, isPrivate);
             _network = network;
@@ -48,7 +48,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="ecKey"></param>
         /// <param name="network">network Type Enum</param>
-        internal TronECKey(ECKey ecKey, TronNetwork network = TronNetwork.MainNet)
+        internal TronNetECKey(ECKey ecKey, TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = ecKey;
             _network = network;
@@ -58,7 +58,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// Constructor(new ECKey instane)
         /// </summary>
         /// <param name="network">network Type Enum</param>
-        internal TronECKey(TronNetwork network = TronNetwork.MainNet)
+        internal TronNetECKey(TronNetwork network = TronNetwork.MainNet)
         {
             _ecKey = new ECKey();
             _network = network;
@@ -73,9 +73,9 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="network"></param>
         /// <returns></returns>
-        public static TronECKey GenerateKey(TronNetwork network = TronNetwork.MainNet)
+        public static TronNetECKey GenerateKey(TronNetwork network = TronNetwork.MainNet)
         {
-            return new TronECKey(network);
+            return new TronNetECKey(network);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public static string GetPublicAddress(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
-            TronECKey key = new TronECKey(privateKey.HexToByteArray(), true, network);
+            TronNetECKey key = new TronNetECKey(privateKey.HexToByteArray(), true, network);
 
             return key.GetPublicAddress();
         }

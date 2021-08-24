@@ -22,10 +22,10 @@ namespace AtomicCore.BlockChain.TronNet
 
             //Register Interface
             services.AddTransient<ITronNetRest, TronNetRest>();
-            services.AddTransient<ITransactionClient, TransactionClient>();
+            services.AddTransient<ITronNetTransactionClient, TronNetTransactionClient>();
             services.AddTransient<IGrpcChannelClient, GrpcChannelClient>();
-            services.AddTransient<ITronClient, TronClient>();
-            services.AddTransient<IWalletClient, WalletClient>();
+            services.AddTransient<ITronNetClient, TronNetClient>();
+            services.AddTransient<ITronNetWalletClient, TronNetWalletClient>();
             services.AddSingleton<IContractClientFactory, ContractClientFactory>();
             services.AddTransient<TRC20ContractClient>();
             services.Configure(setupAction);

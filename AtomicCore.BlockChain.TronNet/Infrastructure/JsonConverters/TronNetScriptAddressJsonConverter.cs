@@ -18,12 +18,12 @@ namespace AtomicCore.BlockChain.TronNet
             if (reader.Value == null)
                 return null;
 
-            return TronECKey.ConvertToTronAddressFromScriptAddress(reader.Value.ToString());
+            return TronNetECKey.ConvertToTronAddressFromScriptAddress(reader.Value.ToString());
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(TronECKey.ConvertToScriptAddress(value.ToString()));
+            writer.WriteValue(TronNetECKey.ConvertToScriptAddress(value.ToString()));
         }
     }
 }

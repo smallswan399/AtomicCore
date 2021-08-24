@@ -13,8 +13,8 @@ namespace AtomicCore.BlockChain.TronNet
         #region Variables
 
         private readonly ILogger<TRC20ContractClient> _logger;
-        private readonly IWalletClient _walletClient;
-        private readonly ITransactionClient _transactionClient;
+        private readonly ITronNetWalletClient _walletClient;
+        private readonly ITronNetTransactionClient _transactionClient;
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="logger"></param>
         /// <param name="walletClient"></param>
         /// <param name="transactionClient"></param>
-        public TRC20ContractClient(ILogger<TRC20ContractClient> logger, IWalletClient walletClient, ITransactionClient transactionClient)
+        public TRC20ContractClient(ILogger<TRC20ContractClient> logger, ITronNetWalletClient walletClient, ITronNetTransactionClient transactionClient)
         {
             _logger = logger;
             _walletClient = walletClient;

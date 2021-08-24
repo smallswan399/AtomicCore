@@ -17,7 +17,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             var privateKey = TronTestAccountCollection.TestMain.PirvateKey;
 
-            TronECKey mainKey = new TronECKey(privateKey, TronNetwork.MainNet);
+            TronNetECKey mainKey = new TronECKey(privateKey, TronNetwork.MainNet);
             string address = mainKey.GetPublicAddress();
 
             Assert.IsTrue(TronTestAccountCollection.TestMain.Address.Equals(address, StringComparison.OrdinalIgnoreCase));
@@ -30,7 +30,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             string eth_address = string.Format("0x{0}", Regex.Replace(date.Substring(8, 64), @"^0*", string.Empty));
 
-            string tronAddress = TronECKey.ConvertToTronAddress(eth_address);
+            string tronAddress = TronNetECKey.ConvertToTronAddress(eth_address);
 
             Assert.IsTrue("TBGMcMy84rxZijiQyjMDEJddMGgGoDQGH5".Equals(tronAddress, StringComparison.OrdinalIgnoreCase));
         }

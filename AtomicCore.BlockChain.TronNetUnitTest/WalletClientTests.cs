@@ -24,7 +24,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         private readonly TronTestRecord _record;
         private readonly ITronNetRest _restAPI;
-        private readonly IWalletClient _wallet;
+        private readonly ITronNetWalletClient _wallet;
         private readonly Wallet.WalletClient _walletProtocol;
 
         #endregion
@@ -145,7 +145,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             string scriptAddress = "41a614f803b6fd780986a42c78ec9c7f77e6ded13c";
 
-            string tronAddress = TronECKey.ConvertToTronAddressFromScriptAddress(scriptAddress);
+            string tronAddress = TronNetECKey.ConvertToTronAddressFromScriptAddress(scriptAddress);
 
             Assert.IsTrue("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t".Equals(tronAddress, StringComparison.OrdinalIgnoreCase));
         }

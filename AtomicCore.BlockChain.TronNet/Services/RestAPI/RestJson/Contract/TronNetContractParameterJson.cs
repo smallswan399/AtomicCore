@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -17,6 +18,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// value
         /// </summary>
         [JsonProperty("value")]
-        public TronNetContractBaseValueJson Value { get; set; }
+        public JObject Value { get; set; }
     }
 }

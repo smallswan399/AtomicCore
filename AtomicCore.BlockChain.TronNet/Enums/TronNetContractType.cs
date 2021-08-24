@@ -6,6 +6,11 @@
     public enum TronNetContractType
     {
         /// <summary>
+        /// unknow
+        /// </summary>
+        UnKnow = -1,
+
+        /// <summary>
         /// Account Create Contract
         /// </summary>
         AccountCreateContract = 0,

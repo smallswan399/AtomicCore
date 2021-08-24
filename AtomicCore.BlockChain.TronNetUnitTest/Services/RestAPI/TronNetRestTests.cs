@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
     [TestClass()]
-    public class TronRestAPITests
+    public class TronNetRestTests
     {
         #region Variables
 
@@ -23,7 +23,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         /// <summary>
         /// 
         /// </summary>
-        public TronRestAPITests()
+        public TronNetRestTests()
         {
             _record = TronTestServiceExtension.GetMainRecord();
             _restAPI = _record.TronClient.GetRestAPI();
@@ -43,6 +43,18 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         #endregion
 
+        #region ITronQueryNetworkRestAPI
 
+        [TestMethod()]
+        public void GetTransactionByIDTest()
+        {
+            string txid = "ca8d10f2b141a3a8d8e31453ff50716258d873c89fd189f6abce92effaa1960d";
+
+            TronNetTransactionRestJson rest_txInfo = _restAPI.GetTransactionByID(txid);
+
+            Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
+        }
+
+        #endregion
     }
 }

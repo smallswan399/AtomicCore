@@ -10,8 +10,8 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// type
         /// </summary>
-        [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonProperty("type"), JsonConverter(typeof(TronNetContractTypeJsonConverter))]
+        public TronNetContractType Type { get; set; }
 
         /// <summary>
         /// parameter

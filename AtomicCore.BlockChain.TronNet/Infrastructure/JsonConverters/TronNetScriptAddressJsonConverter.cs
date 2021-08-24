@@ -6,7 +6,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Trc20 Contrract Script Address Json Converter
     /// </summary>
-    public sealed class BizTronScriptAddressJsonConverter : JsonConverter
+    public sealed class TronNetScriptAddressJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

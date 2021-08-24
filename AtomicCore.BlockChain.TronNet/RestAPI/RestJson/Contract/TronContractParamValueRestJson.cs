@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// owner_address
         /// </summary>
-        [JsonProperty("owner_address"),JsonConverter(typeof(BizTronScriptAddressJsonConverter))]
+        [JsonProperty("owner_address"),JsonConverter(typeof(TronNetScriptAddressJsonConverter))]
         public string OwnerAddress { get; set; }
 
         /// <summary>
@@ -28,13 +28,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// amount(Trx && Trc10)
         /// </summary>
-        [JsonProperty("amount"),JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        [JsonProperty("amount"),JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong Amount { get; set; }
 
         /// <summary>
         /// contract_address
         /// </summary>
-        [JsonProperty("contract_address"), JsonConverter(typeof(BizTronScriptAddressJsonConverter))]
+        [JsonProperty("contract_address"), JsonConverter(typeof(TronNetScriptAddressJsonConverter))]
         public string ContractAddress { get; set; }
 
         /// <summary>

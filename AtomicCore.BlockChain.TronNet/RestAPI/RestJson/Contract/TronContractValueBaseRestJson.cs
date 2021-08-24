@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// owner_address
         /// </summary>
-        [JsonProperty("owner_address"), JsonConverter(typeof(BizTronScriptAddressJsonConverter))]
+        [JsonProperty("owner_address"), JsonConverter(typeof(TronNetScriptAddressJsonConverter))]
         public string OwnerAddress { get; set; }
     }
 }

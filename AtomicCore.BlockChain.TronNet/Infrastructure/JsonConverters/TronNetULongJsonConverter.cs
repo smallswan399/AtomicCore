@@ -4,13 +4,13 @@ using System;
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// Tron Boolean Json Converter
+    /// Tron ULong Type Json Converter
     /// </summary>
-    public sealed class BizTronNetBooleanJsonConverter : JsonConverter
+    public sealed class TronNetULongJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(bool);
+            return objectType == typeof(ulong);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -18,12 +18,12 @@ namespace AtomicCore.BlockChain.TronNet
             if (reader.Value == null)
                 return null;
 
-            return reader.Value.ToString() == "1";
+            return ulong.Parse(reader.Value.ToString());
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue((bool)value ? "1" : "0");
+            writer.WriteValue(value.ToString());
         }
     }
 }

@@ -11,7 +11,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// contract
         /// </summary>
         [JsonProperty("contract")]
-        public TronContractValueBaseRestJson[] Contract { get; set; }
+        public object[] Contract { get; set; }
 
         /// <summary>
         /// ref_block_bytes
@@ -28,13 +28,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// expiration
         /// </summary>
-        [JsonProperty("expiration"), JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        [JsonProperty("expiration"), JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong Expiration { get; set; }
 
         /// <summary>
         /// timestamp
         /// </summary>
-        [JsonProperty("timestamp"), JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        [JsonProperty("timestamp"), JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong Timestamp { get; set; }
     }
 }

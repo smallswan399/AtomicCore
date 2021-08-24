@@ -52,19 +52,19 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// expiration
         /// </summary>
-        [JsonProperty("expiration"), JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        [JsonProperty("expiration"), JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong Expiration { get; set; }
 
         /// <summary>
         /// fee_limit
         /// </summary>
-        [JsonProperty("fee_limit"), JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        [JsonProperty("fee_limit"), JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong FeeLimit { get; set; }
 
         /// <summary>
         /// timestamp
         /// </summary>
-        [JsonProperty("timestamp"),JsonConverter(typeof(BizTronNetULongJsonConverter))]
+        [JsonProperty("timestamp"),JsonConverter(typeof(TronNetULongJsonConverter))]
         public ulong Timestamp { get; set; }
     }
 }

@@ -168,22 +168,77 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="tronAddress"></param>
         /// <returns></returns>
-        public static string ConvertToScriptAddress(string tronAddress)
+        public static string ConvertToHexAddress(string tronAddress)
         {
             return Base58Encoder.DecodeFromBase58Check(tronAddress).ToHex();
         }
 
         /// <summary>
-        /// script address is 21 bytes with network prefix flag,hex format
+        ///  hex address is 21 bytes with network prefix flag,hex format
         /// </summary>
-        /// <param name="scrpitAddress"></param>
+        /// <param name="hexAddress"></param>
+        /// <param name="isUpper"></param>
         /// <returns></returns>
-        public static string ConvertToTronAddressFromScriptAddress(string scrpitAddress)
+        public static string ConvertToEthAddressFromHexAddress(string hexAddress, bool isUpper = false)
         {
-            if (string.IsNullOrEmpty(scrpitAddress))
-                throw new ArgumentNullException(nameof(scrpitAddress));
+            if (string.IsNullOrEmpty(hexAddress))
+                throw new ArgumentNullException(nameof(hexAddress));
+            if (hexAddress.Length == 40 || hexAddress.Length == 42)
+                throw new ArgumentException("address length must be 20 or 21");
 
-            byte[] address = scrpitAddress.RemoveHexPrefix().HexToByteArray();
+            byte[] hexAddressBytes = hexAddress.RemoveHexPrefix().HexToByteArray();
+
+            byte[] addrByte20 = new byte[20];
+            if (hexAddressBytes.Length == 21)
+                Array.Copy(hexAddressBytes, 1, addrByte20, 0, 20);
+            else if (hexAddressBytes.Length == 20)
+                Array.Copy(hexAddressBytes, 0, addrByte20, 0, 20);
+            else
+                throw new ArgumentException("address length must be 20 or 21");
+
+            string address = addrByte20.ToHex();
+            byte[] hash = addrByte20.ToKeccakHash();
+            string addressHash = hash.ToHex();
+
+            StringBuilder checksumAddress = new StringBuilder("0x");
+            for (var i = 0; i < address.Length; i++)
+                if (int.Parse(addressHash[i].ToString(), NumberStyles.HexNumber) > 7)
+                    checksumAddress.Append(address[i].ToString().ToUpper());
+                else
+                    checksumAddress.Append(address[i]);
+
+            if (isUpper)
+                return checksumAddress.ToString().ToUpper();
+            else
+                return checksumAddress.ToString().ToLower();
+        }
+
+        /// <summary>
+        /// hex address is 21 bytes with network prefix flag,hex format
+        /// </summary>
+        /// <param name="hexAddress"></param>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        public static string ConvertToTronAddressFromHexAddress(string hexAddress, TronNetwork network = TronNetwork.MainNet)
+        {
+            if (string.IsNullOrEmpty(hexAddress))
+                throw new ArgumentNullException(nameof(hexAddress));
+            if (hexAddress.Length == 40 || hexAddress.Length == 42)
+                throw new ArgumentException("address length must be 40 or 42");
+
+            byte[] hexAddressBytes = hexAddress.RemoveHexPrefix().HexToByteArray();
+
+            //fill 20 byte into new array
+            byte[] address = new byte[21];
+            if (hexAddressBytes.Length == 21)
+                Array.Copy(hexAddressBytes, 0, address, 0, 21);
+            else if(hexAddressBytes.Length == 20)
+                Array.Copy(hexAddressBytes, 0, address, 1, 21);
+            else
+                throw new ArgumentException("address length must be 40 or 42");
+
+            //reset prefix,ensure the results are correct
+            address[0] = GetNetworkPrefix(network);
 
             byte[] hash = Base58Encoder.TwiceHash(address);
             byte[] bytes = new byte[4];

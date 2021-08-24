@@ -7,10 +7,14 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public abstract class TronNetContractBaseValueJson
     {
+        #region Propertys
+
         /// <summary>
         /// owner_address
         /// </summary>
         [JsonProperty("owner_address"), JsonConverter(typeof(TronNetHexAddressJsonConverter))]
         public virtual string OwnerAddress { get; set; }
+
+        #endregion
     }
 }

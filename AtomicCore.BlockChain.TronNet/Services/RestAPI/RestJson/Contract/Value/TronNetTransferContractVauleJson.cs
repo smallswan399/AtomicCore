@@ -15,13 +15,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// toAddress
         /// </summary>
         [JsonProperty("to_address"), JsonConverter(typeof(TronNetHexAddressJsonConverter))]
-        public string ToAddress { get; set; }
+        public virtual string ToAddress { get; set; }
 
         /// <summary>
         /// amount,unit is sun
         /// </summary>
         [JsonProperty("amount"), JsonConverter(typeof(TronNetULongJsonConverter))]
-        public ulong Amount { get; set; }
+        public virtual ulong Amount { get; set; }
 
         #endregion
 

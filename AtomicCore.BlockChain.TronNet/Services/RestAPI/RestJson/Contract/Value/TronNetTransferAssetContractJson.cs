@@ -11,6 +11,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// Trc10 Asset Name
         /// </summary>
         [JsonProperty("asset_name")]
-        public string Trc10AssetName { get; set; }
+        public virtual string Trc10AssetName { get; set; }
     }
 }

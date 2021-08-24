@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -16,7 +11,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// contract
         /// </summary>
         [JsonProperty("contract")]
-        public object[] Contract { get; set; }
+        public TronContractValueBaseRestJson[] Contract { get; set; }
 
         /// <summary>
         /// ref_block_bytes

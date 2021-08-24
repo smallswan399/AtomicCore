@@ -55,6 +55,9 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronNetContractJson contractJson = rest_txInfo.RawData.Contract.FirstOrDefault();
             Assert.IsNotNull(contractJson);
 
+            string ownerAddress = contractJson.Parameter.Value.GetOwnerTronAddress();
+            Assert.IsTrue(!string.IsNullOrEmpty(ownerAddress));
+
             TronNetTriggerSmartContractJson valueJson = contractJson.Parameter.Value.ToContractValue<TronNetTriggerSmartContractJson>();
             Assert.IsNotNull(valueJson);
 

@@ -191,18 +191,28 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
-        /// 
+        /// Get Trc20 Data
+        /// </summary>
+        /// <param name="jobject"></param>
+        /// <returns></returns>
+        public static string GetTrc20Data(this JObject jobject)
+        {
+            bool flag = jobject.TryGetValue("data", out JToken token);
+            if (!flag)
+                return string.Empty;
+
+            return token.ToString();
+        }
+
+        /// <summary>
+        /// Get Trc20 ToEthAddress
         /// </summary>
         /// <param name="jobject"></param>
         /// <param name="isUpper"></param>
         /// <returns></returns>
         public static string GetTrc20ToEthAddress(this JObject jobject, bool isUpper = false)
         {
-            bool flag = jobject.TryGetValue("data", out JToken token);
-            if (!flag)
-                return string.Empty;
-
-            string data = token.ToString();
+            string data = GetTrc20Data(jobject);
 
             if (string.IsNullOrEmpty(data))
                 return string.Empty;
@@ -222,11 +232,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public static string GetTrc20ToTronAddress(this JObject jobject, TronNetwork network = TronNetwork.MainNet)
         {
-            bool flag = jobject.TryGetValue("data", out JToken token);
-            if (!flag)
-                return string.Empty;
-
-            string data = token.ToString();
+            string data = GetTrc20Data(jobject);
 
             if (string.IsNullOrEmpty(data))
                 return string.Empty;
@@ -245,11 +251,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public static ulong GetTrc20Amount(this JObject jobject)
         {
-            bool flag = jobject.TryGetValue("data", out JToken token);
-            if (!flag)
-                return 0UL;
-
-            string data = token.ToString();
+            string data = GetTrc20Data(jobject);
 
             if (string.IsNullOrEmpty(data))
                 return 0UL;

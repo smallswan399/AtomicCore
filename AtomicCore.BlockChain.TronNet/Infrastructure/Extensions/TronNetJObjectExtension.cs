@@ -8,6 +8,15 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public static class TronNetJObjectExtension
     {
+        #region Variables
+
+        /// <summary>
+        /// TRC20 - Transfer Method top 4 Bytes Hex
+        /// </summary>
+        private const string c_trc20Transfer = "a9059cbb";
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -179,6 +188,96 @@ namespace AtomicCore.BlockChain.TronNet
             string hexAddress = token.ToString();
 
             return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress, network);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobject"></param>
+        /// <param name="isUpper"></param>
+        /// <returns></returns>
+        public static string GetTrc20ToEthAddress(this JObject jobject, bool isUpper = false)
+        {
+            bool flag = jobject.TryGetValue("data", out JToken token);
+            if (!flag)
+                return string.Empty;
+
+            string data = token.ToString();
+
+            if (string.IsNullOrEmpty(data))
+                return string.Empty;
+            if (!data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
+                return string.Empty;
+
+            string hexAddress = data.Substring(30, 42);
+
+            return TronNetECKey.ConvertToEthAddressFromHexAddress(hexAddress, isUpper);
+        }
+
+        /// <summary>
+        /// Get Trc20 ToTronAddress
+        /// </summary>
+        /// <param name="jobject"></param>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        public static string GetTrc20ToTronAddress(this JObject jobject, TronNetwork network = TronNetwork.MainNet)
+        {
+            bool flag = jobject.TryGetValue("data", out JToken token);
+            if (!flag)
+                return string.Empty;
+
+            string data = token.ToString();
+
+            if (string.IsNullOrEmpty(data))
+                return string.Empty;
+            if (!data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
+                return string.Empty;
+
+            string hexAddress = data.Substring(30, 42);
+
+            return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress, network);
+        }
+
+        /// <summary>
+        /// Get Trc20 OrigAmount
+        /// </summary>
+        /// <param name="jobject"></param>
+        /// <returns></returns>
+        public static ulong GetTrc20Amount(this JObject jobject)
+        {
+            bool flag = jobject.TryGetValue("data", out JToken token);
+            if (!flag)
+                return 0UL;
+
+            string data = token.ToString();
+
+            if (string.IsNullOrEmpty(data))
+                return 0UL;
+            if (!data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
+                return 0UL;
+            if ((data.Length - 8) % 64 != 0)
+                return 0UL;
+
+            string removeMethodTopic = data.Substring(8);
+            string amountHex = TronNetUntils.RemoveHexZero(removeMethodTopic.Substring(64, 64), TronNetHexCuteZeroStrategy.Left, 0, true);
+
+            return Convert.ToUInt64(amountHex, 16);
+        }
+
+        /// <summary>
+        /// Get Trc20 Amount
+        /// </summary>
+        /// <param name="jobject"></param>
+        /// <param name="decimals"></param>
+        /// <returns></returns>
+        public static decimal GetTrc20Amount(this JObject jobject, int decimals)
+        {
+            ulong origAmount = GetTrc20Amount(jobject);
+
+            if (decimals <= 0)
+                return origAmount;
+            else
+                return origAmount / (decimal)Math.Pow(10, decimals);
         }
 
         #endregion

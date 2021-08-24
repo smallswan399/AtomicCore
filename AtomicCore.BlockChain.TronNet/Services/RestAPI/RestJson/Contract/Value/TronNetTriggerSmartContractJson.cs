@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Text.RegularExpressions;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -44,12 +43,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public string GetToTronAddress(TronNetwork network = TronNetwork.MainNet)
         {
-            if (string.IsNullOrEmpty(this.Data))
+            if (string.IsNullOrEmpty(Data))
                 return string.Empty;
-            if (!this.Data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
+            if (!Data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
                 return string.Empty;
 
-            string hexAddress = this.Data.Substring(30, 42);
+            string hexAddress = Data.Substring(30, 42);
 
             return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress, network);
         }
@@ -61,12 +60,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public string GetToEthAddress(bool isUpper = false)
         {
-            if (string.IsNullOrEmpty(this.Data))
+            if (string.IsNullOrEmpty(Data))
                 return string.Empty;
-            if (!this.Data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
+            if (!Data.StartsWith(c_trc20Transfer, StringComparison.OrdinalIgnoreCase))
                 return string.Empty;
 
-            string hexAddress = this.Data.Substring(30, 42);
+            string hexAddress = Data.Substring(30, 42);
 
             return TronNetECKey.ConvertToEthAddressFromHexAddress(hexAddress, isUpper);
         }

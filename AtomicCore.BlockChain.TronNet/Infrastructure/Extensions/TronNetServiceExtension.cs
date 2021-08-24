@@ -20,8 +20,12 @@ namespace AtomicCore.BlockChain.TronNet
             TronNetOptions options = new TronNetOptions();
             setupAction(options);
 
-            //Register Interface
+            //Register REST Interface
+            services.AddTransient<ITronNetAddressUtilitiesRest, TronNetRest>();
+            services.AddTransient<ITronNetQueryNetworkRest, TronNetRest>();
             services.AddTransient<ITronNetRest, TronNetRest>();
+
+            //Register Other Interface
             services.AddTransient<ITronNetTransactionClient, TronNetTransactionClient>();
             services.AddTransient<IGrpcChannelClient, GrpcChannelClient>();
             services.AddTransient<ITronNetClient, TronNetClient>();

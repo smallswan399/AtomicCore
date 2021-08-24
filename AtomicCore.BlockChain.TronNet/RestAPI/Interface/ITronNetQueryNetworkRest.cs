@@ -3,7 +3,7 @@
     /// <summary>
     /// Tron Query Network
     /// </summary>
-    public interface ITronQueryNetworkRestAPI
+    public interface ITronNetQueryNetworkRest
     {
         /// <summary>
         /// Get Transaction By Txid

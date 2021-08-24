@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Rest API Implementation Class
     /// </summary>
-    public class TronRestAPI : ITronRestAPI
+    public class TronNetRest : ITronNetRest
     {
         #region Variables
 
@@ -25,7 +25,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// Constructor
         /// </summary>
         /// <param name="options"></param>
-        public TronRestAPI(IOptions<TronNetOptions> options)
+        public TronNetRest(IOptions<TronNetOptions> options)
         {
             _options = options;
         }

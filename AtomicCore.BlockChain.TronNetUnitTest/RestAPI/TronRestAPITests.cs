@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         #region Variables
 
         private readonly TronTestRecord _record;
-        private readonly ITronRestAPI _restAPI;
+        private readonly ITronNetRest _restAPI;
 
         #endregion
 

@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Contract ValueBase Rest Json
     /// </summary>
-    public abstract class TronContractValueBaseRestJson
+    public abstract class TronNetContractValueBaseJson
     {
         /// <summary>
         /// owner_address

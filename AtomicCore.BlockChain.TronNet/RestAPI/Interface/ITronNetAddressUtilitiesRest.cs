@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Address Utilities Rest API
     /// </summary>
-    public interface ITronAddressUtilitiesRestAPI
+    public interface ITronNetAddressUtilitiesRest
     {
         /// <summary>
         /// Generates a random private key and address pair. 

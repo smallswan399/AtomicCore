@@ -14,7 +14,7 @@
         /// Get Rest Api
         /// </summary>
         /// <returns></returns>
-        ITronRestAPI GetRestAPI();
+        ITronNetRest GetRestAPI();
 
         /// <summary>
         /// Grpc Channel Client

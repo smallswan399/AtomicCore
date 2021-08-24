@@ -23,7 +23,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         private const string txid_mainnet = "bfe65fb20e26225345ab6e20c9852ce5af411e5b18245b8a6abbeafb3582d802";
 
         private readonly TronTestRecord _record;
-        private readonly ITronRestAPI _restAPI;
+        private readonly ITronNetRest _restAPI;
         private readonly IWalletClient _wallet;
         private readonly Wallet.WalletClient _walletProtocol;
 

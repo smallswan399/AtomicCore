@@ -9,7 +9,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TRC10 Token
     /// </summary>
-    public interface ITronTRC10TokenRestAPI
+    public interface ITronNetTRC10TokenRest
     {
         void GetAssetIssueByAccount(string address);
 

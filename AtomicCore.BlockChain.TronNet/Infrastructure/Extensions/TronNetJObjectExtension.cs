@@ -142,7 +142,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="jobject"></param>
         /// <param name="decimals"></param>
         /// <returns></returns>
-        public static decimal GetTrc10Amount(this JObject jobject, int decimals = 6)
+        public static decimal GetTrc10Amount(this JObject jobject, int decimals)
         {
             ulong origAmount = GetTrc10Amount(jobject);
 

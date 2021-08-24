@@ -3,7 +3,7 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// Tron Contract Parameter Value Rest Json
+    /// Tron Contract Parameter Value Json
     /// </summary>
     public class TronNetContractParamValueRestJson
     {

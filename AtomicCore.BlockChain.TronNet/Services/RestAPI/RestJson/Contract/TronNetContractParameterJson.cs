@@ -17,6 +17,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// value
         /// </summary>
         [JsonProperty("value")]
-        public TronNetContractValueBaseJson Value { get; set; }
+        public TronNetContractBaseValueJson Value { get; set; }
     }
 }

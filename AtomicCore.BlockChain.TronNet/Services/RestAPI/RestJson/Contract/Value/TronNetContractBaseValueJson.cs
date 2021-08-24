@@ -3,14 +3,14 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// Tron Contract ValueBase Rest Json
+    /// Tron Contract Base Value Json
     /// </summary>
-    public abstract class TronNetContractValueBaseJson
+    public class TronNetContractBaseValueJson
     {
         /// <summary>
         /// owner_address
         /// </summary>
         [JsonProperty("owner_address"), JsonConverter(typeof(TronNetScriptAddressJsonConverter))]
-        public string OwnerAddress { get; set; }
+        public virtual string OwnerAddress { get; set; }
     }
 }

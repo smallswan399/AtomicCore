@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(TronNetContractValueBaseJson);
+            return objectType == typeof(TronNetContractBaseValueJson);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

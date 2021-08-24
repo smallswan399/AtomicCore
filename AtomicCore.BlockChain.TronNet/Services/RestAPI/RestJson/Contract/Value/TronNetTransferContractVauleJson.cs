@@ -3,9 +3,10 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// Tron Transfer Contract Value Rest Json
+    /// Tron Transfer Contract Value Json
+    /// TRX Transfer,
     /// </summary>
-    public class TronNetTransferContractVauleJson : TronNetContractValueBaseJson
+    public class TronNetTransferContractVauleJson : TronNetContractBaseValueJson
     {
         /// <summary>
         /// toAddress

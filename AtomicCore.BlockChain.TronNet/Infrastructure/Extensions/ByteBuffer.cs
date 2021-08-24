@@ -57,10 +57,13 @@ namespace AtomicCore.BlockChain.TronNet
 		/// <returns></returns>
 		public static ByteBuffer Wrap(byte[] array, int offset, int length)
 		{
-			MemoryStream ms = new MemoryStream(array, offset, length, true, true);
-			ms.Capacity = array.Length;
-			ms.SetLength(offset + length);
+            MemoryStream ms = new MemoryStream(array, offset, length, true, true)
+            {
+                Capacity = array.Length
+            };
+            ms.SetLength(offset + length);
 			ms.Position = offset;
+
 			return new ByteBuffer(ms);
 		}
 		/// <summary>
@@ -378,7 +381,7 @@ namespace AtomicCore.BlockChain.TronNet
 			}
 			//this.Position = this.Limit - this.Position;
 			//this.Limit = this.Capacity;
-			this.Limit = this.Limit - (int)this.Position;
+			this.Limit -= (int)this.Position;
 			this.Position = 0;
 		}
 
@@ -694,9 +697,9 @@ namespace AtomicCore.BlockChain.TronNet
 		/// <returns></returns>
 		public static int Put(ByteBuffer output, ByteBuffer input, int numBytesMax)
 		{
-			int limit = input.Limit;
 			int numBytesRead = (numBytesMax > input.Remaining) ? input.Remaining : numBytesMax;
 			/*
+			int limit = input.Limit;
 			input.Limit = (int)input.Position + numBytesRead;
 			output.Put(input);
 			input.Limit = limit;

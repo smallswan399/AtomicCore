@@ -17,7 +17,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             var privateKey = TronTestAccountCollection.TestMain.PirvateKey;
 
-            TronNetECKey mainKey = new TronECKey(privateKey, TronNetwork.MainNet);
+            TronNetECKey mainKey = new TronNetECKey(privateKey, TronNetwork.MainNet);
             string address = mainKey.GetPublicAddress();
 
             Assert.IsTrue(TronTestAccountCollection.TestMain.Address.Equals(address, StringComparison.OrdinalIgnoreCase));

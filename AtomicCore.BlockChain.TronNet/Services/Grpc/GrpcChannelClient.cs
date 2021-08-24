@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace AtomicCore.BlockChain.TronNet
@@ -12,7 +11,6 @@ namespace AtomicCore.BlockChain.TronNet
         #region Variables
 
         private readonly IOptions<TronNetOptions> _options;
-        private readonly ILogger<GrpcChannelClient> _logger;
 
         #endregion
 
@@ -22,11 +20,9 @@ namespace AtomicCore.BlockChain.TronNet
         /// Constructor
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="logger"></param>
-        public GrpcChannelClient(IOptions<TronNetOptions> options, ILogger<GrpcChannelClient> logger)
+        public GrpcChannelClient(IOptions<TronNetOptions> options)
         {
             _options = options;
-            _logger = logger;
         }
 
         #endregion
@@ -39,7 +35,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public Channel GetProtocol()
         {
-            return new Channel(_options.Value.Channel.Host, _options.Value.Channel.Port, ChannelCredentials.Insecure);
+            return new Channel(
+                _options.Value.Channel.Host,
+                _options.Value.Channel.Port,
+                ChannelCredentials.Insecure
+            );
         }
 
         /// <summary>
@@ -48,7 +48,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public Channel GetSolidityProtocol()
         {
-            return new Channel(_options.Value.SolidityChannel.Host, _options.Value.SolidityChannel.Port, ChannelCredentials.Insecure);
+            return new Channel(
+                _options.Value.SolidityChannel.Host,
+                _options.Value.SolidityChannel.Port, 
+                ChannelCredentials.Insecure
+            );
         }
 
         #endregion

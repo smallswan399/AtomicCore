@@ -188,7 +188,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 Value = ByteString.CopyFrom(addressBuffer)
             }, headers: _wallet.GetHeaders());
 
-            Assert.IsTrue(true);
+            Assert.IsTrue(contract.ContractAddress.Length > 0);
         }
 
         /// <summary>
@@ -205,9 +205,11 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             //my address hex
             string myAddressHex = Base58Encoder.DecodeFromBase58Check(TronTestAccountCollection.TestA.Address).ToHex();
+            Assert.IsTrue(!string.IsNullOrEmpty(myAddressHex));
 
             //contract address hex(shatanet contract address)
             string contractAddressHex = Base58Encoder.DecodeFromBase58Check("TB7whW3J9jb5Amoi4R6WgTtMbWPeqMBjSw").ToHex();
+            Assert.IsTrue(contractAddressHex.Length > 0);
 
             var invokeResult = _walletProtocol.TriggerConstantContract(new TriggerSmartContract()
             {
@@ -219,6 +221,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             ByteString decimalBytestring = invokeResult.ConstantResult.FirstOrDefault();
             byte[] deciaml_byte = decimalBytestring.ToByteArray();
             string deciaml_hex = string.Format("0x{0}", Regex.Replace(deciaml_byte.ToHex(), "^0*", string.Empty));
+            Assert.IsTrue(!string.IsNullOrEmpty(deciaml_hex));
 
             int token_decimal = int.Parse(Regex.Replace(deciaml_byte.ToHex(), "^0*", string.Empty), System.Globalization.NumberStyles.HexNumber);
 

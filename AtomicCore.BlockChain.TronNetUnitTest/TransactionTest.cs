@@ -29,7 +29,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             var transactionClient = _record.ServiceProvider.GetService<ITronNetTransactionClient>();
             var privateKey = TronTestAccountCollection.TestMain.PirvateKey;
-            var tronKey = new TronECKey(privateKey, _record.Options.Value.Network);
+            var tronKey = new TronNetECKey(privateKey, _record.Options.Value.Network);
             var from = tronKey.GetPublicAddress();
             var to = TronTestAccountCollection.TestA.Address;
             var amount = 1_000_000L; // 1 TRX, api only receive trx in Sun, and 1 trx = 1000000 Sun
@@ -60,7 +60,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             var transactionClient = _record.ServiceProvider.GetService<ITronNetTransactionClient>();
             var privateKey = TronTestAccountCollection.TestMain.PirvateKey;
-            var ecKey = new TronECKey(privateKey, _record.Options.Value.Network);
+            var ecKey = new TronNetECKey(privateKey, _record.Options.Value.Network);
             var from = ecKey.GetPublicAddress();
             var to = TronTestAccountCollection.TestA.Address;
             var amount = 1_000_000L;

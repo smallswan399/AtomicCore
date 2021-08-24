@@ -28,7 +28,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         public async Task TestTransactionSignAsync()
         {
             var privateStr = TronTestAccountCollection.TestMain.PirvateKey;
-            var tronKey = new TronECKey(privateStr, _record.Options.Value.Network);
+            var tronKey = new TronNetECKey(privateStr, _record.Options.Value.Network);
             var from = tronKey.GetPublicAddress();
             var to = TronTestAccountCollection.TestA.Address;
             var amount = 1_000_000L; // 1 TRX, api only receive trx in Sun, and 1 trx = 1000000 Sun

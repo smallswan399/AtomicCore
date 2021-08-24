@@ -183,7 +183,7 @@ namespace AtomicCore.BlockChain.TronNet
         {
             if (string.IsNullOrEmpty(hexAddress))
                 throw new ArgumentNullException(nameof(hexAddress));
-            if (hexAddress.Length == 40 || hexAddress.Length == 42)
+            if (hexAddress.Length != 40 && hexAddress.Length != 42)
                 throw new ArgumentException("address length must be 20 or 21");
 
             byte[] hexAddressBytes = hexAddress.RemoveHexPrefix().HexToByteArray();
@@ -223,7 +223,7 @@ namespace AtomicCore.BlockChain.TronNet
         {
             if (string.IsNullOrEmpty(hexAddress))
                 throw new ArgumentNullException(nameof(hexAddress));
-            if (hexAddress.Length == 40 || hexAddress.Length == 42)
+            if (hexAddress.Length != 40 && hexAddress.Length != 42)
                 throw new ArgumentException("address length must be 40 or 42");
 
             byte[] hexAddressBytes = hexAddress.RemoveHexPrefix().HexToByteArray();

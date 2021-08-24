@@ -58,6 +58,12 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronNetTriggerSmartContractJson valueJson = contractJson.Parameter.Value.ToContractValue<TronNetTriggerSmartContractJson>();
             Assert.IsNotNull(valueJson);
 
+            string toEthAddress = valueJson.GetToEthAddress();
+            Assert.IsTrue("0x10b6bb9e59f3e7b139a3e23c340eabc841817976".Equals(toEthAddress, StringComparison.OrdinalIgnoreCase));
+
+            string toTronAddress = valueJson.GetToTronAddress();
+            Assert.IsTrue("TBVaidbMvnXovzHJV7TTxeZ5Tkehxrx5UW".Equals(toTronAddress, StringComparison.OrdinalIgnoreCase));
+
             Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
         }
 

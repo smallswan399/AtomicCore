@@ -6,7 +6,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Trc20 Contrract Script Address Json Converter
     /// </summary>
-    public sealed class TronNetScriptAddressJsonConverter : JsonConverter
+    public sealed class TronNetHexAddressJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
@@ -18,7 +18,9 @@ namespace AtomicCore.BlockChain.TronNet
             if (reader.Value == null)
                 return null;
 
-            return TronNetECKey.ConvertToTronAddressFromHexAddress(reader.Value.ToString());
+            string hexAddress = reader.Value.ToString();
+
+            return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

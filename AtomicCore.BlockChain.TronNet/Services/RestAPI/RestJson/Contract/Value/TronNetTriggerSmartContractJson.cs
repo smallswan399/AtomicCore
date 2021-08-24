@@ -23,7 +23,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// contract_address
         /// </summary>
-        [JsonProperty("contract_address"), JsonConverter(typeof(TronNetScriptAddressJsonConverter))]
+        [JsonProperty("contract_address"), JsonConverter(typeof(TronNetHexAddressJsonConverter))]
         public string ContractAddress { get; set; }
 
         /// <summary>

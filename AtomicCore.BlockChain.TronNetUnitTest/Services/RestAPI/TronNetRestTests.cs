@@ -52,6 +52,12 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             TronNetTransactionRestJson rest_txInfo = _restAPI.GetTransactionByID(txid);
 
+            TronNetContractJson contractJson = rest_txInfo.RawData.Contract.FirstOrDefault();
+            Assert.IsNotNull(contractJson);
+
+            TronNetTriggerSmartContractJson valueJson = contractJson.Parameter.Value.ToContractValue<TronNetTriggerSmartContractJson>();
+            Assert.IsNotNull(valueJson);
+
             Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
         }
 

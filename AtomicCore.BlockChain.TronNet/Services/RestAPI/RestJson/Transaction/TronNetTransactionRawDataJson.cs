@@ -11,6 +11,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// contract
         /// </summary>
         [JsonProperty("contract")]
-        public TronNetContractRestJson[] Contract { get; set; }
+        public TronNetContractJson[] Contract { get; set; }
     }
 }

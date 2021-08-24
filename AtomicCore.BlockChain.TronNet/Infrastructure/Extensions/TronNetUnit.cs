@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Unit
     /// </summary>
-    public static class TronUnit
+    public static class TronNetUnit
     {
         /// <summary>
         /// tron sun value

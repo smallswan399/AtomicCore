@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Transaction Extension
     /// </summary>
-    public static class TransactionExtension
+    public static class TronNetTransactionExtension
     {
         /// <summary>
         /// Calc TXID

@@ -8,11 +8,11 @@
         /// <summary>
         /// Host
         /// </summary>
-        public string Host { get; set; } = "grpc.shasta.trongrid.io";
+        public string Host { get; set; }
 
         /// <summary>
         /// Ports
         /// </summary>
-        public int Port { get; set; } = 50051;
+        public int Port { get; set; }
     }
 }

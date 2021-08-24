@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Create Transaction Rest Json
     /// </summary>
-    public class TronCreateTransactionRestJson
+    public class TronNetCreateTransactionRestJson
     {
         /// <summary>
         /// TXID
@@ -17,6 +17,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// Raw Data
         /// </summary>
         [JsonProperty("raw_data")]
-        public TronCreateTransactionRawDataRestJson RawData { get; set; }
+        public TronNetCreateTransactionRawDataJson RawData { get; set; }
     }
 }

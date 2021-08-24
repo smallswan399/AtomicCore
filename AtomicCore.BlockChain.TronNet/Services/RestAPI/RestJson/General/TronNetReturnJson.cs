@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Return Rest Json
     /// </summary>
-    public class TronReturnRestJson
+    public class TronNetReturnJson
     {
         /// <summary>
         /// ContractRet

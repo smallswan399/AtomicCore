@@ -27,7 +27,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             //Main Account
             string privateKey = TronTestAccountCollection.TestMain.PirvateKey;
-            ITronAccount account = _wallet.GetAccount(privateKey);
+            ITronNetAccount account = _wallet.GetAccount(privateKey);
 
             //USDT Contract Address
             string contractAddress = TronTestAccountCollection.TestNetUsdtAddress;

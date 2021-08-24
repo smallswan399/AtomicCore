@@ -31,6 +31,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
-        TronCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID, bool? visible);
+        TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID, bool? visible);
     }
 }

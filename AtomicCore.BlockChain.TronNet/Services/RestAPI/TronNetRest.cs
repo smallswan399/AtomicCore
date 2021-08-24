@@ -175,11 +175,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <returns>Returns a private key, the corresponding address in hex,and base58</returns>
         [Obsolete("Remote service has been removed")]
-        public TronAddressKeyPairRestJson GenerateAddress()
+        public TronNetAddressKeyPairRestJson GenerateAddress()
         {
             string url = CreateFullNodeRestUrl("/wallet/generateaddress");
             string resp = this.RestGetJson(url);
-            TronAddressKeyPairRestJson restJson = ObjectParse<TronAddressKeyPairRestJson>(resp);
+            TronNetAddressKeyPairRestJson restJson = ObjectParse<TronNetAddressKeyPairRestJson>(resp);
 
             return restJson;
         }
@@ -193,7 +193,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="passphrase"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        public TronAddressBase58CheckRestJson CreateAddress(string passphrase)
+        public TronNetAddressBase58CheckRestJson CreateAddress(string passphrase)
         {
             if (string.IsNullOrEmpty(passphrase))
                 throw new ArgumentNullException(nameof(passphrase));
@@ -201,7 +201,7 @@ namespace AtomicCore.BlockChain.TronNet
             string passphraseHex = Encoding.UTF8.GetBytes(passphrase).ToHex();
             string url = CreateFullNodeRestUrl("/wallet/createaddress");
             string resp = this.RestPostJson(url, new { value = passphraseHex });
-            TronAddressBase58CheckRestJson restJson = ObjectParse<TronAddressBase58CheckRestJson>(resp);
+            TronNetAddressBase58CheckRestJson restJson = ObjectParse<TronNetAddressBase58CheckRestJson>(resp);
 
             return restJson;
         }
@@ -211,7 +211,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="address">Tron Address</param>
         /// <returns></returns>
-        public TronAddressValidRestJson ValidateAddress(string address)
+        public TronNetAddressValidRestJson ValidateAddress(string address)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
@@ -219,7 +219,7 @@ namespace AtomicCore.BlockChain.TronNet
             string addressHex = Base58Encoder.DecodeFromBase58Check(address).ToHex();
             string url = CreateFullNodeRestUrl("/wallet/validateaddress");
             string resp = this.RestPostJson(url, new { address = addressHex });
-            TronAddressValidRestJson restJson = ObjectParse<TronAddressValidRestJson>(resp);
+            TronNetAddressValidRestJson restJson = ObjectParse<TronNetAddressValidRestJson>(resp);
 
             return restJson;
         }
@@ -233,14 +233,14 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="txid"></param>
         /// <returns></returns>
-        public TronTransactionRestJson GetTransactionByID(string txid)
+        public TronNetTransactionRestJson GetTransactionByID(string txid)
         {
             if (string.IsNullOrEmpty(txid))
                 throw new ArgumentNullException(nameof(txid));
 
             string url = CreateFullNodeRestUrl("/wallet/gettransactionbyid");
             string resp = this.RestPostJson(url, new { value = txid });
-            TronTransactionRestJson restJson = ObjectParse<TronTransactionRestJson>(resp);
+            TronNetTransactionRestJson restJson = ObjectParse<TronNetTransactionRestJson>(resp);
 
             return restJson;
         }

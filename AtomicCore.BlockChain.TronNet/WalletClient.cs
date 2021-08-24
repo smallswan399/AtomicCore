@@ -50,11 +50,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// Generate Account
         /// </summary>
         /// <returns></returns>
-        public ITronAccount GenerateAccount()
+        public ITronNetAccount GenerateAccount()
         {
             TronECKey tronKey = TronECKey.GenerateKey(_options.Value.Network);
 
-            return new TronAccount(tronKey);
+            return new TronNetAccount(tronKey);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="privateKey"></param>
         /// <returns></returns>
-        public ITronAccount GetAccount(string privateKey)
+        public ITronNetAccount GetAccount(string privateKey)
         {
-            return new TronAccount(privateKey, _options.Value.Network);
+            return new TronNetAccount(privateKey, _options.Value.Network);
         }
 
         /// <summary>

@@ -3,7 +3,7 @@
     /// <summary>
     /// Tron Account Interfacr Implementation Class
     /// </summary>
-    public class TronAccount : ITronAccount
+    public class TronNetAccount : ITronNetAccount
     {
         #region Variables
 
@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="network"></param>
-        public TronAccount(string privateKey, TronNetwork network = TronNetwork.MainNet)
+        public TronNetAccount(string privateKey, TronNetwork network = TronNetwork.MainNet)
         {
             Initialise(new TronECKey(privateKey, network));
         }
@@ -30,7 +30,7 @@
         /// Constructor
         /// </summary>
         /// <param name="key"></param>
-        public TronAccount(TronECKey key)
+        public TronNetAccount(TronECKey key)
         {
             Initialise(key);
         }

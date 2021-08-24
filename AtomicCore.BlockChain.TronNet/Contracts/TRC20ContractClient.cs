@@ -88,7 +88,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="memo"></param>
         /// <param name="feeLimit"></param>
         /// <returns></returns>
-        public async Task<string> TransferAsync(string contractAddress, ITronAccount ownerAccount, string toAddress, decimal amount, string memo, long feeLimit)
+        public async Task<string> TransferAsync(string contractAddress, ITronNetAccount ownerAccount, string toAddress, decimal amount, string memo, long feeLimit)
         {
             var contractAddressBytes = Base58Encoder.DecodeFromBase58Check(contractAddress);
             var callerAddressBytes = Base58Encoder.DecodeFromBase58Check(toAddress);
@@ -168,7 +168,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="contractAddress"></param>
         /// <param name="ownerAccount"></param>
         /// <returns></returns>
-        public async Task<decimal> BalanceOfAsync(string contractAddress, ITronAccount ownerAccount)
+        public async Task<decimal> BalanceOfAsync(string contractAddress, ITronNetAccount ownerAccount)
         {
             var contractAddressBytes = Base58Encoder.DecodeFromBase58Check(contractAddress);
             var ownerAddressBytes = Base58Encoder.DecodeFromBase58Check(ownerAccount.Address);

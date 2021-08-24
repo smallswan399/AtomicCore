@@ -5,13 +5,13 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Transaction Rest Json
     /// </summary>
-    public class TronTransactionRestJson
+    public class TronNetTransactionRestJson
     {
         /// <summary>
         /// ret list result
         /// </summary>
         [JsonProperty("ret")]
-        public TronReturnRestJson[] Returns { get; set; }
+        public TronNetReturnJson[] Returns { get; set; }
 
         /// <summary>
         /// signature
@@ -29,7 +29,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// raw_data
         /// </summary>
         [JsonProperty("raw_data")]
-        public TronTransactionRawDataRestJson RawData { get; set; }
+        public TronNetTransactionRawDataJson RawData { get; set; }
 
         /// <summary>
         /// raw_data_hex

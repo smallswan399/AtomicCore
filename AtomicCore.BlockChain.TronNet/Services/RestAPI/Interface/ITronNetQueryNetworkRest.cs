@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="txid"></param>
         /// <returns></returns>
-        TronTransactionRestJson GetTransactionByID(string txid);
+        TronNetTransactionRestJson GetTransactionByID(string txid);
     }
 }

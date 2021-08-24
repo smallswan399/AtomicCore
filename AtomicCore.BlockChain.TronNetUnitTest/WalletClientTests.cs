@@ -105,7 +105,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
 
             //APIREST
-            TronTransactionRestJson rest_txInfo = _restAPI.GetTransactionByID(txid);
+            TronNetTransactionRestJson rest_txInfo = _restAPI.GetTransactionByID(txid);
             Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
 
             //GRPC

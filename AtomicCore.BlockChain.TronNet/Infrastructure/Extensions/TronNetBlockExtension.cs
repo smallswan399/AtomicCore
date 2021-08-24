@@ -7,7 +7,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// Block Extension
     /// https://github.com/tronprotocol/documentation/blob/master/TRX/Tron-overview.md
     /// </summary>
-    public static class BlockExtension
+    public static class TronNetBlockExtension
     {
         /// <summary>
         /// Get Block Hash(ID)

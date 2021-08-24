@@ -3,7 +3,7 @@
     /// <summary>
     /// Tron Account Interface
     /// </summary>
-    public interface ITronAccount
+    public interface ITronNetAccount
     {
         /// <summary>
         /// Public Key

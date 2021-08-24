@@ -15,7 +15,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <returns>Returns a private key, the corresponding address in hex,and base58</returns>
         [Obsolete("Remote service has been removed")]
-        TronAddressKeyPairRestJson GenerateAddress();
+        TronNetAddressKeyPairRestJson GenerateAddress();
 
         /// <summary>
         /// Create address from a specified password string (NOT PRIVATE KEY)
@@ -26,13 +26,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="passphrase"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        TronAddressBase58CheckRestJson CreateAddress(string passphrase);
+        TronNetAddressBase58CheckRestJson CreateAddress(string passphrase);
 
         /// <summary>
         /// Validates address, returns either true or false.
         /// </summary>
         /// <param name="address">Address should be in base58checksum, hexString, or base64 format.</param>
         /// <returns></returns>
-        TronAddressValidRestJson ValidateAddress(string address);
+        TronNetAddressValidRestJson ValidateAddress(string address);
     }
 }

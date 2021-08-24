@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Address Valid Rest Json
     /// </summary>
-    public class TronAddressValidRestJson
+    public class TronNetAddressValidRestJson
     {
         /// <summary>
         /// result

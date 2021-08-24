@@ -24,14 +24,14 @@ namespace AtomicCore.BlockChain.TronNet
         /// Generatee Account
         /// </summary>
         /// <returns></returns>
-        ITronAccount GenerateAccount();
+        ITronNetAccount GenerateAccount();
 
         /// <summary>
         /// Get Account From PrivateKey HexString
         /// </summary>
         /// <param name="privateKey"></param>
         /// <returns></returns>
-        ITronAccount GetAccount(string privateKey);
+        ITronNetAccount GetAccount(string privateKey);
 
         /// <summary>
         /// Parse Address

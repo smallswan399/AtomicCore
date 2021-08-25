@@ -230,9 +230,7 @@ namespace AtomicCore.BlockChain.TronNet
 
         /// <summary>
         /// Get Transaction Sign
-        /// Please control risks when using this API. 
-        /// To ensure environmental security, please do not invoke APIs provided by other 
-        /// or invoke this very API on a public network.
+        /// Offline Signature
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="createTransaction"></param>
@@ -285,6 +283,20 @@ namespace AtomicCore.BlockChain.TronNet
             ////TronNetSignedTransactionRestJson restJson = ObjectParse<TronNetSignedTransactionRestJson>(resp);
 
             ////return restJson;
+        }
+
+        /// <summary>
+        /// Broadcast Transaction
+        /// </summary>
+        /// <param name="singedTransaction"></param>
+        /// <returns></returns>
+        public TronNetResultJson BroadcastTransaction(TronNetSignedTransactionRestJson singedTransaction)
+        {
+            string url = CreateFullNodeRestUrl("/wallet/broadcasttransaction");
+            string resp = this.RestPostJson(url, singedTransaction);
+            TronNetResultJson restJson = ObjectParse<TronNetResultJson>(resp);
+
+            return restJson;
         }
 
         /// <summary>

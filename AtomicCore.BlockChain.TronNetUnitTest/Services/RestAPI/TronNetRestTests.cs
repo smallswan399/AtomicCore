@@ -46,6 +46,21 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         #region ITronTransactionsRest
 
         [TestMethod()]
+        public void CreateTransactionTest()
+        {
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            TronNetCreateTransactionRestJson result = testRestAPI.CreateTransaction(
+                TronTestAccountCollection.TestMain.Address,
+                TronTestAccountCollection.TestA.Address,
+                1
+            );
+
+            Assert.IsTrue(!string.IsNullOrEmpty(result.TxID));
+        }
+
+        [TestMethod()]
         public void GetTransactionSignTest()
         {
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
@@ -63,19 +78,27 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(null != result);
         }
 
+        /// <summary>
+        /// API ERROR
+        /// </summary>
         [TestMethod()]
-        public void CreateTransactionTest()
+        public void BroadcastTransactionTest()
         {
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
-            TronNetCreateTransactionRestJson result = testRestAPI.CreateTransaction(
+            TronNetCreateTransactionRestJson createTransaction = testRestAPI.CreateTransaction(
                 TronTestAccountCollection.TestMain.Address,
                 TronTestAccountCollection.TestA.Address,
                 1
             );
+            Assert.IsTrue(!string.IsNullOrEmpty(createTransaction.TxID));
 
-            Assert.IsTrue(!string.IsNullOrEmpty(result.TxID));
+            TronNetSignedTransactionRestJson signTransaction = testRestAPI.GetTransactionSign(TronTestAccountCollection.TestMain.PirvateKey, createTransaction);
+
+            TronNetResultJson result = testRestAPI.BroadcastTransaction(signTransaction);
+
+            Assert.IsTrue(result.Result);
         }
 
         #endregion
@@ -111,8 +134,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
 
+
         #endregion
-
-
     }
 }

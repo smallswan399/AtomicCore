@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AtomicCore.BlockChain.TronNet
+﻿namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Tron Transaction Rest API
@@ -15,7 +13,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction);
 
-        //void BroadcastTransaction();
+        /// <summary>
+        /// Broadcast Transaction
+        /// </summary>
+        /// <param name="singedTransaction"></param>
+        /// <returns></returns>
+        TronNetResultJson BroadcastTransaction(TronNetSignedTransactionRestJson singedTransaction);
 
         //void BroadcastHex();
 

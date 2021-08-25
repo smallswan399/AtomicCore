@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// TronNet SignedTransaction Rest Json
     /// </summary>
-    public class TronNetSignedTransactionRestJson
+    public class TronNetSignedTransactionRestJson : TronNetCreateTransactionRestJson
     {
+        /// <summary>
+        /// Signature
+        /// </summary>
+        [JsonProperty("signature")]
+        public string[] Signature { get; set; }
     }
 }

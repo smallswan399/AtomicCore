@@ -46,11 +46,32 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         #region ITronTransactionsRest
 
         [TestMethod()]
+        public void GetTransactionSignTest()
+        {
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            TronNetCreateTransactionRestJson createTransaction = testRestAPI.CreateTransaction(
+                TronTestAccountCollection.TestMain.Address,
+                TronTestAccountCollection.TestA.Address,
+                1
+            );
+            Assert.IsTrue(!string.IsNullOrEmpty(createTransaction.TxID));
+
+            var result = testRestAPI.GetTransactionSign(TronTestAccountCollection.TestMain.PirvateKey, createTransaction);
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
         public void CreateTransactionTest()
         {
-            var result = _restAPI.CreateTransaction(
-                "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm",
-                "TEEBzBuyVvE2YT1ub3xHe9UtcfwXtS1KeV",
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            TronNetCreateTransactionRestJson result = testRestAPI.CreateTransaction(
+                TronTestAccountCollection.TestMain.Address,
+                TronTestAccountCollection.TestA.Address,
                 1
             );
 
@@ -88,6 +109,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
         }
+
 
         #endregion
 

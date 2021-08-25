@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Error Msg
         /// </summary>
-        [JsonProperty("Error")]
+        [JsonProperty("Error"), JsonIgnore]
         public string Error { get; set; }
     }
 }

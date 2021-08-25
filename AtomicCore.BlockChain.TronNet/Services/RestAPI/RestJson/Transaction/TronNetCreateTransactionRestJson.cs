@@ -8,6 +8,12 @@ namespace AtomicCore.BlockChain.TronNet
     public class TronNetCreateTransactionRestJson : TronNetValidRestJson
     {
         /// <summary>
+        /// visible
+        /// </summary>
+        [JsonProperty("visible")]
+        public bool Visible { get; set; }
+
+        /// <summary>
         /// TXID
         /// </summary>
         [JsonProperty("txID")]
@@ -18,5 +24,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("raw_data")]
         public TronNetCreateTransactionRawDataJson RawData { get; set; }
+
+        /// <summary>
+        /// Raw Data Hex
+        /// </summary>
+        [JsonProperty("raw_data_hex")]
+        public string RawDataHex { get; set; }
     }
 }

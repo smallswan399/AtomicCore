@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.TronNet
+﻿using System;
+
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Tron Transaction Rest API

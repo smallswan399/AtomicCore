@@ -229,6 +229,17 @@ namespace AtomicCore.BlockChain.TronNet
         #region ITronTransactionsRest
 
         /// <summary>
+        /// Get Transaction Sign
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="createTransaction"></param>
+        /// <returns></returns>
+        public TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction)
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Create a TRX transfer transaction. 
         /// If to_address does not exist, then create the account on the blockchain.
         /// </summary>

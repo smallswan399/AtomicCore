@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AtomicCore.BlockChain.TronNet
+﻿namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Tron Transaction Rest API
     /// </summary>
     public interface ITronTransactionsRest
     {
-        //void GetTransactionSign();
+        /// <summary>
+        /// Get Transaction Sign
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="createTransaction"></param>
+        /// <returns></returns>
+        TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction);
 
         //void BroadcastTransaction();
 

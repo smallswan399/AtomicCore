@@ -49,8 +49,8 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         public void CreateTransactionTest()
         {
             var result = _restAPI.CreateTransaction(
-                TronTestAccountCollection.TestMain.Address,
-                TronTestAccountCollection.TestA.Address,
+                "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm",
+                "TEEBzBuyVvE2YT1ub3xHe9UtcfwXtS1KeV",
                 1
             );
 

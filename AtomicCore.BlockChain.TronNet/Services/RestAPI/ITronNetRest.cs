@@ -3,7 +3,7 @@
     /// <summary>
     /// Tron Rest API
     /// </summary>
-    public interface ITronNetRest : ITronNetAddressUtilitiesRest, ITronNetQueryNetworkRest
+    public interface ITronNetRest : ITronNetAddressUtilitiesRest, ITronTransactionsRest, ITronNetQueryNetworkRest
     {
 
     }

@@ -165,7 +165,7 @@ namespace AtomicCore.BlockChain.TronNet
 
         #endregion
 
-        #region ITronAddressUtilitiesRestAPI
+        #region ITronAddressUtilitiesRest
 
         /// <summary>
         /// Generates a random private key and address pair. 
@@ -220,6 +220,53 @@ namespace AtomicCore.BlockChain.TronNet
             string url = CreateFullNodeRestUrl("/wallet/validateaddress");
             string resp = this.RestPostJson(url, new { address = addressHex });
             TronNetAddressValidRestJson restJson = ObjectParse<TronNetAddressValidRestJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
+
+        #region ITronTransactionsRest
+
+        /// <summary>
+        /// Create a TRX transfer transaction. 
+        /// If to_address does not exist, then create the account on the blockchain.
+        /// </summary>
+        /// <param name="ownerAddress">To_address is the transfer address</param>
+        /// <param name="toAddress">Owner_address is the transfer address</param>
+        /// <param name="amount">Amount is the transfer amount,the unit is trx</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional.Whehter the address is in base58 format</param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID = null, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+            if (string.IsNullOrEmpty(toAddress))
+                throw new ArgumentNullException(nameof(toAddress));
+            if (amount <= decimal.Zero)
+                throw new ArgumentException("amount must be greater than zero");
+
+            //address to hex
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
+            long trx_of_sun = (long)(amount * 1000000);
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+                to_address = hex_to_address,
+                amount = trx_of_sun
+            };
+            if (null != permissionID)
+                reqData.permission_id = permissionID.Value;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/createtransaction");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
 
             return restJson;
         }

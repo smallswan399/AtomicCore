@@ -43,6 +43,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         #endregion
 
+        #region ITronTransactionsRest
+
+        [TestMethod()]
+        public void CreateTransactionTest()
+        {
+            var result = _restAPI.CreateTransaction(
+                TronTestAccountCollection.TestMain.Address,
+                TronTestAccountCollection.TestA.Address,
+                1
+            );
+
+            Assert.IsTrue(!string.IsNullOrEmpty(result.TxID));
+        }
+
+        #endregion
+
         #region ITronQueryNetworkRestAPI
 
         [TestMethod()]
@@ -74,5 +90,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         #endregion
+
+
     }
 }

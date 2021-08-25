@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Create Transaction Rest Json
     /// </summary>
-    public class TronNetCreateTransactionRestJson
+    public class TronNetCreateTransactionRestJson : TronNetValidRestJson
     {
         /// <summary>
         /// TXID

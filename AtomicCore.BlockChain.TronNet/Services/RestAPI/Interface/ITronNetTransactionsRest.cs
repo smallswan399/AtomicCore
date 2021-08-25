@@ -9,17 +9,17 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Transaction Rest API
     /// </summary>
-    public interface ITronTransactionsRestAPI
+    public interface ITronTransactionsRest
     {
-        void GetTransactionSign();
+        //void GetTransactionSign();
 
-        void BroadcastTransaction();
+        //void BroadcastTransaction();
 
-        void BroadcastHex();
+        //void BroadcastHex();
 
-        void EasyTransfer();
+        //void EasyTransfer();
 
-        void EasyTransferByPrivate();
+        //void EasyTransferByPrivate();
 
         /// <summary>
         /// Create a TRX transfer transaction. 
@@ -31,6 +31,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID, bool? visible);
+        TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID = null, bool? visible = null);
     }
 }

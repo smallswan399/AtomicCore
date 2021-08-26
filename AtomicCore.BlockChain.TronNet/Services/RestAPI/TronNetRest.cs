@@ -436,7 +436,22 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Get Transaction Info By Txid
+        /// </summary>
+        /// <param name="txid"></param>
+        /// <returns></returns>
+        public TronNetTransactionInfoJson GetTransactionInfoById(string txid)
+        {
+            if (string.IsNullOrEmpty(txid))
+                throw new ArgumentNullException(nameof(txid));
 
+            string url = CreateFullNodeRestUrl("/wallet/gettransactioninfobyid");
+            string resp = this.RestPostJson(url, new { value = txid });
+            TronNetTransactionInfoJson restJson = ObjectParse<TronNetTransactionInfoJson>(resp);
+
+            return restJson;
+        }
 
         #endregion
     }

@@ -180,11 +180,18 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             //TRC10 => c43d19f4517ce1a4c31c66eb4d9b41409caddc3be1cb733e28e941b3220e1b2d
             //TRC20 => f2eb864b3058b708d082b4aecf6573bc5606c741b51cf8870da30dd56e4aae40
 
-            TronNetTransactionInfoJson result = _restAPI.GetTransactionInfoById("f337385642d56a981fe8938049e3765e6abcca53ac9412a327b1906df272bdc1");
+            TronNetTransactionInfoJson result = _restAPI.GetTransactionInfoById("f2eb864b3058b708d082b4aecf6573bc5606c741b51cf8870da30dd56e4aae40");
 
             Assert.IsTrue(!string.IsNullOrEmpty(result.TxID));
         }
 
+        [TestMethod()]
+        public void ListNodesTest()
+        {
+            var result = _restAPI.ListNodes();
+
+            Assert.IsTrue(null != result);
+        }
 
         #endregion
 

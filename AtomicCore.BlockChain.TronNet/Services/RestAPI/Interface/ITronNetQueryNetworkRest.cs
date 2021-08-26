@@ -53,5 +53,19 @@
         /// <param name="txid"></param>
         /// <returns></returns>
         TronNetTransactionInfoJson GetTransactionInfoById(string txid);
+
+        /// <summary>
+        /// Get TransactionInfo By BlockHeight
+        /// </summary>
+        /// <param name="blockHeight"></param>
+        /// <returns></returns>
+        [System.Obsolete("Please use method 'GetBlockByLimitNext' instead")]
+        TronNetTransactionInfoJson GetTransactionInfoByBlockNum(ulong blockHeight);
+
+        /// <summary>
+        /// Return List of Node
+        /// </summary>
+        /// <returns></returns>
+        TronNetNodeJson ListNodes();
     }
 }

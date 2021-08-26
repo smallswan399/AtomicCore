@@ -400,7 +400,7 @@ namespace AtomicCore.BlockChain.TronNet
         public TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum)
         {
             string url = CreateFullNodeRestUrl("/wallet/getblockbylimitnext");
-            string resp = this.RestPostJson(url, new { startNum , endNum });
+            string resp = this.RestPostJson(url, new { startNum, endNum });
             TronNetBlockListJson restJson = ObjectParse<TronNetBlockListJson>(resp);
 
             return restJson;
@@ -449,6 +449,30 @@ namespace AtomicCore.BlockChain.TronNet
             string url = CreateFullNodeRestUrl("/wallet/gettransactioninfobyid");
             string resp = this.RestPostJson(url, new { value = txid });
             TronNetTransactionInfoJson restJson = ObjectParse<TronNetTransactionInfoJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Get TransactionInfo By BlockHeight
+        /// </summary>
+        /// <param name="blockHeight"></param>
+        /// <returns></returns>
+        [System.Obsolete("Please use method 'GetBlockByLimitNext' instead")]
+        public TronNetTransactionInfoJson GetTransactionInfoByBlockNum(ulong blockHeight)
+        {
+            throw new NotImplementedException("Please use method 'GetBlockByLimitNext' instead");
+        }
+
+        /// <summary>
+        /// Return List of Nodes
+        /// </summary>
+        /// <returns></returns>
+        public TronNetNodeJson ListNodes()
+        {
+            string url = CreateFullNodeRestUrl("/wallet/listnodes");
+            string resp = this.RestGetJson(url);
+            TronNetNodeJson restJson = ObjectParse<TronNetNodeJson>(resp);
 
             return restJson;
         }

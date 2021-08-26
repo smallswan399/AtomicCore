@@ -130,6 +130,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         [TestMethod()]
+        public void GetBlockByLimitNextTest()
+        {
+            TronNetBlockListJson result = _restAPI.GetBlockByLimitNext(10, 11);
+
+            Assert.IsTrue(result.Blocks != null);
+        }
+
+        [TestMethod()]
+        public void GetNowBlockTest()
+        {
+            TronNetBlockDetailsJson result = _restAPI.GetNowBlock();
+
+            Assert.IsTrue(result != null);
+        }
+
+        [TestMethod()]
         public void GetTransactionByIDTest()
         {
             string txid = "ca8d10f2b141a3a8d8e31453ff50716258d873c89fd189f6abce92effaa1960d";
@@ -156,6 +172,8 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             Assert.IsTrue(!string.IsNullOrEmpty(rest_txInfo.TxID));
         }
+
+
 
         #endregion
 

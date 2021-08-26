@@ -27,6 +27,20 @@
         TronNetBlockListJson GetBlockByLatestNum(ulong lastNum);
 
         /// <summary>
+        /// Returns the list of Block Objects included in the 'Block Height' range specified.
+        /// </summary>
+        /// <param name="startNum">Starting block height, including this block.</param>
+        /// <param name="endNum">Ending block height, excluding that block.</param>
+        /// <returns></returns>
+        TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum);
+
+        /// <summary>
+        /// Query the latest block information
+        /// </summary>
+        /// <returns></returns>
+        TronNetBlockDetailsJson GetNowBlock();
+
+        /// <summary>
         /// Get Transaction By Txid
         /// </summary>
         /// <param name="txid"></param>

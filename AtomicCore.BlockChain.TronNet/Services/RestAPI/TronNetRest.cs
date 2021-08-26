@@ -392,6 +392,34 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// Returns the list of Block Objects included in the 'Block Height' range specified.
+        /// </summary>
+        /// <param name="startNum">Starting block height, including this block.</param>
+        /// <param name="endNum">Ending block height, excluding that block.</param>
+        /// <returns></returns>
+        public TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum)
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getblockbylimitnext");
+            string resp = this.RestPostJson(url, new { startNum , endNum });
+            TronNetBlockListJson restJson = ObjectParse<TronNetBlockListJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Query the latest block information
+        /// </summary>
+        /// <returns></returns>
+        public TronNetBlockDetailsJson GetNowBlock()
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getnowblock");
+            string resp = this.RestPostJson(url);
+            TronNetBlockDetailsJson restJson = ObjectParse<TronNetBlockDetailsJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
         /// Get Transaction By Txid
         /// </summary>
         /// <param name="txid"></param>

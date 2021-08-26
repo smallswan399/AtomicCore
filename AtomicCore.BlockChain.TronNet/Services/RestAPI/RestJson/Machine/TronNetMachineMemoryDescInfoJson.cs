@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -11,14 +7,34 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public class TronNetMachineMemoryDescInfoJson
     {
-        public ulong initSize { get; set; }
+        /// <summary>
+        /// initSize
+        /// </summary>
+        [JsonProperty("initSize")]
+        public int InitSize { get; set; }
 
-        public ulong maxSize { get; set; }
+        /// <summary>
+        /// maxSize
+        /// </summary>
+        [JsonProperty("maxSize")]
+        public int MaxSize { get; set; }
 
-        public string name { get; set; }
+        /// <summary>
+        /// name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-        public decimal useRate { get; set; }
+        /// <summary>
+        /// useRate
+        /// </summary>
+        [JsonProperty("useRate")]
+        public decimal UseRate { get; set; }
 
-        public ulong useSize { get; set; }
+        /// <summary>
+        /// useSize
+        /// </summary>
+        [JsonProperty("useSize")]
+        public int UseSize { get; set; }
     }
 }

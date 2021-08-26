@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -7,30 +8,82 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public class TronNetMachineInfoJson
     {
-        public int cpuCount { get; set; }
+        /// <summary>
+        /// cpuCount
+        /// </summary>
+        [JsonProperty("cpuCount")]
+        public int CpuCount { get; set; }
 
-        public decimal cpuRate { get; set; }
+        /// <summary>
+        /// cpuRate
+        /// </summary>
+        [JsonProperty("cpuRate")]
+        public decimal CpuRate { get; set; }
 
-        public int deadLockThreadCount { get; set; }
+        /// <summary>
+        /// deadLockThreadCount
+        /// </summary>
+        [JsonProperty("deadLockThreadCount")]
+        public int DeadLockThreadCount { get; set; }
 
-        public JObject deadLockThreadInfoList { get; set; }
+        /// <summary>
+        /// deadLockThreadInfoList
+        /// </summary>
+        [JsonProperty("deadLockThreadInfoList")]
+        public JObject DeadLockThreadInfoList { get; set; }
 
-        public ulong freeMemory { get; set; }
+        /// <summary>
+        /// freeMemory
+        /// </summary>
+        [JsonProperty("freeMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong FreeMemory { get; set; }
 
-        public string javaVersion { get; set; }
+        /// <summary>
+        /// javaVersion
+        /// </summary>
+        [JsonProperty("javaVersion")]
+        public string JavaVersion { get; set; }
 
-        public ulong jvmFreeMemory { get; set; }
+        /// <summary>
+        /// jvmFreeMemory
+        /// </summary>
+        [JsonProperty("jvmFreeMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong JvmFreeMemory { get; set; }
 
-        public ulong jvmTotalMemory { get; set; }
+        /// <summary>
+        /// jvmTotalMemory
+        /// </summary>
+        [JsonProperty("jvmTotalMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong JvmTotalMemory { get; set; }
 
-        public TronNetMachineMemoryDescInfoJson[] memoryDescInfoList { get; set; }
+        /// <summary>
+        /// memoryDescInfoList
+        /// </summary>
+        [JsonProperty("memoryDescInfoList")]
+        public TronNetMachineMemoryDescInfoJson[] MemoryDescInfoList { get; set; }
 
-        public string osName { get; set; }
+        /// <summary>
+        /// osName
+        /// </summary>
+        [JsonProperty("osName")]
+        public string OsName { get; set; }
 
-        public decimal processCpuRate { get; set; }
+        /// <summary>
+        /// processCpuRate
+        /// </summary>
+        [JsonProperty("processCpuRate")]
+        public decimal ProcessCpuRate { get; set; }
 
-        public int threadCount { get; set; }
+        /// <summary>
+        /// threadCount
+        /// </summary>
+        [JsonProperty("threadCount")]
+        public int ThreadCount { get; set; }
 
-        public ulong totalMemory { get; set; }
+        /// <summary>
+        /// totalMemory
+        /// </summary>
+        [JsonProperty("totalMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong TotalMemory { get; set; }
     }
 }

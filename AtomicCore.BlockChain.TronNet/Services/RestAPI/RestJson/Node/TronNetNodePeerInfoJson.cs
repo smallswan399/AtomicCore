@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -11,50 +7,142 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public class TronNetNodePeerInfoJson : TronNetNodeHostJson
     {
-        public bool active { get; set; }
+        /// <summary>
+        /// active
+        /// </summary>
+        [JsonProperty("active")]
+        public bool Active { get; set; }
 
-        public decimal avgLatency { get; set; }
+        /// <summary>
+        /// avgLatency
+        /// </summary>
+        [JsonProperty("avgLatency")]
+        public decimal AvgLatency { get; set; }
 
-        public int blockInPorcSize { get; set; }
+        /// <summary>
+        /// blockInPorcSize
+        /// </summary>
+        [JsonProperty("blockInPorcSize")]
+        public int BlockInPorcSize { get; set; }
 
-        public ulong connectTime { get; set; }
+        /// <summary>
+        /// connectTime
+        /// </summary>
+        [JsonProperty("connectTime"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong ConnectTime { get; set; }
 
-        public ulong disconnectTimes { get; set; }
+        /// <summary>
+        /// disconnectTimes
+        /// </summary>
+        [JsonProperty("disconnectTimes"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong DisconnectTimes { get; set; }
 
-        public ulong headBlockTimeWeBothHave { get; set; }
+        /// <summary>
+        /// headBlockTimeWeBothHave
+        /// </summary>
+        [JsonProperty("headBlockTimeWeBothHave"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong HeadBlockTimeWeBothHave { get; set; }
 
-        public string headBlockWeBothHave { get; set; }
+        /// <summary>
+        /// headBlockWeBothHave
+        /// </summary>
+        [JsonProperty("headBlockWeBothHave")]
+        public string HeadBlockWeBothHave { get; set; }
 
-        public int inFlow { get; set; }
+        /// <summary>
+        /// inFlow
+        /// </summary>
+        [JsonProperty("inFlow")]
+        public int InFlow { get; set; }
 
-        public ulong lastBlockUpdateTime { get; set; }
+        /// <summary>
+        /// lastBlockUpdateTime
+        /// </summary>
+        [JsonProperty("lastBlockUpdateTime"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        public ulong LastBlockUpdateTime { get; set; }
 
-        public string lastSyncBlock { get; set; }
+        /// <summary>
+        /// lastSyncBlock
+        /// </summary>
+        [JsonProperty("lastSyncBlock")]
+        public string LastSyncBlock { get; set; }
 
-        public string localDisconnectReason { get; set; }
+        /// <summary>
+        /// localDisconnectReason
+        /// </summary>
+        [JsonProperty("localDisconnectReason")]
+        public string LocalDisconnectReason { get; set; }
 
-        public bool needSyncFromPeer { get; set; }
+        /// <summary>
+        /// needSyncFromPeer
+        /// </summary>
+        [JsonProperty("needSyncFromPeer")]
+        public bool NeedSyncFromPeer { get; set; }
 
-        public bool needSyncFromUs { get; set; }
+        /// <summary>
+        /// needSyncFromUs
+        /// </summary>
+        [JsonProperty("needSyncFromUs")]
+        public bool NeedSyncFromUs { get; set; }
 
-        public int nodeCount { get; set; }
+        /// <summary>
+        /// nodeCount
+        /// </summary>
+        [JsonProperty("nodeCount")]
+        public int NodeCount { get; set; }
 
-        public string nodeId { get; set; }
+        /// <summary>
+        /// nodeId
+        /// </summary>
+        [JsonProperty("nodeId")]
+        public string NodeId { get; set; }
 
-        public int remainNum { get; set; }
+        /// <summary>
+        /// remainNum
+        /// </summary>
+        [JsonProperty("remainNum")]
+        public int RemainNum { get; set; }
 
-        public string remoteDisconnectReason { get; set; }
+        /// <summary>
+        /// remoteDisconnectReason
+        /// </summary>
+        [JsonProperty("remoteDisconnectReason")]
+        public string RemoteDisconnectReason { get; set; }
 
-        public decimal score { get; set; }
+        /// <summary>
+        /// score
+        /// </summary>
+        [JsonProperty("score")]
+        public decimal Score { get; set; }
 
-        public int syncBlockRequestedSize { get; set; }
+        /// <summary>
+        /// syncBlockRequestedSize
+        /// </summary>
+        [JsonProperty("syncBlockRequestedSize")]
+        public int SyncBlockRequestedSize { get; set; }
 
-        public bool syncFlag { get; set; }
+        /// <summary>
+        /// syncFlag
+        /// </summary>
+        [JsonProperty("syncFlag")]
+        public bool SyncFlag { get; set; }
 
-        public int syncToFetchSize { get; set; }
+        /// <summary>
+        /// syncToFetchSize
+        /// </summary>
+        [JsonProperty("syncToFetchSize")]
+        public int SyncToFetchSize { get; set; }
 
-        public int syncToFetchSizePeekNum { get; set; }
+        /// <summary>
+        /// syncToFetchSizePeekNum
+        /// </summary>
+        [JsonProperty("syncToFetchSizePeekNum")]
+        public int SyncToFetchSizePeekNum { get; set; }
 
-        public int unFetchSynNum { get; set; }
+        /// <summary>
+        /// unFetchSynNum
+        /// </summary>
+        [JsonProperty("unFetchSynNum")]
+        public int UnFetchSynNum { get; set; }
     }
 }

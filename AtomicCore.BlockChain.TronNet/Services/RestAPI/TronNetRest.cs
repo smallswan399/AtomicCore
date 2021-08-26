@@ -353,7 +353,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public TronNetBlockJson GetBlockByNum(ulong blockHeight)
         {
-            return null;
+            string url = CreateFullNodeRestUrl("/wallet/getblockbynum");
+            string resp = this.RestPostJson(url, new { num = blockHeight });
+            TronNetBlockJson restJson = ObjectParse<TronNetBlockJson>(resp);
+
+            return restJson;
         }
 
         /// <summary>

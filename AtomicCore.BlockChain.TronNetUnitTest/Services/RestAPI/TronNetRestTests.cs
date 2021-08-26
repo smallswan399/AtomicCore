@@ -114,6 +114,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         [TestMethod()]
+        public void GetBlockByIdTest()
+        {
+            TronNetBlockJson result = _restAPI.GetBlockById("0000000001f9f486548b36b7a54732ffc070b4311247cb88999cf7cef5c1bfa2");
+
+            Assert.IsTrue(!string.IsNullOrEmpty(result.BlockID));
+        }
+
+        [TestMethod()]
         public void GetTransactionByIDTest()
         {
             string txid = "ca8d10f2b141a3a8d8e31453ff50716258d873c89fd189f6abce92effaa1960d";

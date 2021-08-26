@@ -361,6 +361,20 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// Get Block By Hash(ID)
+        /// </summary>
+        /// <param name="blockID"></param>
+        /// <returns></returns>
+        public TronNetBlockJson GetBlockById(string blockID)
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getblockbyid");
+            string resp = this.RestPostJson(url, new { value = blockID });
+            TronNetBlockJson restJson = ObjectParse<TronNetBlockJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
         /// Get Transaction By Txid
         /// </summary>
         /// <param name="txid"></param>

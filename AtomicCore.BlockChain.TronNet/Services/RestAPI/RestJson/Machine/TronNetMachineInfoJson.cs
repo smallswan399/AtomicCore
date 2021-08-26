@@ -30,7 +30,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// deadLockThreadInfoList
         /// </summary>
         [JsonProperty("deadLockThreadInfoList")]
-        public JObject DeadLockThreadInfoList { get; set; }
+        public JObject[] DeadLockThreadInfoList { get; set; }
 
         /// <summary>
         /// freeMemory

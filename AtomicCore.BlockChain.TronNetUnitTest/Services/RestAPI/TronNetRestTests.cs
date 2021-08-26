@@ -196,7 +196,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetNodeInfoTest()
         {
-            var result = _restAPI.GetNodeInfo();
+            TronNetNodeOverviewJson result = _restAPI.GetNodeInfo();
 
             Assert.IsTrue(null != result);
         }

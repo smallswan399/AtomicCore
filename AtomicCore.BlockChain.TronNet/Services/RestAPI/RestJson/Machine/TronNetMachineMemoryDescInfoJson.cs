@@ -11,13 +11,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// initSize
         /// </summary>
         [JsonProperty("initSize")]
-        public int InitSize { get; set; }
+        public long InitSize { get; set; }
 
         /// <summary>
         /// maxSize
         /// </summary>
         [JsonProperty("maxSize")]
-        public int MaxSize { get; set; }
+        public long MaxSize { get; set; }
 
         /// <summary>
         /// name
@@ -35,6 +35,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// useSize
         /// </summary>
         [JsonProperty("useSize")]
-        public int UseSize { get; set; }
+        public long UseSize { get; set; }
     }
 }

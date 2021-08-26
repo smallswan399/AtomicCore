@@ -67,5 +67,11 @@
         /// </summary>
         /// <returns></returns>
         TronNetNodeJson ListNodes();
+
+        /// <summary>
+        /// Get NodeInfo
+        /// </summary>
+        /// <returns></returns>
+        TronNetNodeOverviewJson GetNodeInfo();
     }
 }

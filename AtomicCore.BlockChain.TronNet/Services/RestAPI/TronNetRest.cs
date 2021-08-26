@@ -477,6 +477,19 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Get NodeInfo
+        /// </summary>
+        /// <returns></returns>
+        public TronNetNodeOverviewJson GetNodeInfo()
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getnodeinfo");
+            string resp = this.RestGetJson(url);
+            TronNetNodeOverviewJson restJson = ObjectParse<TronNetNodeOverviewJson>(resp);
+
+            return restJson;
+        }
+
         #endregion
     }
 }

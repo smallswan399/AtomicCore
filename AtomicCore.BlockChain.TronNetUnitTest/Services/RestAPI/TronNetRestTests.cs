@@ -193,6 +193,15 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(null != result);
         }
 
+        [TestMethod()]
+        public void GetNodeInfoTest()
+        {
+            var result = _restAPI.GetNodeInfo();
+
+            Assert.IsTrue(null != result);
+        }
+
+
         #endregion
 
 

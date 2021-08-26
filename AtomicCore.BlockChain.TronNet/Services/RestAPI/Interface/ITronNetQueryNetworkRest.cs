@@ -46,5 +46,7 @@
         /// <param name="txid"></param>
         /// <returns></returns>
         TronNetTransactionRestJson GetTransactionByID(string txid);
+
+
     }
 }

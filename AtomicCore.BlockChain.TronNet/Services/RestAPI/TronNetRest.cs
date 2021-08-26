@@ -367,9 +367,26 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public TronNetBlockJson GetBlockById(string blockID)
         {
+            if (string.IsNullOrEmpty(blockID))
+                throw new ArgumentNullException(nameof(blockID));
+
             string url = CreateFullNodeRestUrl("/wallet/getblockbyid");
             string resp = this.RestPostJson(url, new { value = blockID });
             TronNetBlockJson restJson = ObjectParse<TronNetBlockJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Get a list of block objects by last blocks
+        /// </summary>
+        /// <param name="lastNum"></param>
+        /// <returns></returns>
+        public TronNetBlockListJson GetBlockByLatestNum(ulong lastNum)
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getblockbylatestnum");
+            string resp = this.RestPostJson(url, new { num = lastNum });
+            TronNetBlockListJson restJson = ObjectParse<TronNetBlockListJson>(resp);
 
             return restJson;
         }

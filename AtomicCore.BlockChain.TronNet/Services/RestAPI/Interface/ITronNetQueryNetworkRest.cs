@@ -20,6 +20,13 @@
         TronNetBlockJson GetBlockById(string blockID);
 
         /// <summary>
+        /// Get a list of block objects by last blocks
+        /// </summary>
+        /// <param name="lastNum"></param>
+        /// <returns></returns>
+        TronNetBlockListJson GetBlockByLatestNum(ulong lastNum);
+
+        /// <summary>
         /// Get Transaction By Txid
         /// </summary>
         /// <param name="txid"></param>

@@ -122,6 +122,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         [TestMethod()]
+        public void GetBlockByLatestNumTest()
+        {
+            TronNetBlockListJson result = _restAPI.GetBlockByLatestNum(10);
+
+            Assert.IsTrue(result.Blocks != null);
+        }
+
+        [TestMethod()]
         public void GetTransactionByIDTest()
         {
             string txid = "ca8d10f2b141a3a8d8e31453ff50716258d873c89fd189f6abce92effaa1960d";
@@ -150,5 +158,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         #endregion
+
+
     }
 }

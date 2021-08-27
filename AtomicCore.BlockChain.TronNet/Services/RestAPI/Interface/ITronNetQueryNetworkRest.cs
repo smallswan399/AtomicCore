@@ -73,5 +73,11 @@
         /// </summary>
         /// <returns></returns>
         TronNetNodeOverviewJson GetNodeInfo();
+
+        /// <summary>
+        /// Get Chain Parameters
+        /// </summary>
+        /// <returns></returns>
+        TronNetChainParameterOverviewJson GetChainParameters();
     }
 }

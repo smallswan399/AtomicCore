@@ -503,6 +503,28 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Get Block's Account Balance Change
+        /// 47.241.20.47 & 161.117.85.97 &161.117.224.116 &161.117.83.38
+        /// </summary>
+        /// <param name="blockHash"></param>
+        /// <param name="blockHeight"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetBlockBalanceJson GetBlockBalance(string blockHash, ulong blockHeight, bool visible = true)
+        {
+            if (string.IsNullOrEmpty(blockHash))
+                throw new ArgumentNullException(nameof(blockHash));
+            if(blockHeight <= 0)
+                throw new ArgumentException("blockHeight must be greater than zero");
+
+            string url = CreateFullNodeRestUrl("/wallet/getblockbalance");
+            string resp = this.RestPostJson(url, new { hash = blockHash, number = blockHeight, visible });
+            TronNetBlockBalanceJson restJson = ObjectParse<TronNetBlockBalanceJson>(resp);
+
+            return restJson;
+        }
+
         #endregion
     }
 }

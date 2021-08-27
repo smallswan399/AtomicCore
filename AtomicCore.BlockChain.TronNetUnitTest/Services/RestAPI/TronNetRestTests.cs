@@ -209,6 +209,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(null != result);
         }
 
+        [TestMethod()]
+        public void GetBlockBalanceTest()
+        {
+            TronNetBlockBalanceJson result = _restAPI.GetBlockBalance("0000000001fa75a71a08b6b79ad1043601e4d7a283e51cc3ce36d46cbb1b6b5e", 33191335, true);
+
+            Assert.IsTrue(null != result);
+        }
+
         #endregion
     }
 }

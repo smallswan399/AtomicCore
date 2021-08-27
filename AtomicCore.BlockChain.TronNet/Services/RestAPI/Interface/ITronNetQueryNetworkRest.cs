@@ -79,5 +79,15 @@
         /// </summary>
         /// <returns></returns>
         TronNetChainParameterOverviewJson GetChainParameters();
+
+        /// <summary>
+        /// Get Block's Account Balance Change
+        /// 47.241.20.47 & 161.117.85.97 &161.117.224.116 &161.117.83.38
+        /// </summary>
+        /// <param name="blockHash"></param>
+        /// <param name="blockHeight"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetBlockBalanceJson GetBlockBalance(string blockHash, ulong blockHeight, bool visible = true);
     }
 }

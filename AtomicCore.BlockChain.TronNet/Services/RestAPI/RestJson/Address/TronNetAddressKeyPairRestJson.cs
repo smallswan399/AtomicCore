@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Address Private Key Rest Json
     /// </summary>
-    public class TronNetAddressKeyPairRestJson
+    public class TronNetAddressKeyPairRestJson : TronNetValidRestJson
     {
         /// <summary>
         /// Tron Address Private Key

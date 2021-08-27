@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Address Base58Check Rest Json
     /// </summary>
-    public class TronNetAddressBase58CheckRestJson
+    public class TronNetAddressBase58CheckRestJson : TronNetValidRestJson
     {
         /// <summary>
         /// base58checkAddress

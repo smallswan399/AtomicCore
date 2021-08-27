@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Result Json
     /// </summary>
-    public class TronNetResultJson
+    public class TronNetResultJson : TronNetValidRestJson
     {
         /// <summary>
         /// ContractRet

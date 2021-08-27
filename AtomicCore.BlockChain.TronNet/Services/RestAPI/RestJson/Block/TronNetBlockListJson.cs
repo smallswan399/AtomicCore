@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Block List Json
     /// </summary>
-    public class TronNetBlockListJson
+    public class TronNetBlockListJson : TronNetValidRestJson
     {
         /// <summary>
         /// block list

@@ -6,7 +6,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Node Overview Json
     /// </summary>
-    public class TronNetNodeOverviewJson
+    public class TronNetNodeOverviewJson : TronNetValidRestJson
     {
         /// <summary>
         /// activeConnectCount

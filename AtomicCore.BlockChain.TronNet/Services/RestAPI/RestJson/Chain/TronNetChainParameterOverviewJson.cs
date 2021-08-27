@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Chain Parmeter Overview Json
     /// </summary>
-    public class TronNetChainParameterOverviewJson
+    public class TronNetChainParameterOverviewJson : TronNetValidRestJson
     {
         /// <summary>
         /// Chain Parameters

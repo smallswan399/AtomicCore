@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Block Balance Change Json
     /// </summary>
-    public class TronNetBlockBalanceJson
+    public class TronNetBlockBalanceJson : TronNetValidRestJson
     {
         /// <summary>
         /// block identifier

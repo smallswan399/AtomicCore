@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,8 +149,20 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="resp"></param>
         /// <returns></returns>
         private T ObjectParse<T>(string resp)
-            where T : class, new()
+            where T : TronNetValidRestJson, new()
         {
+            if (resp.Contains("\"Error\""))
+            {
+                JObject errorJson = JObject.Parse(resp);
+                if (errorJson.ContainsKey("Error"))
+                {
+                    return new T()
+                    {
+                        Error = errorJson.GetValue("Error").ToString()
+                    };
+                }
+            }
+
             T jsonResult;
             try
             {
@@ -515,7 +528,7 @@ namespace AtomicCore.BlockChain.TronNet
         {
             if (string.IsNullOrEmpty(blockHash))
                 throw new ArgumentNullException(nameof(blockHash));
-            if(blockHeight <= 0)
+            if (blockHeight <= 0)
                 throw new ArgumentException("blockHeight must be greater than zero");
 
             string url = CreateFullNodeRestUrl("/wallet/getblockbalance");

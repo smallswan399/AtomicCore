@@ -25,6 +25,9 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public virtual bool IsAvailable()
         {
+            if (null == Error)
+                return true;
+
             return string.IsNullOrEmpty(Error);
         }
 

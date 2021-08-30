@@ -34,5 +34,13 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             Assert.IsTrue("TBGMcMy84rxZijiQyjMDEJddMGgGoDQGH5".Equals(tronAddress, StringComparison.OrdinalIgnoreCase));
         }
+
+        [TestMethod()]
+        public void ToHexAddressTest()
+        {
+            string hexAddress = TronNetECKey.ConvertToHexAddress("TEhn1qUkP28puJjeVeo9TK27zu2gJEACin");
+
+            Assert.IsTrue("4133ed881fcd5e889abf2dcd39e3a413e5476a00ba".Equals(hexAddress));
+        }
     }
 }

@@ -223,5 +223,17 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         #endregion
+
+        #region ITronNetTRC10TokenRest
+
+        [TestMethod()]
+        public void GetAssetIssueByIdTest()
+        {
+            TronNetAssetJson result = _restAPI.GetAssetIssueById(1000001);
+
+            Assert.IsTrue("1000001".Equals(result.ID));
+        }
+
+        #endregion
     }
 }

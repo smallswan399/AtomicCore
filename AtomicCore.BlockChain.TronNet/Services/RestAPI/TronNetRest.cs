@@ -539,5 +539,23 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         #endregion
+
+        #region ITronNetTRC10TokenRest
+
+        /// <summary>
+        /// Get AssetIssue By ID
+        /// </summary>
+        /// <param name="assertID"></param>
+        /// <returns></returns>
+        public TronNetAssetJson GetAssetIssueById(int assertID)
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getassetissuebyid");
+            string resp = this.RestPostJson(url, new { value = assertID });
+            TronNetAssetJson restJson = ObjectParse<TronNetAssetJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
     }
 }

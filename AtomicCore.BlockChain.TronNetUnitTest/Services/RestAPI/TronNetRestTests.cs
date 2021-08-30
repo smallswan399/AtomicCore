@@ -264,6 +264,21 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(null != result.AssetIssue && result.AssetIssue.Any());
         }
 
+        [TestMethod()]
+        public void CreateAssetIssueTest()
+        {
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            var result = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestMain.Address, "Hu Zi Token", 6, "HZT", 21000000000, 1, 1, DateTime.Now, DateTime.Now.AddDays(1), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
+            {
+                FrozenAmount = 1,
+                FrozenDays = 2
+            });
+
+            Assert.IsTrue(null != result);
+        }
+
         #endregion
     }
 }

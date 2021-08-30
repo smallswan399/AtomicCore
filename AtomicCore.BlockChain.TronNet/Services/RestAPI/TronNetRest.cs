@@ -621,6 +621,87 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Create AssetIssue
+        /// </summary>
+        /// <param name="ownerAddress">Owner Address</param>
+        /// <param name="tokenName">Token Name</param>
+        /// <param name="tokenPrecision">Token Precision</param>
+        /// <param name="tokenAbbr">Token Abbr</param>
+        /// <param name="totalSupply">Token Total Supply</param>
+        /// <param name="trxNum">
+        /// Define the price by the ratio of trx_num/num(The unit of 'trx_num' is SUN)
+        /// </param>
+        /// <param name="num">
+        /// Define the price by the ratio of trx_num/num
+        /// </param>
+        /// <param name="startTime">ICO StartTime</param>
+        /// <param name="endTime">ICO EndTime</param>
+        /// <param name="tokenDescription">Token Description</param>
+        /// <param name="tokenUrl">Token Official Website Url</param>
+        /// <param name="freeAssetNetLimit">Token Free Asset Net Limit</param>
+        /// <param name="publicFreeAssetNetLimit">Token Public Free Asset Net Limit</param>
+        /// <param name="frozenSupply">Token Frozen Supply</param>
+        /// <returns></returns>
+        public string CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+            if (string.IsNullOrEmpty(tokenName))
+                throw new ArgumentNullException(nameof(tokenName));
+            if (tokenPrecision <= 0)
+                tokenPrecision = 0;
+            if (string.IsNullOrEmpty(tokenAbbr))
+                throw new ArgumentNullException(nameof(tokenAbbr));
+            if (totalSupply <= 0)
+                throw new ArgumentException("'totalSupply' must be greater to zero");
+            if (string.IsNullOrEmpty(tokenUrl))
+                tokenUrl = string.Empty;
+
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_token_name = TronNetUntils.StringToHexString(tokenName, true, Encoding.UTF8);
+            string hex_token_abbr = TronNetUntils.StringToHexString(tokenAbbr, true, Encoding.UTF8);
+            long start_time = TronNetUntils.LocalDatetimeToMillisecondTimestamp(startTime);
+            long end_time = TronNetUntils.LocalDatetimeToMillisecondTimestamp(endTime);
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+                name = hex_token_name,
+                precision = tokenPrecision,
+                abbr = hex_token_abbr,
+                totalSupply,
+                trxNum,
+                num,
+                start_time,
+                end_time,
+                free_asset_net_limit = freeAssetNetLimit,
+                public_free_asset_net_limit = publicFreeAssetNetLimit
+            };
+            if (!string.IsNullOrEmpty(tokenDescription))
+            {
+                string hex_token_desc = TronNetUntils.StringToHexString(tokenDescription, true, Encoding.UTF8);
+                reqData.description = hex_token_desc;
+            }
+            if (!string.IsNullOrEmpty(tokenUrl))
+            {
+                string hex_url = TronNetUntils.StringToHexString(tokenUrl, true, Encoding.UTF8);
+                reqData.url = hex_url;
+            }
+            if (null != frozenSupply)
+            {
+                string json_frozen_supply = Newtonsoft.Json.JsonConvert.SerializeObject(frozenSupply);
+                reqData.frozen_supply = json_frozen_supply;
+            }
+
+            string url = CreateFullNodeRestUrl("/wallet/createassetissue");
+            string resp = this.RestPostJson(url, reqData);
+            //TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
+
+            return resp;
+        }
+
         #endregion
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AtomicCore.BlockChain.TronNet
+﻿namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// TRC10 Token
@@ -17,16 +11,20 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="tronAddress">tron address</param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        TronNetAddressAssetJson GetAssetIssueByAccount(string tronAddress, bool? visible = null);
+        TronNetAssetCollectionJson GetAssetIssueByAccount(string tronAddress, bool? visible = null);
 
         /// <summary>
         /// Get AssetIssue By Id
         /// </summary>
         /// <param name="assertID"></param>
         /// <returns></returns>
-        TronNetAssetJson GetAssetIssueById(int assertID);
+        TronNetAssetInfoJson GetAssetIssueById(int assertID);
 
-        //void GetAssetIssueList();
+        /// <summary>
+        /// Get AssetIssue List
+        /// </summary>
+        /// <returns></returns>
+        TronNetAssetCollectionJson GetAssetIssueList();
 
         //void GetPaginatedAssetIssueList(int offset, int limit);
 

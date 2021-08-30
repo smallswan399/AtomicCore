@@ -230,26 +230,32 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         public void GetAssetIssueByAccountTest()
         {
             //TestNet
-            ////TronNetAddressAssetJson result = _restAPI.GetAssetIssueByAccount("TXLL4wzNZicjNZDcE9KM987dSaxpffWjkq");
+            ////TronNetAssetCollectionJson result = _restAPI.GetAssetIssueByAccount("TXLL4wzNZicjNZDcE9KM987dSaxpffWjkq");
             ////Assert.IsTrue(null != result.AssetIssue && result.AssetIssue.Any());
 
             //TestNet
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
-            TronNetAddressAssetJson test_result = testRestAPI.GetAssetIssueByAccount("TEhn1qUkP28puJjeVeo9TK27zu2gJEACin");
+            TronNetAssetCollectionJson test_result = testRestAPI.GetAssetIssueByAccount("TEhn1qUkP28puJjeVeo9TK27zu2gJEACin");
             Assert.IsTrue(null != test_result.AssetIssue && test_result.AssetIssue.Any());
         }
 
         [TestMethod()]
         public void GetAssetIssueByIdTest()
         {
-            TronNetAssetJson result = _restAPI.GetAssetIssueById(1000001);
+            TronNetAssetInfoJson result = _restAPI.GetAssetIssueById(1000001);
 
             Assert.IsTrue("1000001".Equals(result.ID));
         }
 
+        [TestMethod()]
+        public void GetAssetIssueListTest()
+        {
+            TronNetAssetCollectionJson result = _restAPI.GetAssetIssueList();
+
+            Assert.IsTrue(null != result.AssetIssue && result.AssetIssue.Any());
+        }
+
         #endregion
-
-
     }
 }

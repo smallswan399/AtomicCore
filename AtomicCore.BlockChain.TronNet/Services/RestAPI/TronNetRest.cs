@@ -2,9 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -562,7 +560,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="tronAddress"></param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        public TronNetAddressAssetJson GetAssetIssueByAccount(string tronAddress, bool? visible = null)
+        public TronNetAssetCollectionJson GetAssetIssueByAccount(string tronAddress, bool? visible = null)
         {
             string address = TronNetECKey.ConvertToHexAddress(tronAddress);
 
@@ -576,7 +574,7 @@ namespace AtomicCore.BlockChain.TronNet
 
             string url = CreateFullNodeRestUrl("/wallet/getassetissuebyaccount");
             string resp = this.RestPostJson(url, reqData);
-            TronNetAddressAssetJson restJson = ObjectParse<TronNetAddressAssetJson>(resp);
+            TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
 
             return restJson;
         }
@@ -586,11 +584,24 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="assertID"></param>
         /// <returns></returns>
-        public TronNetAssetJson GetAssetIssueById(int assertID)
+        public TronNetAssetInfoJson GetAssetIssueById(int assertID)
         {
             string url = CreateFullNodeRestUrl("/wallet/getassetissuebyid");
             string resp = this.RestPostJson(url, new { value = assertID });
-            TronNetAssetJson restJson = ObjectParse<TronNetAssetJson>(resp);
+            TronNetAssetInfoJson restJson = ObjectParse<TronNetAssetInfoJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Get AssetIssue List
+        /// </summary>
+        /// <returns></returns>
+        public TronNetAssetCollectionJson GetAssetIssueList()
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getassetissuelist");
+            string resp = this.RestGetJson(url);
+            TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
 
             return restJson;
         }

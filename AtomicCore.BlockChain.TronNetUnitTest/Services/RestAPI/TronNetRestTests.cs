@@ -270,7 +270,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
-            var result = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestMain.Address, "Hu Zi Token", 6, "HZT", 21000000000, 1, 1, DateTime.Now, DateTime.Now.AddDays(1), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
+            var result = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestMain.Address, "HuZiToken", 2, "HZT", 2100000000, 1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
             {
                 FrozenAmount = 1,
                 FrozenDays = 2

@@ -657,12 +657,19 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("'totalSupply' must be greater to zero");
             if (string.IsNullOrEmpty(tokenUrl))
                 tokenUrl = string.Empty;
+            if (string.IsNullOrEmpty(tokenDescription))
+                tokenDescription = string.Empty;
+            if (null == frozenSupply)
+                throw new ArgumentNullException(nameof(frozenSupply));
 
             string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
             string hex_token_name = TronNetUntils.StringToHexString(tokenName, true, Encoding.UTF8);
             string hex_token_abbr = TronNetUntils.StringToHexString(tokenAbbr, true, Encoding.UTF8);
             long start_time = TronNetUntils.LocalDatetimeToMillisecondTimestamp(startTime);
             long end_time = TronNetUntils.LocalDatetimeToMillisecondTimestamp(endTime);
+
+            string hex_token_desc = TronNetUntils.StringToHexString(tokenDescription, true, Encoding.UTF8);
+            string hex_url = TronNetUntils.StringToHexString(tokenUrl, true, Encoding.UTF8);
 
             //create request data
             dynamic reqData = new
@@ -671,29 +678,17 @@ namespace AtomicCore.BlockChain.TronNet
                 name = hex_token_name,
                 precision = tokenPrecision,
                 abbr = hex_token_abbr,
-                totalSupply,
-                trxNum,
+                total_supply = totalSupply,
+                trx_num = trxNum,
                 num,
                 start_time,
                 end_time,
+                description = hex_token_desc,
+                url = hex_url,
                 free_asset_net_limit = freeAssetNetLimit,
-                public_free_asset_net_limit = publicFreeAssetNetLimit
+                public_free_asset_net_limit = publicFreeAssetNetLimit,
+                frozen_supply = frozenSupply
             };
-            if (!string.IsNullOrEmpty(tokenDescription))
-            {
-                string hex_token_desc = TronNetUntils.StringToHexString(tokenDescription, true, Encoding.UTF8);
-                reqData.description = hex_token_desc;
-            }
-            if (!string.IsNullOrEmpty(tokenUrl))
-            {
-                string hex_url = TronNetUntils.StringToHexString(tokenUrl, true, Encoding.UTF8);
-                reqData.url = hex_url;
-            }
-            if (null != frozenSupply)
-            {
-                string json_frozen_supply = Newtonsoft.Json.JsonConvert.SerializeObject(frozenSupply);
-                reqData.frozen_supply = json_frozen_supply;
-            }
 
             string url = CreateFullNodeRestUrl("/wallet/createassetissue");
             string resp = this.RestPostJson(url, reqData);

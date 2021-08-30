@@ -38,8 +38,12 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void ToHexAddressTest()
         {
-            string hexAddress = TronNetECKey.ConvertToHexAddress("TEhn1qUkP28puJjeVeo9TK27zu2gJEACin");
+            //MainNet
+            string hex_addr_main = TronNetECKey.ConvertToHexAddress("TXLL4wzNZicjNZDcE9KM987dSaxpffWjkq");
+            Assert.IsTrue("41ea5946a48137c39140662ac7335e6aa96b90739e".Equals(hex_addr_main));
 
+            //TestNet
+            string hexAddress = TronNetECKey.ConvertToHexAddress("TEhn1qUkP28puJjeVeo9TK27zu2gJEACin");
             Assert.IsTrue("4133ed881fcd5e889abf2dcd39e3a413e5476a00ba".Equals(hexAddress));
         }
     }

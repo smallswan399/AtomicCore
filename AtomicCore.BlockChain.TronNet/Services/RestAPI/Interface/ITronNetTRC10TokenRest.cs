@@ -11,7 +11,13 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public interface ITronNetTRC10TokenRest
     {
-        //void GetAssetIssueByAccount(string address);
+        /// <summary>
+        /// Get AssetIssue By Account
+        /// </summary>
+        /// <param name="tronAddress">tron address</param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetAddressAssetJson GetAssetIssueByAccount(string tronAddress, bool? visible = null);
 
         /// <summary>
         /// Get AssetIssue By Id

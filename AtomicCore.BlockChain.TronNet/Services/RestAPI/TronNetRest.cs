@@ -50,6 +50,20 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// Create Solidity Node Rest Url
+        /// </summary>
+        /// <param name="actionUrl"></param>
+        /// <returns></returns>
+        private string CreateSolidityNodeRestUrl(string actionUrl)
+        {
+            return string.Format(
+                "{0}{1}",
+                this._options.Value.SolidityNodeRestAPI,
+                actionUrl
+            );
+        }
+
+        /// <summary>
         /// Rest Get Json Result
         /// </summary>
         /// <param name="url"></param>
@@ -541,6 +555,31 @@ namespace AtomicCore.BlockChain.TronNet
         #endregion
 
         #region ITronNetTRC10TokenRest
+
+        /// <summary>
+        /// Get Asset Issue By Account
+        /// </summary>
+        /// <param name="tronAddress"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetAddressAssetJson GetAssetIssueByAccount(string tronAddress, bool? visible = null)
+        {
+            string address = TronNetECKey.ConvertToHexAddress(tronAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                address
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getassetissuebyaccount");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetAddressAssetJson restJson = ObjectParse<TronNetAddressAssetJson>(resp);
+
+            return restJson;
+        }
 
         /// <summary>
         /// Get AssetIssue By ID

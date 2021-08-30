@@ -26,7 +26,13 @@
         /// <returns></returns>
         TronNetAssetCollectionJson GetAssetIssueList();
 
-        //void GetPaginatedAssetIssueList(int offset, int limit);
+        /// <summary>
+        /// Get Paginated AssentIssue LIst
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit);
 
         //void TransferAsset(string owner_address, string to_address, string asset_name, ulong amount, int? permission_id, bool? visible);
 

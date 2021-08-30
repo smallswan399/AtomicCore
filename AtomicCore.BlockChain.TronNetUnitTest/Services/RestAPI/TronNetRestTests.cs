@@ -256,6 +256,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(null != result.AssetIssue && result.AssetIssue.Any());
         }
 
+        [TestMethod()]
+        public void GetPaginatedAssetIssueListTest()
+        {
+            TronNetAssetCollectionJson result = _restAPI.GetPaginatedAssetIssueList(1, 1);
+
+            Assert.IsTrue(null != result.AssetIssue && result.AssetIssue.Any());
+        }
+
         #endregion
     }
 }

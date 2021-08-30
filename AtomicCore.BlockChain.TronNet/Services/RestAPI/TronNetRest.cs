@@ -606,6 +606,21 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Get Paginated AssetIssue List
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit)
+        {
+            string url = CreateFullNodeRestUrl("/wallet/getpaginatedassetissuelist");
+            string resp = this.RestPostJson(url, new { offset, limit });
+            TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
+
+            return restJson;
+        }
+
         #endregion
     }
 }

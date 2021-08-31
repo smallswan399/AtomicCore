@@ -802,9 +802,9 @@ namespace AtomicCore.BlockChain.TronNet
         {
             if (string.IsNullOrEmpty(toAddress))
                 throw new ArgumentNullException(nameof(toAddress));
-            if(string.IsNullOrEmpty(ownerAddress))
+            if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
-            if(string.IsNullOrEmpty(assetName))
+            if (string.IsNullOrEmpty(assetName))
                 throw new ArgumentNullException(nameof(assetName));
             if (amount <= decimal.Zero)
                 throw new ArgumentException("amount must be greater than 0");
@@ -832,6 +832,113 @@ namespace AtomicCore.BlockChain.TronNet
             TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
 
             return restJson;
+        }
+
+        /// <summary>
+        /// Unstake a token that has passed the minimum freeze duration.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="permissionID"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson UnfreezeAsset(string ownerAddress, int? permissionID = null, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+
+            //variables
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+            };
+            if (null != permissionID)
+                reqData.permission_id = permissionID.Value;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/unfreezeasset");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Update basic TRC10 token information.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="tokenDescription"></param>
+        /// <param name="tokenUrl"></param>
+        /// <param name="newLimit"></param>
+        /// <param name="newPublicLimit"></param>
+        /// <param name="permissionID"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson UpdateAsset(string ownerAddress, string tokenDescription, string tokenUrl, int newLimit, int newPublicLimit, int? permissionID, bool? visible)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+            if (string.IsNullOrEmpty(tokenDescription))
+                throw new ArgumentNullException(nameof(tokenDescription));
+            if (string.IsNullOrEmpty(tokenUrl))
+                throw new ArgumentNullException(nameof(tokenUrl));
+
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_token_desc = TronNetUntils.StringToHexString(tokenDescription, true, Encoding.UTF8);
+            string hex_url = TronNetUntils.StringToHexString(tokenUrl, true, Encoding.UTF8);
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+                description = hex_token_desc,
+                url = hex_url,
+                free_asset_net_limit = newLimit,
+                public_free_asset_net_limit = newPublicLimit,
+            };
+            if (null != permissionID)
+                reqData.permission_id = permissionID.Value;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/updateasset");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Easy TRC10 token transfer. Create a TRC10 transfer transaction and broadcast directly.
+        /// </summary>
+        /// <param name="passPhrase"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="assetId"></param>
+        /// <param name="amount"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        public TronNetCreateTransactionRestJson EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool? visible)
+        {
+            throw new NotImplementedException("Remote service has been removed");
+        }
+
+        /// <summary>
+        /// TRC10 token easy transfer. Broadcast the created transaction directly.
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="assetId"></param>
+        /// <param name="amount"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        public TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool? visible)
+        {
+            throw new NotImplementedException("Remote service has been removed");
         }
 
         #endregion

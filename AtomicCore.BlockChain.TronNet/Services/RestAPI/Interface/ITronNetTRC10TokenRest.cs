@@ -37,7 +37,7 @@ namespace AtomicCore.BlockChain.TronNet
         TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit);
 
         /// <summary>
-        /// Transfer Asset
+        /// Transfer TRC10 token.
         /// </summary>
         /// <param name="ownerAddress">Owner address</param>
         /// <param name="toAddress">receiving address</param>
@@ -73,7 +73,7 @@ namespace AtomicCore.BlockChain.TronNet
         TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply);
 
         /// <summary>
-        /// Participate sAssetIssue
+        /// Participate in an asset issue.
         /// </summary>
         /// <param name="toAddress"></param>
         /// <param name="ownerAddress"></param>
@@ -83,12 +83,51 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         TronNetCreateTransactionRestJson ParticipateAssetIssue(string toAddress, string ownerAddress, ulong amount, string assetName, bool? visible = null);
 
-        //void UnfreezeAsset(string owner_address, int? permission_id, bool? visible);
+        /// <summary>
+        /// Unstake a token that has passed the minimum freeze duration.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="permissionID"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson UnfreezeAsset(string ownerAddress, int? permissionID = null, bool? visible = null);
 
-        //void UpdateAsset(string owner_address, string description, string url, int new_limit, int new_public_limit, int? permission_id, bool? visible);
+        /// <summary>
+        /// Update basic TRC10 token information.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="description"></param>
+        /// <param name="tokenUrl"></param>
+        /// <param name="newLimit"></param>
+        /// <param name="newPublicLimit"></param>
+        /// <param name="permissionID"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson UpdateAsset(string ownerAddress, string tokenDescription
+            , string tokenUrl, int newLimit, int newPublicLimit, int? permissionID, bool? visible);
 
-        //void EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool? visible);
+        /// <summary>
+        /// Easy TRC10 token transfer. Create a TRC10 transfer transaction and broadcast directly.
+        /// </summary>
+        /// <param name="passPhrase"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="assetId"></param>
+        /// <param name="amount"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        TronNetCreateTransactionRestJson EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool? visible);
 
-        //void EasyTransferAssetByPrivate(string privateKey,string toAddress, string assetId, ulong amount, bool? visible);
+        /// <summary>
+        /// TRC10 token easy transfer. Broadcast the created transaction directly.
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="assetId"></param>
+        /// <param name="amount"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool? visible);
     }
 }

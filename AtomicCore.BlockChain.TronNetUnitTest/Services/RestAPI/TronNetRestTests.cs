@@ -275,7 +275,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
             //create transactin
-            TronNetCreateTransactionRestJson createTransactionResult = testRestAPI.TransferAsset(TronTestAccountCollection.TestMain.Address, TronTestAccountCollection.TestA.Address, "1000962", 1M);
+            TronNetCreateTransactionRestJson createTransactionResult = testRestAPI.TransferAsset(TronTestAccountCollection.TestMain.Address, TronTestAccountCollection.TestA.Address, "1000962", 10000);
             Assert.IsTrue(createTransactionResult.IsAvailable());
         }
 

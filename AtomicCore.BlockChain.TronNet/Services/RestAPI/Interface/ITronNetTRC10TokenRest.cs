@@ -36,7 +36,17 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit);
 
-        //void TransferAsset(string owner_address, string to_address, string asset_name, ulong amount, int? permission_id, bool? visible);
+        /// <summary>
+        /// Transfer Asset
+        /// </summary>
+        /// <param name="ownerAddress">Owner address</param>
+        /// <param name="toAddress">receiving address</param>
+        /// <param name="assetName">Token id</param>
+        /// <param name="amount">amount</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson TransferAsset(string ownerAddress, string toAddress, string assetName, decimal amount, int? permissionID = null, bool? visible = null);
 
         /// <summary>
         /// Create AssetIssue

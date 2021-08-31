@@ -666,6 +666,65 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// Transfer Asset
+        /// </summary>
+        /// <param name="ownerAddress">Owner address</param>
+        /// <param name="toAddress">receiving address</param>
+        /// <param name="assetName">Token id</param>
+        /// <param name="amount">amount</param>
+        /// <param name="permission_id">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson TransferAsset(string ownerAddress, string toAddress, string assetName, decimal amount, int? permissionID = null, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+            if (string.IsNullOrEmpty(toAddress))
+                throw new ArgumentNullException(nameof(toAddress));
+            if (string.IsNullOrEmpty(assetName))
+                throw new ArgumentNullException(nameof(assetName));
+            if (amount <= decimal.Zero)
+                throw new ArgumentException("amount must be greater than 0");
+
+            //variables
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
+            bool has_asset_id = int.TryParse(assetName, out int assert_id);
+            if (!has_asset_id)
+                throw new ArgumentException("assert name error");
+
+            //get trc10
+            TronNetAssetInfoJson assetJson = this.GetAssetIssueById(assert_id);
+            if (!assetJson.IsAvailable())
+                return new TronNetCreateTransactionRestJson()
+                {
+                    Error = assetJson.Error
+                };
+
+            //calc amount unit
+            long amount_send = (long)(assetJson.Precision <= 0 ? amount : amount * (decimal)Math.Pow(10, assetJson.Precision));
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+                to_address = hex_to_address,
+                asset_name = assetName,
+                amount = amount_send
+            };
+            if (null != permissionID)
+                reqData.permission_id = permissionID.Value;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/transferasset");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
         /// Create AssetIssue
         /// </summary>
         /// <param name="ownerAddress">Owner Address</param>

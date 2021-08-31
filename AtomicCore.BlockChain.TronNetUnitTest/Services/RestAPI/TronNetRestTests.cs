@@ -269,6 +269,17 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         [TestMethod()]
+        public void TransferAssetTest()
+        {
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            //create transactin
+            TronNetCreateTransactionRestJson createTransactionResult = testRestAPI.TransferAsset(TronTestAccountCollection.TestMain.Address, TronTestAccountCollection.TestA.Address, "1000962", 1M);
+            Assert.IsTrue(createTransactionResult.IsAvailable());
+        }
+
+        [TestMethod()]
         public void CreateAssetIssueTest()
         {
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
@@ -281,16 +292,10 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 FrozenDays = 2
             });
             Assert.IsTrue(createTransactionResult.IsAvailable());
-
-            //sign transaction
-            TronNetSignedTransactionRestJson signTransactionResult = testRestAPI.GetTransactionSign(TronTestAccountCollection.TestMain.PirvateKey, createTransactionResult);
-            Assert.IsTrue(signTransactionResult.IsAvailable());
-
-            //broadcast transaction
-            var result = testRestAPI.BroadcastTransaction(signTransactionResult);
-            Assert.IsTrue(result.IsAvailable());
         }
 
         #endregion
+
+
     }
 }

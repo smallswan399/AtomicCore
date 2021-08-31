@@ -260,6 +260,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="privateKey"></param>
         /// <param name="createTransaction"></param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         public TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction)
         {
             if (string.IsNullOrEmpty(privateKey))
@@ -267,10 +268,10 @@ namespace AtomicCore.BlockChain.TronNet
             if (null == createTransaction)
                 throw new ArgumentException("createTransaction is null");
 
-            //Restore ECKey From Private Key
+            /* Restore ECKey From Private Key */
             ECKey ecKey = new ECKey(privateKey.HexToByteArray(), true);
 
-            //hash sign
+            /* hash sign */
             string raw_json = Newtonsoft.Json.JsonConvert.SerializeObject(createTransaction.RawData);
             byte[] raw_data_bytes = Encoding.UTF8.GetBytes(raw_json);
             byte[] hash_bytes = raw_data_bytes.ToSHA256Hash();
@@ -289,25 +290,22 @@ namespace AtomicCore.BlockChain.TronNet
 
             return restJson;
 
-            //////create request data
-            ////dynamic reqData = new
-            ////{
-            ////    txID = createTransaction.TxID,
-            ////    visible = false,
-            ////    privateKey,
-            ////    transaction = new 
-            ////    {
-            ////        raw_data = createTransaction.RawData,
-            ////        raw_data_hex = createTransaction.RawDataHex,
-            ////        signature = new string[] { sign }
-            ////    }
-            ////};
+            ////////create request data
+            //////dynamic reqData = new
+            //////{
+            //////    transaction = new 
+            //////    {
+            //////        txID = createTransaction.TxID,
+            //////        raw_data = createTransaction.RawData
+            //////    },
+            //////    privateKey
+            //////};
 
-            ////string url = CreateFullNodeRestUrl("/wallet/gettransactionsign");
-            ////string resp = this.RestPostJson(url, reqData);
-            ////TronNetSignedTransactionRestJson restJson = ObjectParse<TronNetSignedTransactionRestJson>(resp);
+            //////string url = CreateFullNodeRestUrl("/wallet/gettransactionsign");
+            //////string resp = this.RestPostJson(url, reqData);
+            //////TronNetSignedTransactionRestJson restJson = ObjectParse<TronNetSignedTransactionRestJson>(resp);
 
-            ////return restJson;
+            //////return restJson;
         }
 
         /// <summary>
@@ -317,8 +315,16 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public TronNetResultJson BroadcastTransaction(TronNetSignedTransactionRestJson singedTransaction)
         {
+            //create request data
+            dynamic reqData = new
+            {
+                signature = singedTransaction.Signature,
+                txID = singedTransaction.TxID,
+                raw_data = singedTransaction.RawData
+            };
+
             string url = CreateFullNodeRestUrl("/wallet/broadcasttransaction");
-            string resp = this.RestPostJson(url, singedTransaction);
+            string resp = this.RestPostJson(url, reqData);
             TronNetResultJson restJson = ObjectParse<TronNetResultJson>(resp);
 
             return restJson;

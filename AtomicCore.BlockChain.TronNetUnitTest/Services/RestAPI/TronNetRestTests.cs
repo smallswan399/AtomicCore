@@ -71,11 +71,11 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 TronTestAccountCollection.TestA.Address,
                 1
             );
-            Assert.IsTrue(!string.IsNullOrEmpty(createTransaction.TxID));
+            Assert.IsTrue(createTransaction.IsAvailable());
 
             var result = testRestAPI.GetTransactionSign(TronTestAccountCollection.TestMain.PirvateKey, createTransaction);
 
-            Assert.IsTrue(null != result);
+            Assert.IsTrue(result.IsAvailable());
         }
 
         /// <summary>
@@ -87,14 +87,18 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
+            string from = TronTestAccountCollection.TestMain.Address;
+            string to = TronTestAccountCollection.TestA.Address;
+            string from_priv = TronTestAccountCollection.TestMain.PirvateKey;
+
             TronNetCreateTransactionRestJson createTransaction = testRestAPI.CreateTransaction(
-                TronTestAccountCollection.TestMain.Address,
-                TronTestAccountCollection.TestA.Address,
+                from,
+                to,
                 1
             );
             Assert.IsTrue(!string.IsNullOrEmpty(createTransaction.TxID));
 
-            TronNetSignedTransactionRestJson signTransaction = testRestAPI.GetTransactionSign(TronTestAccountCollection.TestMain.PirvateKey, createTransaction);
+            TronNetSignedTransactionRestJson signTransaction = testRestAPI.GetTransactionSign(from_priv, createTransaction);
 
             TronNetResultJson result = testRestAPI.BroadcastTransaction(signTransaction);
 
@@ -270,13 +274,21 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
-            var result = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestMain.Address, "HuZiToken", 2, "HZT", 2100000000, 1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
+            //create transactin
+            TronNetCreateTransactionRestJson createTransactionResult = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestMain.Address, "HuZiToken", 2, "HZT", 2100000000, 1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
             {
                 FrozenAmount = 1,
                 FrozenDays = 2
             });
+            Assert.IsTrue(createTransactionResult.IsAvailable());
 
-            Assert.IsTrue(null != result);
+            //sign transaction
+            TronNetSignedTransactionRestJson signTransactionResult = testRestAPI.GetTransactionSign(TronTestAccountCollection.TestMain.PirvateKey, createTransactionResult);
+            Assert.IsTrue(signTransactionResult.IsAvailable());
+
+            //broadcast transaction
+            var result = testRestAPI.BroadcastTransaction(signTransactionResult);
+            Assert.IsTrue(result.IsAvailable());
         }
 
         #endregion

@@ -643,7 +643,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="publicFreeAssetNetLimit">Token Public Free Asset Net Limit</param>
         /// <param name="frozenSupply">Token Frozen Supply</param>
         /// <returns></returns>
-        public string CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply)
+        public TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -692,9 +692,9 @@ namespace AtomicCore.BlockChain.TronNet
 
             string url = CreateFullNodeRestUrl("/wallet/createassetissue");
             string resp = this.RestPostJson(url, reqData);
-            //TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
 
-            return resp;
+            return restJson;
         }
 
         #endregion

@@ -60,7 +60,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="publicFreeAssetNetLimit">Token Public Free Asset Net Limit</param>
         /// <param name="frozenSupply">Token Frozen Supply</param>
         /// <returns></returns>
-        string CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply);
+        TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply);
 
         //void ParticipateAssetIssue(string to_address, string owner_address, ulong amount, string asset_name, bool? visible);
 

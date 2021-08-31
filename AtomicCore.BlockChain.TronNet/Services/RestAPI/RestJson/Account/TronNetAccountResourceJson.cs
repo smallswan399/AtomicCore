@@ -11,7 +11,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// frozen_balance_for_energy
         /// </summary>
         [JsonProperty("frozen_balance_for_energy")]
-        public TronNetAccountFrozenEnergyBalance FrozenEnergyBalance { get; set; }
+        public TronNetFrozenEnergyBalanceJson FrozenEnergyBalance { get; set; }
 
         /// <summary>
         /// latest_consume_time_for_energy

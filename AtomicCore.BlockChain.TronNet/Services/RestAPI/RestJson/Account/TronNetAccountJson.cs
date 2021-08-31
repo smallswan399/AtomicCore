@@ -42,5 +42,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("account_resource")]
         public TronNetAccountResourceJson AccountResource { get; set; }
+
+        /// <summary>
+        /// owner_permission
+        /// </summary>
+        [JsonProperty("owner_permission")]
+        public TronNetOwnerPermissionJson OwnerPermission { get; set; }
     }
 }

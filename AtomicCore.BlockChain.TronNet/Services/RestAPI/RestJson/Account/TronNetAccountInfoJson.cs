@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Account Json
     /// </summary>
-    public class TronNetAccountJson : TronNetValidRestJson
+    public class TronNetAccountInfoJson : TronNetValidRestJson
     {
         /// <summary>
         /// address
@@ -20,10 +20,10 @@ namespace AtomicCore.BlockChain.TronNet
         public string AccountName { get; set; }
 
         /// <summary>
-        /// balance
+        /// trx balance
         /// </summary>
-        [JsonProperty("balance")]
-        public ulong Balance { get; set; }
+        [JsonProperty("balance"), JsonConverter(typeof(TronNetTrxUnitJsonConverter))]
+        public decimal TrxBalance { get; set; }
 
         /// <summary>
         /// latest_opration_time
@@ -48,5 +48,17 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("owner_permission")]
         public TronNetOwnerPermissionJson OwnerPermission { get; set; }
+
+        /// <summary>
+        /// active_permission
+        /// </summary>
+        [JsonProperty("active_permission")]
+        public TronNetActivePermissionJson[] ActivePermission { get; set; }
+
+        /// <summary>
+        /// trc10 token asset list
+        /// </summary>
+        [JsonProperty("assetV2")]
+        public TronNetAssetV2Json[] AssetV2 { get; set; }
     }
 }

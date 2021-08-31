@@ -52,7 +52,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
-            TronNetAccountJson account = testRestAPI.GetAccount(TronTestAccountCollection.TestMain.Address);
+            TronNetAccountInfoJson account = testRestAPI.GetAccount(TronTestAccountCollection.TestMain.Address);
 
             Assert.IsTrue(account.IsAvailable());
         }

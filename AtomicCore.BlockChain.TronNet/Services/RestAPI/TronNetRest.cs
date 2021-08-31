@@ -942,5 +942,37 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         #endregion
+
+        #region ITronNetAccountRest
+
+        /// <summary>
+        /// Query information about an account,Including balances, stake, votes and time, etc.
+        /// </summary>
+        /// <param name="address">address should be converted to a hex string</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
+        public TronNetAccountJson GetAccount(string address, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            //variables
+            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+
+            //create request data
+            dynamic reqData = new
+            {
+                address = hex_address
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getaccount");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetAccountJson restJson = ObjectParse<TronNetAccountJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
     }
 }

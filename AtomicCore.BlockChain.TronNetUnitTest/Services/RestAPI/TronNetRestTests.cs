@@ -43,6 +43,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         #endregion
 
+        #region ITronNetAccountRest
+
+        [TestMethod()]
+        public void GetAccountTest()
+        {
+            //TestNet
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            TronNetAccountJson account = testRestAPI.GetAccount(TronTestAccountCollection.TestMain.Address);
+
+            Assert.IsTrue(account.IsAvailable());
+        }
+
+        #endregion
+
         #region ITronTransactionsRest
 
         [TestMethod()]
@@ -293,6 +309,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             });
             Assert.IsTrue(createTransactionResult.IsAvailable());
         }
+
 
         #endregion
 

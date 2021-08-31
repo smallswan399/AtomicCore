@@ -313,6 +313,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="singedTransaction"></param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         public TronNetResultJson BroadcastTransaction(TronNetSignedTransactionRestJson singedTransaction)
         {
             //create request data
@@ -328,6 +329,43 @@ namespace AtomicCore.BlockChain.TronNet
             TronNetResultJson restJson = ObjectParse<TronNetResultJson>(resp);
 
             return restJson;
+        }
+
+        /// <summary>
+        /// Broadcast Hex
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        public TronNetResultJson BroadcastHex(string hex)
+        {
+            throw new NotImplementedException("Remote service has been removed");
+        }
+
+        /// <summary>
+        /// Easy Transfer
+        /// </summary>
+        /// <param name="passPhrase"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        public TronNetEasyTransferJson EasyTransfer(string passPhrase, string toAddress, ulong amount)
+        {
+            throw new NotImplementedException("Remote service has been removed");
+        }
+
+        /// <summary>
+        /// Easy Transfer By Private
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        public TronNetEasyTransferJson EasyTransferByPrivate(string privateKey, string toAddress, ulong amount)
+        {
+            throw new NotImplementedException("Remote service has been removed");
         }
 
         /// <summary>

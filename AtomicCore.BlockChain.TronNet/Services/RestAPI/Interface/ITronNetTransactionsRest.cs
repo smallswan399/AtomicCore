@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.TronNet
+﻿using System;
+
+namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// Tron Transaction Rest API
@@ -11,6 +13,7 @@
         /// <param name="privateKey"></param>
         /// <param name="createTransaction"></param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction);
 
         /// <summary>
@@ -18,13 +21,36 @@
         /// </summary>
         /// <param name="singedTransaction"></param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         TronNetResultJson BroadcastTransaction(TronNetSignedTransactionRestJson singedTransaction);
 
-        //void BroadcastHex();
+        /// <summary>
+        /// Broadcast Hex
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        TronNetResultJson BroadcastHex(string hex);
 
-        //void EasyTransfer();
+        /// <summary>
+        /// Easy Transfer
+        /// </summary>
+        /// <param name="passPhrase"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        TronNetEasyTransferJson EasyTransfer(string passPhrase, string toAddress, ulong amount);
 
-        //void EasyTransferByPrivate();
+        /// <summary>
+        /// Easy Transfer By Private
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
+        TronNetEasyTransferJson EasyTransferByPrivate(string privateKey,string toAddress, ulong amount);
 
         /// <summary>
         /// Create a TRX transfer transaction. 

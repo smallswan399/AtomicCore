@@ -70,7 +70,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
-            TronNetAccountInfoJson account = testRestAPI.GetAccount(TronTestAccountCollection.TestMain.Address);
+            TronNetAccountBalanceJson account = testRestAPI.GetAccount(TronTestAccountCollection.TestMain.Address);
 
             Assert.IsTrue(account.IsAvailable());
         }
@@ -97,6 +97,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronNetBlockAccountBalanceJson result = testRestAPI.GetAccountBalance(TronTestAccountCollection.TestMain.Address, "000000000111bc16322bbbb248140dccd7e35cce956969679f52cf55060f7f86", 17939478);
 
             Assert.IsTrue(result.IsAvailable());
+        }
+
+        #endregion
+
+        #region ITronNetAccountResourcesRests
+
+        [TestMethod()]
+        public void GetAccountResourceTest()
+        {
+            //TestNet
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            var result = testRestAPI.GetAccountResource(TronTestAccountCollection.TestMain.Address);
+
+            Assert.IsTrue(null != result);
         }
 
         #endregion
@@ -355,8 +371,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
 
 
+
         #endregion
-
-
     }
 }

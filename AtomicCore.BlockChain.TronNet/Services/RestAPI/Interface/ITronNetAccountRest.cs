@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="address">address should be converted to a hex string</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
-        TronNetAccountInfoJson GetAccount(string address, bool? visible = null);
+        TronNetAccountBalanceJson GetAccount(string address, bool? visible = null);
 
         /// <summary>
         /// Modify account name

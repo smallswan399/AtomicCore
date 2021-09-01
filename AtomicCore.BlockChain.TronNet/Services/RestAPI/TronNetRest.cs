@@ -295,7 +295,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="address">address should be converted to a hex string</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
-        public TronNetAccountInfoJson GetAccount(string address, bool? visible = null)
+        public TronNetAccountBalanceJson GetAccount(string address, bool? visible = null)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
@@ -313,7 +313,7 @@ namespace AtomicCore.BlockChain.TronNet
 
             string url = CreateFullNodeRestUrl("/wallet/getaccount");
             string resp = this.RestPostJson(url, reqData);
-            TronNetAccountInfoJson restJson = ObjectParse<TronNetAccountInfoJson>(resp);
+            TronNetAccountBalanceJson restJson = ObjectParse<TronNetAccountBalanceJson>(resp);
 
             return restJson;
         }
@@ -394,11 +394,11 @@ namespace AtomicCore.BlockChain.TronNet
             //create request data
             dynamic reqData = new
             {
-                account_identifier = new 
+                account_identifier = new
                 {
                     address = hex_address
                 },
-                block_identifier = new 
+                block_identifier = new
                 {
                     hash = blockHash,
                     number = blockHeight
@@ -410,6 +410,39 @@ namespace AtomicCore.BlockChain.TronNet
             string url = CreateFullNodeRestUrl("/wallet/getaccountbalance");
             string resp = this.RestPostJson(url, reqData);
             TronNetBlockAccountBalanceJson restJson = ObjectParse<TronNetBlockAccountBalanceJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
+
+        #region ITronNetAccountResourcesRests
+
+        /// <summary>
+        /// Query the resource information of an account(bandwidth,energy,etc)
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetAccountResourceJson GetAccountResource(string address, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            //variables
+            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+
+            //create request data
+            dynamic reqData = new
+            {
+                address = hex_address
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getaccountresource");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetAccountResourceJson restJson = ObjectParse<TronNetAccountResourceJson>(resp);
 
             return restJson;
         }

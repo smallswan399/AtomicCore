@@ -5,7 +5,13 @@
     /// </summary>
     public interface ITronNetAccountResourcesRest
     {
-
+        /// <summary>
+        /// Query the resource information of an account(bandwidth,energy,etc)
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetAccountResourceJson GetAccountResource(string address, bool? visible = null);
 
 
 

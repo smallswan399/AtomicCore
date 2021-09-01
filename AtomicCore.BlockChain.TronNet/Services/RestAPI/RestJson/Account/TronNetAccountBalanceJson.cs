@@ -3,9 +3,9 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// TronNet Account Json
+    /// TronNet Account Balance Json
     /// </summary>
-    public class TronNetAccountInfoJson : TronNetValidRestJson
+    public class TronNetAccountBalanceJson : TronNetValidRestJson
     {
         /// <summary>
         /// address
@@ -41,7 +41,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// account_resource
         /// </summary>
         [JsonProperty("account_resource")]
-        public TronNetAccountResourceJson AccountResource { get; set; }
+        public TronNetAccountBalanceResourceJson AccountResource { get; set; }
 
         /// <summary>
         /// owner_permission

@@ -251,6 +251,75 @@ namespace AtomicCore.BlockChain.TronNet
 
         #endregion
 
+        #region ITronNetAccountRest
+
+        /// <summary>
+        /// Create an account. Uses an already activated account to create a new account
+        /// </summary>
+        /// <param name="ownerAddress">Owner_address is an activated account，converted to a hex String.If the owner_address has enough bandwidth obtained by freezing TRX, then creating an account will only consume bandwidth , otherwise, 0.1 TRX will be burned to pay for bandwidth, and at the same time, 1 TRX will be required to be created.</param>
+        /// <param name="accountAddress">account_address is the address of the new account, converted to a hex string, this address needs to be calculated in advance</param>
+        /// <param name="permissionID">Optional,whether the address is in base58 format</param>
+        /// <param name="visible">Optional,for multi-signature use</param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+            if (string.IsNullOrEmpty(accountAddress))
+                throw new ArgumentNullException(nameof(accountAddress));
+
+            //variables
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_account_address = TronNetECKey.ConvertToHexAddress(accountAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+                account_address = hex_account_address
+            };
+            if (null != permissionID)
+                reqData.permission_id = permissionID;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/createaccount");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Query information about an account,Including balances, stake, votes and time, etc.
+        /// </summary>
+        /// <param name="address">address should be converted to a hex string</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
+        public TronNetAccountInfoJson GetAccount(string address, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            //variables
+            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+
+            //create request data
+            dynamic reqData = new
+            {
+                address = hex_address
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getaccount");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetAccountInfoJson restJson = ObjectParse<TronNetAccountInfoJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
+
         #region ITronTransactionsRest
 
         /// <summary>
@@ -939,38 +1008,6 @@ namespace AtomicCore.BlockChain.TronNet
         public TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool? visible)
         {
             throw new NotImplementedException("Remote service has been removed");
-        }
-
-        #endregion
-
-        #region ITronNetAccountRest
-
-        /// <summary>
-        /// Query information about an account,Including balances, stake, votes and time, etc.
-        /// </summary>
-        /// <param name="address">address should be converted to a hex string</param>
-        /// <param name="visible">Optional,whether the address is in base58 format</param>
-        public TronNetAccountInfoJson GetAccount(string address, bool? visible = null)
-        {
-            if (string.IsNullOrEmpty(address))
-                throw new ArgumentNullException(nameof(address));
-
-            //variables
-            string hex_address = TronNetECKey.ConvertToHexAddress(address);
-
-            //create request data
-            dynamic reqData = new
-            {
-                address = hex_address
-            };
-            if (null != visible)
-                reqData.visible = visible.Value;
-
-            string url = CreateFullNodeRestUrl("/wallet/getaccount");
-            string resp = this.RestPostJson(url, reqData);
-            TronNetAccountInfoJson restJson = ObjectParse<TronNetAccountInfoJson>(resp);
-
-            return restJson;
         }
 
         #endregion

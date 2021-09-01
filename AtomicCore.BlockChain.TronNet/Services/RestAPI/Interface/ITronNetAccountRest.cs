@@ -12,7 +12,8 @@
         /// <param name="accountAddress">account_address is the address of the new account, converted to a hex string, this address needs to be calculated in advance</param>
         /// <param name="permissionID">Optional,whether the address is in base58 format</param>
         /// <param name="visible">Optional,for multi-signature use</param>
-        //void CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool? visible = null);
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool? visible = null);
 
         /// <summary>
         /// Query information about an account,Including balances, stake, votes and time, etc.

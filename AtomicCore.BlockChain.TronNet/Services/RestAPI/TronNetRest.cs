@@ -318,6 +318,57 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Modify account name
+        /// </summary>
+        /// <param name="accountName">Account_name is the name of the account</param>
+        /// <param name="ownerAddress">Owner_address is the account address to be modified</param>
+        /// <param name="permissionID">Optional,for multi-signature use</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson UpdateAccount(string accountName, string ownerAddress, int? permissionID = null, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(accountName))
+                throw new ArgumentNullException(nameof(accountName));
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+
+            //variables
+            string hex_account_name = TronNetUntils.StringToHexString(accountName, true, Encoding.UTF8);
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                account_name = hex_account_name,
+                owner_address = hex_owner_address
+            };
+            if (null != permissionID)
+                reqData.permission_id = permissionID;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/updateaccount");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Update the account's permission.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="actives"></param>
+        /// <param name="owner"></param>
+        /// <param name="witness"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool? visible = null)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region ITronTransactionsRest

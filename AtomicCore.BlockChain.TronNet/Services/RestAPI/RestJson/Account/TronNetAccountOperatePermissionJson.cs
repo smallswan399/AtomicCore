@@ -3,9 +3,9 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// TronNet Active Permission Json
+    /// TronNet Operate Permission Json
     /// </summary>
-    public class TronNetActivePermissionJson : TronNetOwnerPermissionJson
+    public class TronNetAccountOperatePermissionJson : TronNetAccountPermissionJson
     {
         /// <summary>
         /// id

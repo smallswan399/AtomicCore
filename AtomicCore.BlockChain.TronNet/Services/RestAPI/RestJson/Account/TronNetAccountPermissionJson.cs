@@ -3,9 +3,9 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// TronNet Owner Permission Json
+    /// TronNet Account Permission Json
     /// </summary>
-    public class TronNetOwnerPermissionJson
+    public class TronNetAccountPermissionJson
     {
         /// <summary>
         /// permission_name
@@ -23,6 +23,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// keys
         /// </summary>
         [JsonProperty("keys")]
-        public TronNetOwnerPermissionKeyJson[] Keys { get; set; }
+        public TronNetAccountPermissionKeyValueJson[] Keys { get; set; }
     }
 }

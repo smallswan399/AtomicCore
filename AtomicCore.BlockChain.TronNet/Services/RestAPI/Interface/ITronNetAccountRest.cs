@@ -22,9 +22,26 @@
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         TronNetAccountInfoJson GetAccount(string address, bool? visible = null);
 
-        //void UpdateAccount(string ownerAddress, string targetAddress, int? permissionID = null, bool? visible = null);
+        /// <summary>
+        /// Modify account name
+        /// </summary>
+        /// <param name="accountName">Account_name is the name of the account</param>
+        /// <param name="ownerAddress">Owner_address is the account address to be modified</param>
+        /// <param name="permissionID">Optional,for multi-signature use</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson UpdateAccount(string accountName, string ownerAddress, int? permissionID = null, bool? visible = null);
 
-        //void AccountPermissionUpdate();
+        /// <summary>
+        /// Update the account's permission.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="actives"></param>
+        /// <param name="owner"></param>
+        /// <param name="witness"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool? visible = null);
 
         //void GetAccountBalance();
     }

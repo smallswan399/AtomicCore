@@ -47,13 +47,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// owner_permission
         /// </summary>
         [JsonProperty("owner_permission")]
-        public TronNetOwnerPermissionJson OwnerPermission { get; set; }
+        public TronNetAccountPermissionJson OwnerPermission { get; set; }
 
         /// <summary>
         /// active_permission
         /// </summary>
         [JsonProperty("active_permission")]
-        public TronNetActivePermissionJson[] ActivePermission { get; set; }
+        public TronNetAccountOperatePermissionJson[] ActivePermission { get; set; }
 
         /// <summary>
         /// trc10 token asset list

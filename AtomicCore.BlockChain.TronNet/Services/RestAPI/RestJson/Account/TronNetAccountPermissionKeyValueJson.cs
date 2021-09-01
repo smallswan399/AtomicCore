@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Owner PermissionKey Json
     /// </summary>
-    public class TronNetOwnerPermissionKeyJson
+    public class TronNetAccountPermissionKeyValueJson
     {
         /// <summary>
         /// address

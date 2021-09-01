@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Asset V2 Jsons
     /// </summary>
-    public class TronNetAssetV2Json
+    public class TronNetAccountAssetV2Json
     {
         /// <summary>
         /// Asset ID

@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronNet Account Frozen Energy Balance
     /// </summary>
-    public class TronNetFrozenEnergyBalanceJson
+    public class TronNetAccountFrozenEnergyBalanceJson
     {
         /// <summary>
         /// frozen_balance

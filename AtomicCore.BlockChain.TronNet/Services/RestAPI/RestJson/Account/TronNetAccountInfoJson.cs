@@ -59,6 +59,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// trc10 token asset list
         /// </summary>
         [JsonProperty("assetV2")]
-        public TronNetAssetV2Json[] AssetV2 { get; set; }
+        public TronNetAccountAssetV2Json[] AssetV2 { get; set; }
     }
 }

@@ -369,6 +369,51 @@ namespace AtomicCore.BlockChain.TronNet
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Get the account balance in a specific block.
+        /// (Note: At present, the interface data can only be queried through 
+        /// the following official nodes 47.241.20.47 & 161.117.85.97 &161.117.224.116 &161.117.83.38)
+        /// </summary>
+        /// <param name="address">tron address</param>
+        /// <param name="blockHash">block hash</param>
+        /// <param name="blockHeight">block height</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
+        /// <returns></returns>
+        public TronNetBlockAccountBalanceJson GetAccountBalance(string address, string blockHash, ulong blockHeight, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+            if (string.IsNullOrEmpty(blockHash))
+                throw new ArgumentNullException(nameof(blockHash));
+            if (blockHeight <= 0)
+                throw new ArgumentException("block height must be greater than 0");
+
+            //variables
+            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+
+            //create request data
+            dynamic reqData = new
+            {
+                account_identifier = new 
+                {
+                    address = hex_address
+                },
+                block_identifier = new 
+                {
+                    hash = blockHash,
+                    number = blockHeight
+                }
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getaccountbalance");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetBlockAccountBalanceJson restJson = ObjectParse<TronNetBlockAccountBalanceJson>(resp);
+
+            return restJson;
+        }
+
         #endregion
 
         #region ITronTransactionsRest

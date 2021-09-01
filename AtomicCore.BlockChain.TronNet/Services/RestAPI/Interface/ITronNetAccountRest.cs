@@ -35,14 +35,24 @@
         /// <summary>
         /// Update the account's permission.
         /// </summary>
-        /// <param name="ownerAddress"></param>
-        /// <param name="actives"></param>
-        /// <param name="owner"></param>
-        /// <param name="witness"></param>
-        /// <param name="visible"></param>
+        /// <param name="ownerAddress">owner address</param>
+        /// <param name="actives">actives</param>
+        /// <param name="owner">owner</param>
+        /// <param name="witness">witness</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
         TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool? visible = null);
 
-        //void GetAccountBalance();
+        /// <summary>
+        /// Get the account balance in a specific block.
+        /// (Note: At present, the interface data can only be queried through 
+        /// the following official nodes 47.241.20.47 & 161.117.85.97 &161.117.224.116 &161.117.83.38)
+        /// </summary>
+        /// <param name="address">tron address</param>
+        /// <param name="blockHash">block hash</param>
+        /// <param name="blockHeight">block height</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
+        /// <returns></returns>
+        TronNetBlockAccountBalanceJson GetAccountBalance(string address, string blockHash, ulong blockHeight, bool? visible = null);
     }
 }

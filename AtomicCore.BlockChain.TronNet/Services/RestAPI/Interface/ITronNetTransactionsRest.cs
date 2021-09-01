@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// Tron Transaction Rest API
     /// </summary>
-    public interface ITronTransactionsRest
+    public interface ITronNetTransactionsRest
     {
         /// <summary>
         /// Get Transaction Sign

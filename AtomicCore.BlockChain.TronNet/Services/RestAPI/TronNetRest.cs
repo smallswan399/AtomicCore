@@ -421,8 +421,8 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Query the resource information of an account(bandwidth,energy,etc)
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="visible"></param>
+        /// <param name="address">address</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
         public TronNetAccountResourceJson GetAccountResource(string address, bool? visible = null)
         {
@@ -450,8 +450,8 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Query bandwidth information.
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="visible"></param>
+        /// <param name="address">address</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
         public TronNetAccountNetResourceJson GetAccountNet(string address, bool? visible = null)
         {
@@ -486,8 +486,9 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="frozenDuration">TRX stake duration, only be specified as 3 days</param>
         /// <param name="resource">TRX stake type, 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress"></param>
-        /// <param name="permissionID"></param>
-        /// <param name="visible"></param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <returns></returns>
         public TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null)
         {
             if (string.IsNullOrEmpty(ownerAddress))
@@ -531,11 +532,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// Unstake TRX that has passed the minimum stake duration to release bandwidth and energy 
         /// and at the same time TRON Power will reduce and all votes will be canceled.
         /// </summary>
-        /// <param name="ownerAddress"></param>
-        /// <param name="resource"></param>
-        /// <param name="receiverAddress"></param>
-        /// <param name="permissionID"></param>
-        /// <param name="visible"></param>
+        /// <param name="ownerAddress">Owner address</param>
+        /// <param name="resource">Stake TRX for 'BANDWIDTH' or 'ENERGY'</param>
+        /// <param name="receiverAddress">Optional,the address that will lose the resource</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
         public TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null)
         {
@@ -564,6 +565,41 @@ namespace AtomicCore.BlockChain.TronNet
             string url = CreateFullNodeRestUrl("/wallet/unfreezebalance");
             string resp = this.RestPostJson(url, reqData);
             TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Returns all resources delegations from an account to another account. 
+        /// The fromAddress can be retrieved from the GetDelegatedResourceAccountIndex API.
+        /// </summary>
+        /// <param name="fromAddress">Energy from address</param>
+        /// <param name="toAddress">Energy delegation information</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <returns></returns>
+        public TronNetDelegatedResourceJson GetDelegatedResource(string fromAddress, string toAddress, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(fromAddress))
+                throw new ArgumentNullException(nameof(fromAddress));
+            if (string.IsNullOrEmpty(toAddress))
+                throw new ArgumentNullException(nameof(toAddress));
+
+            //variables
+            string hex_from_address = TronNetECKey.ConvertToHexAddress(fromAddress);
+            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                fromAddress = hex_from_address,
+                toAddress = hex_to_address
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getdelegatedresource");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetDelegatedResourceJson restJson = ObjectParse<TronNetDelegatedResourceJson>(resp);
 
             return restJson;
         }

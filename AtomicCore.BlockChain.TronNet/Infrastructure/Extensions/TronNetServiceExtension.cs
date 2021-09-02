@@ -28,6 +28,7 @@ namespace AtomicCore.BlockChain.TronNet
             services.AddTransient<ITronNetQueryNetworkRest, TronNetRest>();
             services.AddTransient<ITronNetTransactionsRest, TronNetRest>();
             services.AddTransient<ITronNetTRC10TokenRest, TronNetRest>();
+            services.AddTransient<ITronNetSmartContractsRest, TronNetRest>();
 
             //Register Other Interface
             services.AddTransient<ITronNetTransactionClient, TronNetTransactionClient>();

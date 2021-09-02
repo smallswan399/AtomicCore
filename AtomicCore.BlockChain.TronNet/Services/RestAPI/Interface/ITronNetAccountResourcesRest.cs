@@ -13,7 +13,13 @@
         /// <returns></returns>
         TronNetAccountResourceJson GetAccountResource(string address, bool? visible = null);
 
-
+        /// <summary>
+        /// Query bandwidth information.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetAccountNetResourceJson GetAccountNet(string address, bool? visible = null);
 
     }
 }

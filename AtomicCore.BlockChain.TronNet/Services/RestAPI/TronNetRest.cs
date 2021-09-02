@@ -447,6 +447,35 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Query bandwidth information.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetAccountNetResourceJson GetAccountNet(string address, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            //variables
+            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+
+            //create request data
+            dynamic reqData = new
+            {
+                address = hex_address
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getaccountnet");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetAccountNetResourceJson restJson = ObjectParse<TronNetAccountNetResourceJson>(resp);
+
+            return restJson;
+        }
+
         #endregion
 
         #region ITronTransactionsRest

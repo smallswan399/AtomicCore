@@ -4,7 +4,7 @@ using System;
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// Trc20 Contrract Script Address Json Converter
+    /// Hex Address Json Converter
     /// </summary>
     public sealed class TronNetHexAddressJsonConverter : JsonConverter
     {

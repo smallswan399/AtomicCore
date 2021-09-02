@@ -57,5 +57,14 @@
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
         TronNetDelegatedResourceJson GetDelegatedResource(string fromAddress, string toAddress, bool? visible = null);
+
+        /// <summary>
+        /// Query the energy delegation by an account. 
+        /// i.e. list all addresses that have delegated resources to an account.
+        /// </summary>
+        /// <param name="address">address</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <returns></returns>
+        TronNetDelegatedResourceAccountJson GetDelegatedResourceAccountIndex(string address, bool? visible = null);
     }
 }

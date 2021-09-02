@@ -604,6 +604,36 @@ namespace AtomicCore.BlockChain.TronNet
             return restJson;
         }
 
+        /// <summary>
+        /// Query the energy delegation by an account. 
+        /// i.e. list all addresses that have delegated resources to an account.
+        /// </summary>
+        /// <param name="address">address</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <returns></returns>
+        public TronNetDelegatedResourceAccountJson GetDelegatedResourceAccountIndex(string address, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            //variables
+            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+
+            //create request data
+            dynamic reqData = new
+            {
+                value = hex_address,
+            };
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/getdelegatedresourceaccountindex");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetDelegatedResourceAccountJson restJson = ObjectParse<TronNetDelegatedResourceAccountJson>(resp);
+
+            return restJson;
+        }
+
         #endregion
 
         #region ITronTransactionsRest

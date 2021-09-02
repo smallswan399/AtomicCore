@@ -174,6 +174,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(true);
         }
 
+        [TestMethod()]
+        public void GetDelegatedResourceAccountIndexTest()
+        {
+            //TestNet
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            TronNetDelegatedResourceAccountJson result = testRestAPI.GetDelegatedResourceAccountIndex(
+                TronTestAccountCollection.TestMain.Address
+            );
+            Assert.IsTrue(result.IsAvailable());
+
+            string json_text = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            Assert.IsTrue(!string.IsNullOrEmpty(json_text));
+        }
+
         #endregion
 
         #region ITronTransactionsRest
@@ -426,6 +442,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             });
             Assert.IsTrue(createTransactionResult.IsAvailable());
         }
+
 
 
 

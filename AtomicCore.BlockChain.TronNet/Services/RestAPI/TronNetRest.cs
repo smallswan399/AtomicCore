@@ -510,7 +510,7 @@ namespace AtomicCore.BlockChain.TronNet
                 frozen_duration = frozenDuration,
                 resource = resource.ToString().ToUpper()
             };
-            if(string.IsNullOrEmpty(receiverAddress))
+            if (!string.IsNullOrEmpty(receiverAddress))
             {
                 string hex_receiver_adddress = TronNetECKey.ConvertToHexAddress(receiverAddress);
                 reqData.receiver_address = hex_receiver_adddress;
@@ -521,6 +521,47 @@ namespace AtomicCore.BlockChain.TronNet
                 reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/freezebalance");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Unstake TRX that has passed the minimum stake duration to release bandwidth and energy 
+        /// and at the same time TRON Power will reduce and all votes will be canceled.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="resource"></param>
+        /// <param name="receiverAddress"></param>
+        /// <param name="permissionID"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        public TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null)
+        {
+            if (string.IsNullOrEmpty(ownerAddress))
+                throw new ArgumentNullException(nameof(ownerAddress));
+
+            //variables
+            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                owner_address = hex_owner_address,
+                resource = resource.ToString().ToUpper()
+            };
+            if (!string.IsNullOrEmpty(receiverAddress))
+            {
+                string hex_receiver_adddress = TronNetECKey.ConvertToHexAddress(receiverAddress);
+                reqData.receiver_address = hex_receiver_adddress;
+            }
+            if (null != permissionID)
+                reqData.permission_id = permissionID.Value;
+            if (null != visible)
+                reqData.visible = visible.Value;
+
+            string url = CreateFullNodeRestUrl("/wallet/unfreezebalance");
             string resp = this.RestPostJson(url, reqData);
             TronNetCreateTransactionRestJson restJson = ObjectParse<TronNetCreateTransactionRestJson>(resp);
 

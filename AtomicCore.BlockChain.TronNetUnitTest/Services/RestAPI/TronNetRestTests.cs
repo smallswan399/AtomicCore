@@ -144,6 +144,21 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(result.IsAvailable());
         }
 
+        [TestMethod()]
+        public void UnfreezeBalanceTest()
+        {
+            //TestNet
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            var result = testRestAPI.UnfreezeBalance(
+                TronTestAccountCollection.TestMain.Address,
+                TronNetResourceType.ENERGY
+            );
+
+            Assert.IsTrue(result.IsAvailable());
+        }
+
         #endregion
 
         #region ITronTransactionsRest

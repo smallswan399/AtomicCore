@@ -34,5 +34,17 @@
         /// <param name="permissionID"></param>
         /// <param name="visible"></param>
         TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null);
+
+        /// <summary>
+        /// Unstake TRX that has passed the minimum stake duration to release bandwidth and energy 
+        /// and at the same time TRON Power will reduce and all votes will be canceled.
+        /// </summary>
+        /// <param name="ownerAddress"></param>
+        /// <param name="resource"></param>
+        /// <param name="receiverAddress"></param>
+        /// <param name="permissionID"></param>
+        /// <param name="visible"></param>
+        /// <returns></returns>
+        TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null);
     }
 }

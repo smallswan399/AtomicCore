@@ -6,6 +6,11 @@
     public enum TronNetResourceType
     {
         /// <summary>
+        /// UnKnow
+        /// </summary>
+        UnKnow = 0,
+
+        /// <summary>
         /// bandwidth
         /// </summary>
         BANDWIDTH = 1,

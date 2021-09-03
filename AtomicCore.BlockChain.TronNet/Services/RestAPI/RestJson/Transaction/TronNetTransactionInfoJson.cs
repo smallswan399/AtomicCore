@@ -22,13 +22,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// block number
         /// </summary>
-        [JsonProperty("blockNumber"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("blockNumber")]
         public ulong BlockNumber { get; set; }
 
         /// <summary>
         /// block timestamp
         /// </summary>
-        [JsonProperty("blockTimeStamp"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("blockTimeStamp")]
         public ulong BlockTimeStamp { get; set; }
 
         /// <summary>

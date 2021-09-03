@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// timestamp
         /// </summary>
-        [JsonProperty("timestamp"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("timestamp")]
         public ulong Timestamp { get; set; }
 
         /// <summary>

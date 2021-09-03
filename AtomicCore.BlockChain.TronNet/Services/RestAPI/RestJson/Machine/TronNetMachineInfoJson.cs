@@ -35,7 +35,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// freeMemory
         /// </summary>
-        [JsonProperty("freeMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("freeMemory")]
         public ulong FreeMemory { get; set; }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// jvmFreeMemory
         /// </summary>
-        [JsonProperty("jvmFreeMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("jvmFreeMemory")]
         public ulong JvmFreeMemory { get; set; }
 
         /// <summary>
         /// jvmTotalMemory
         /// </summary>
-        [JsonProperty("jvmTotalMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("jvmTotalMemory")]
         public ulong JvmTotalMemory { get; set; }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// totalMemory
         /// </summary>
-        [JsonProperty("totalMemory"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("totalMemory")]
         public ulong TotalMemory { get; set; }
     }
 }

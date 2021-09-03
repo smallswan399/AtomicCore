@@ -56,9 +56,10 @@
         /// <summary>
         /// Get Transaction Info By Txid
         /// </summary>
-        /// <param name="txid"></param>
+        /// <param name="txid">txid</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetTransactionInfoJson GetTransactionInfoById(string txid);
+        TronNetTransactionInfoJson GetTransactionInfoById(string txid, bool visible = true);
 
         /// <summary>
         /// Get TransactionInfo By BlockHeight

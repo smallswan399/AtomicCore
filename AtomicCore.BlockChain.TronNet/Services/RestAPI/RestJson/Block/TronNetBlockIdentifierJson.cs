@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Number
         /// </summary>
-        [JsonProperty("number"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("number")]
         public ulong Number { get; set; }
     }
 }

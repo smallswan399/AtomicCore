@@ -34,13 +34,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// total_supply
         /// </summary>
-        [JsonProperty("total_supply"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("total_supply")]
         public ulong TotalSupply { get; set; }
 
         /// <summary>
         /// trx_num
         /// </summary>
-        [JsonProperty("trx_num"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("trx_num")]
         public ulong TrxNum { get; set; }
 
         /// <summary>
@@ -52,19 +52,19 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// num
         /// </summary>
-        [JsonProperty("num"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("num")]
         public ulong Num { get; set; }
 
         /// <summary>
         /// start_time
         /// </summary>
-        [JsonProperty("start_time"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("start_time")]
         public ulong StartTime { get; set; }
 
         /// <summary>
         /// end_time
         /// </summary>
-        [JsonProperty("end_time"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("end_time")]
         public ulong EndTime { get; set; }
 
         /// <summary>

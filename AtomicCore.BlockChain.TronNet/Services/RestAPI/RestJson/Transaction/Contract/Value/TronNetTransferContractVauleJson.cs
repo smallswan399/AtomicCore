@@ -20,7 +20,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// amount,unit is sun
         /// </summary>
-        [JsonProperty("amount"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("amount")]
         public virtual ulong Amount { get; set; }
 
         #endregion

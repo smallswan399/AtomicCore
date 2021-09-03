@@ -262,7 +262,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional,whether the address is in base58 format</param>
         /// <param name="visible">Optional,for multi-signature use</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -270,19 +270,18 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentNullException(nameof(accountAddress));
 
             //variables
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
-            string hex_account_address = TronNetECKey.ConvertToHexAddress(accountAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_account_address = visible ? accountAddress : TronNetECKey.ConvertToHexAddress(accountAddress);
 
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
-                account_address = hex_account_address
+                owner_address = post_owner_address,
+                account_address = post_account_address,
+                visible
             };
             if (null != permissionID)
                 reqData.permission_id = permissionID;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/createaccount");
             string resp = this.RestPostJson(url, reqData);
@@ -296,21 +295,20 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="address">address should be converted to a hex string</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
-        public TronNetAccountBalanceJson GetAccount(string address, bool? visible = null)
+        public TronNetAccountBalanceJson GetAccount(string address, bool visible = true)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
             //variables
-            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+            string post_address = visible ? address : TronNetECKey.ConvertToHexAddress(address);
 
             //create request data
             dynamic reqData = new
             {
-                address = hex_address
+                address = post_address,
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/getaccount");
             string resp = this.RestPostJson(url, reqData);
@@ -327,7 +325,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional,for multi-signature use</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson UpdateAccount(string accountName, string ownerAddress, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson UpdateAccount(string accountName, string ownerAddress, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(accountName))
                 throw new ArgumentNullException(nameof(accountName));
@@ -336,18 +334,17 @@ namespace AtomicCore.BlockChain.TronNet
 
             //variables
             string hex_account_name = TronNetUntils.StringToHexString(accountName, true, Encoding.UTF8);
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
 
             //create request data
             dynamic reqData = new
             {
                 account_name = hex_account_name,
-                owner_address = hex_owner_address
+                owner_address = post_owner_address,
+                visible
             };
             if (null != permissionID)
                 reqData.permission_id = permissionID;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/updateaccount");
             string resp = this.RestPostJson(url, reqData);
@@ -365,7 +362,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="witness"></param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool? visible = null)
+        public TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool visible = true)
         {
             throw new NotImplementedException();
         }
@@ -380,7 +377,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="blockHeight">block height</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetBlockAccountBalanceJson GetAccountBalance(string address, string blockHash, ulong blockHeight, bool? visible = null)
+        public TronNetBlockAccountBalanceJson GetAccountBalance(string address, string blockHash, ulong blockHeight, bool visible = true)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
@@ -390,23 +387,22 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("block height must be greater than 0");
 
             //variables
-            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+            string post_address = visible ? address : TronNetECKey.ConvertToHexAddress(address);
 
             //create request data
             dynamic reqData = new
             {
                 account_identifier = new
                 {
-                    address = hex_address
+                    address = post_address
                 },
                 block_identifier = new
                 {
                     hash = blockHash,
                     number = blockHeight
-                }
+                },
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/getaccountbalance");
             string resp = this.RestPostJson(url, reqData);

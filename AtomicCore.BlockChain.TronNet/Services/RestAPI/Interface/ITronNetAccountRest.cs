@@ -13,14 +13,14 @@
         /// <param name="permissionID">Optional,whether the address is in base58 format</param>
         /// <param name="visible">Optional,for multi-signature use</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson CreateAccount(string ownerAddress, string accountAddress, int? permissionID = null, bool visible = true);
 
         /// <summary>
         /// Query information about an account,Including balances, stake, votes and time, etc.
         /// </summary>
         /// <param name="address">address should be converted to a hex string</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
-        TronNetAccountBalanceJson GetAccount(string address, bool? visible = null);
+        TronNetAccountBalanceJson GetAccount(string address, bool visible = true);
 
         /// <summary>
         /// Modify account name
@@ -30,7 +30,7 @@
         /// <param name="permissionID">Optional,for multi-signature use</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson UpdateAccount(string accountName, string ownerAddress, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson UpdateAccount(string accountName, string ownerAddress, int? permissionID = null, bool visible = true);
 
         /// <summary>
         /// Update the account's permission.
@@ -41,7 +41,7 @@
         /// <param name="witness">witness</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool? visible = null);
+        TronNetCreateTransactionRestJson AccountPermissionUpdate(string ownerAddress, TronNetAccountOperatePermissionJson actives, TronNetAccountOperatePermissionJson owner, TronNetAccountOperatePermissionJson witness, bool visible = true);
 
         /// <summary>
         /// Get the account balance in a specific block.
@@ -53,6 +53,6 @@
         /// <param name="blockHeight">block height</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetBlockAccountBalanceJson GetAccountBalance(string address, string blockHash, ulong blockHeight, bool? visible = null);
+        TronNetBlockAccountBalanceJson GetAccountBalance(string address, string blockHash, ulong blockHeight, bool visible = true);
     }
 }

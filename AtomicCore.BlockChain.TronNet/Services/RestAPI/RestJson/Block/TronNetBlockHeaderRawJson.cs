@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// block number
         /// </summary>
-        [JsonProperty("number"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("number")]
         public ulong Number { get; set; }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// timestamp
         /// </summary>
-        [JsonProperty("timestamp"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("timestamp")]
         public ulong Timestamp { get; set; }
     }
 }

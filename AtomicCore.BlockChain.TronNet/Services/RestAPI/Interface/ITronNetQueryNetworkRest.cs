@@ -8,37 +8,42 @@
         /// <summary>
         /// Get Block By Number
         /// </summary>
-        /// <param name="blockHeight"></param>
+        /// <param name="blockHeight">block number</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetBlockJson GetBlockByNum(ulong blockHeight);
+        TronNetBlockJson GetBlockByNum(ulong blockHeight, bool visible = true);
 
         /// <summary>
         /// Get Block By Hash(ID)
         /// </summary>
-        /// <param name="blockID"></param>
+        /// <param name="blockID">block hash</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetBlockJson GetBlockById(string blockID);
+        TronNetBlockJson GetBlockById(string blockID, bool visible = true);
 
         /// <summary>
         /// Get a list of block objects by last blocks
         /// </summary>
-        /// <param name="lastNum"></param>
+        /// <param name="lastNum">Specify the last few blocks</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetBlockListJson GetBlockByLatestNum(ulong lastNum);
+        TronNetBlockListJson GetBlockByLatestNum(ulong lastNum, bool visible = true);
 
         /// <summary>
         /// Returns the list of Block Objects included in the 'Block Height' range specified.
         /// </summary>
         /// <param name="startNum">Starting block height, including this block.</param>
         /// <param name="endNum">Ending block height, excluding that block.</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum);
+        TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum, bool visible = true);
 
         /// <summary>
         /// Query the latest block information
         /// </summary>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetBlockDetailsJson GetNowBlock();
+        TronNetBlockDetailsJson GetNowBlock(bool visible = true);
 
         /// <summary>
         /// Get Transaction By Txid

@@ -789,14 +789,15 @@ namespace AtomicCore.BlockChain.TronNet
         #region ITronQueryNetworkRestAPI
 
         /// <summary>
-        /// Get Block by Number
+        /// Get Block By Number
         /// </summary>
-        /// <param name="blockHeight"></param>
+        /// <param name="blockHeight">block number</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetBlockJson GetBlockByNum(ulong blockHeight)
+        public TronNetBlockJson GetBlockByNum(ulong blockHeight, bool visible = true)
         {
             string url = CreateFullNodeRestUrl("/wallet/getblockbynum");
-            string resp = this.RestPostJson(url, new { num = blockHeight });
+            string resp = this.RestPostJson(url, new { num = blockHeight, visible });
             TronNetBlockJson restJson = ObjectParse<TronNetBlockJson>(resp);
 
             return restJson;
@@ -805,15 +806,16 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get Block By Hash(ID)
         /// </summary>
-        /// <param name="blockID"></param>
+        /// <param name="blockID">block hash</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetBlockJson GetBlockById(string blockID)
+        public TronNetBlockJson GetBlockById(string blockID, bool visible = true)
         {
             if (string.IsNullOrEmpty(blockID))
                 throw new ArgumentNullException(nameof(blockID));
 
             string url = CreateFullNodeRestUrl("/wallet/getblockbyid");
-            string resp = this.RestPostJson(url, new { value = blockID });
+            string resp = this.RestPostJson(url, new { value = blockID, visible });
             TronNetBlockJson restJson = ObjectParse<TronNetBlockJson>(resp);
 
             return restJson;
@@ -822,12 +824,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get a list of block objects by last blocks
         /// </summary>
-        /// <param name="lastNum"></param>
+        /// <param name="lastNum">Specify the last few blocks</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetBlockListJson GetBlockByLatestNum(ulong lastNum)
+        public TronNetBlockListJson GetBlockByLatestNum(ulong lastNum, bool visible = true)
         {
             string url = CreateFullNodeRestUrl("/wallet/getblockbylatestnum");
-            string resp = this.RestPostJson(url, new { num = lastNum });
+            string resp = this.RestPostJson(url, new { num = lastNum, visible });
             TronNetBlockListJson restJson = ObjectParse<TronNetBlockListJson>(resp);
 
             return restJson;
@@ -838,11 +841,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="startNum">Starting block height, including this block.</param>
         /// <param name="endNum">Ending block height, excluding that block.</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum)
+        public TronNetBlockListJson GetBlockByLimitNext(ulong startNum, ulong endNum, bool visible = true)
         {
             string url = CreateFullNodeRestUrl("/wallet/getblockbylimitnext");
-            string resp = this.RestPostJson(url, new { startNum, endNum });
+            string resp = this.RestPostJson(url, new { startNum, endNum, visible });
             TronNetBlockListJson restJson = ObjectParse<TronNetBlockListJson>(resp);
 
             return restJson;
@@ -851,11 +855,12 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Query the latest block information
         /// </summary>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetBlockDetailsJson GetNowBlock()
+        public TronNetBlockDetailsJson GetNowBlock(bool visible = true)
         {
-            string url = CreateFullNodeRestUrl("/wallet/getnowblock");
-            string resp = this.RestPostJson(url);
+            string url = CreateFullNodeRestUrl(string.Format("/wallet/getnowblock?visible={0}", visible.ToString().ToLower()));
+            string resp = this.RestGetJson(url);
             TronNetBlockDetailsJson restJson = ObjectParse<TronNetBlockDetailsJson>(resp);
 
             return restJson;

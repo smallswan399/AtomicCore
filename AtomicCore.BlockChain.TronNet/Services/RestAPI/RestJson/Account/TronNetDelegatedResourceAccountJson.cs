@@ -10,13 +10,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// account
         /// </summary>
-        [JsonProperty("account"), JsonConverter(typeof(TronNetHexAddressJsonConverter))]
+        [JsonProperty("account")]
         public string Account { get; set; }
 
         /// <summary>
         /// toAccounts
         /// </summary>
-        [JsonProperty("toAccounts"),JsonConverter(typeof(TronNetHexAddressArrayJsonConverter))]
+        [JsonProperty("toAccounts")]
         public string[] ToAccounts { get; set; }
     }
 }

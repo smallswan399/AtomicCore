@@ -65,6 +65,6 @@
         /// <param name="address">address</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        TronNetDelegatedResourceAccountJson GetDelegatedResourceAccountIndex(string address, bool? visible = null);
+        TronNetDelegatedResourceAccountJson GetDelegatedResourceAccountIndex(string address, bool visible = true);
     }
 }

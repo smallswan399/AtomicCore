@@ -28,19 +28,19 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// connectTime
         /// </summary>
-        [JsonProperty("connectTime"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("connectTime")]
         public ulong ConnectTime { get; set; }
 
         /// <summary>
         /// disconnectTimes
         /// </summary>
-        [JsonProperty("disconnectTimes"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("disconnectTimes")]
         public ulong DisconnectTimes { get; set; }
 
         /// <summary>
         /// headBlockTimeWeBothHave
         /// </summary>
-        [JsonProperty("headBlockTimeWeBothHave"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("headBlockTimeWeBothHave")]
         public ulong HeadBlockTimeWeBothHave { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// lastBlockUpdateTime
         /// </summary>
-        [JsonProperty("lastBlockUpdateTime"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("lastBlockUpdateTime")]
         public ulong LastBlockUpdateTime { get; set; }
 
         /// <summary>

@@ -28,13 +28,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// expiration
         /// </summary>
-        [JsonProperty("expiration"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("expiration")]
         public ulong Expiration { get; set; }
 
         /// <summary>
         /// timestamp
         /// </summary>
-        [JsonProperty("timestamp"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("timestamp")]
         public ulong Timestamp { get; set; }
     }
 }

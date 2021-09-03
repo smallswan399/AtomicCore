@@ -17,7 +17,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// beginSyncNum
         /// </summary>
-        [JsonProperty("beginSyncNum"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("beginSyncNum")]
         public ulong BeginSyncNum { get; set; }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// totalFlow
         /// </summary>
-        [JsonProperty("totalFlow"), JsonConverter(typeof(TronNetULongJsonConverter))]
+        [JsonProperty("totalFlow")]
         public ulong TotalFlow { get; set; }
     }
 }

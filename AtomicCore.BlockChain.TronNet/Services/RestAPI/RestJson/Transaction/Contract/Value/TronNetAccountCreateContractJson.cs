@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// owner_address
         /// </summary>
-        [JsonProperty("account_address"), JsonConverter(typeof(TronNetHexAddressJsonConverter))]
+        [JsonProperty("account_address")]
         public virtual string AccountAddress { get; set; }
     }
 }

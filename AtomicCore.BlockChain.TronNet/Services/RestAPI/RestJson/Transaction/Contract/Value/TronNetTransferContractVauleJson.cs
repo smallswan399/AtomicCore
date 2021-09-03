@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// toAddress
         /// </summary>
-        [JsonProperty("to_address"), JsonConverter(typeof(TronNetHexAddressJsonConverter))]
+        [JsonProperty("to_address")]
         public virtual string ToAddress { get; set; }
 
         /// <summary>

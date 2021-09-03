@@ -461,7 +461,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
-
+            //abi index 26 
             TronNetContractMetaDataJson result = testRestAPI.GetContract("TB7whW3J9jb5Amoi4R6WgTtMbWPeqMBjSw");
 
             Assert.IsTrue(result.IsAvailable());

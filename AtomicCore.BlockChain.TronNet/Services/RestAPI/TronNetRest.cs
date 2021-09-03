@@ -485,10 +485,10 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="frozenDuration">TRX stake duration, only be specified as 3 days</param>
         /// <param name="resource">TRX stake type, 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress"></param>
-        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, bool visible = true, int? permissionID = null)
+        public TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -529,10 +529,10 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="ownerAddress">Owner address</param>
         /// <param name="resource">Stake TRX for 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress">Optional,the address that will lose the resource</param>
-        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <param name="permissionID">Optional, for multi-signature use</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, bool visible = true, int? permissionID = null)
+        public TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));

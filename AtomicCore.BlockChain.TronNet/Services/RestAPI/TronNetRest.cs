@@ -1327,5 +1327,37 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         #endregion
+
+        #region ITronNetSmartContractsRest
+
+        /// <summary>
+        /// Queries a contract's information from the blockchain. Returns SmartContract object.
+        /// </summary>
+        /// <param name="contractAddress">Contract address</param>
+        /// <param name="visible">Optional, is address in visible format(base58check) or hex?</param>
+        /// <returns></returns>
+        public TronNetContractMetaDataJson GetContract(string contractAddress, bool visible = true)
+        {
+            if (string.IsNullOrEmpty(contractAddress))
+                throw new ArgumentNullException(nameof(contractAddress));
+
+            //variables
+            string value = visible ? contractAddress : TronNetECKey.ConvertToHexAddress(contractAddress);
+
+            //create request data
+            dynamic reqData = new
+            {
+                value,
+                visible
+            };
+
+            string url = CreateFullNodeRestUrl("/wallet/getcontract");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetContractMetaDataJson restJson = ObjectParse<TronNetContractMetaDataJson>(resp);
+
+            return restJson;
+        }
+
+        #endregion
     }
 }

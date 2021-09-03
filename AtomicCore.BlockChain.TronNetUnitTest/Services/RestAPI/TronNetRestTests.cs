@@ -34,6 +34,28 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         #region ITronAddressUtilitiesRestAPI
 
         [TestMethod()]
+        public void GenerateAddressTest()
+        {
+            var result = _restAPI.GenerateAddress();
+            Assert.IsTrue(result.IsAvailable());
+
+            string tronAddress = TronNetECKey.ConvertToTronAddressFromHexAddress(result.HexAddress);
+            Assert.IsTrue(tronAddress.Equals(result.Address));
+        }
+
+        [TestMethod()]
+        public void CreateAddressTest()
+        {
+            //TestNet
+            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            var result = testRestAPI.CreateAddress("123456");
+
+            Assert.IsTrue(result.IsAvailable());
+        }
+
+        [TestMethod()]
         public void ValidateAddressTest()
         {
             var result = _restAPI.ValidateAddress("TEfiVcH2MF43NDXLpxmy6wRpaMxnZuc4iX");

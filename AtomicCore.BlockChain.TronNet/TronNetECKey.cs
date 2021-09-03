@@ -13,6 +13,7 @@ namespace AtomicCore.BlockChain.TronNet
 
         private readonly ECKey _ecKey;
         private string _publicAddress = null;
+        private string _hexAddress = null;
         private readonly TronNetwork _network;
         private string _privateKeyHex = null;
 
@@ -232,7 +233,7 @@ namespace AtomicCore.BlockChain.TronNet
             byte[] address = new byte[21];
             if (hexAddressBytes.Length == 21)
                 Array.Copy(hexAddressBytes, 0, address, 0, 21);
-            else if(hexAddressBytes.Length == 20)
+            else if (hexAddressBytes.Length == 20)
                 Array.Copy(hexAddressBytes, 0, address, 1, 21);
             else
                 throw new ArgumentException("address length must be 40 or 42");
@@ -300,6 +301,25 @@ namespace AtomicCore.BlockChain.TronNet
                 _privateKeyHex = _ecKey.PrivateKey.D.ToByteArrayUnsigned().ToHex();
 
             return _privateKeyHex;
+        }
+
+        /// <summary>
+        /// Get Hex Address
+        /// </summary>
+        /// <param name="prefix">0x prefix</param>
+        /// <returns></returns>
+        public string GetHexAddress(bool prefix = false)
+        {
+            if (!string.IsNullOrWhiteSpace(_hexAddress)) return _hexAddress;
+
+            byte[] initAddress = _ecKey.GetPubKeyNoPrefix().ToKeccakHash();
+            byte[] address = new byte[initAddress.Length - 11];
+            Array.Copy(initAddress, 12, address, 1, 20);
+            address[0] = GetPublicAddressPrefix();
+
+            _hexAddress = address.ToHex(prefix);
+
+            return _hexAddress;
         }
 
         /// <summary>

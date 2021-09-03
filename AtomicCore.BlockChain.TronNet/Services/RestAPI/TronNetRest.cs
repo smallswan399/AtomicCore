@@ -195,19 +195,19 @@ namespace AtomicCore.BlockChain.TronNet
 
         /// <summary>
         /// Generates a random private key and address pair. 
-        /// Risk Warning : there is a security risk. 
-        /// This interface service has been shutdown by the Trongrid. 
-        /// Please use the offline mode or the node deployed by yourself.
+        /// use offline code generation
         /// </summary>
         /// <returns>Returns a private key, the corresponding address in hex,and base58</returns>
-        [Obsolete("Remote service has been removed")]
         public TronNetAddressKeyPairRestJson GenerateAddress()
         {
-            string url = CreateFullNodeRestUrl("/wallet/generateaddress");
-            string resp = this.RestGetJson(url);
-            TronNetAddressKeyPairRestJson restJson = ObjectParse<TronNetAddressKeyPairRestJson>(resp);
+            TronNetECKey newKey = TronNetECKey.GenerateKey();
 
-            return restJson;
+            return new TronNetAddressKeyPairRestJson()
+            {
+                Address = newKey.GetPublicAddress(),
+                PrivateKey = newKey.GetPrivateKey(),
+                HexAddress = newKey.GetHexAddress()
+            };
         }
 
         /// <summary>
@@ -218,7 +218,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="passphrase"></param>
         /// <returns></returns>
-        [Obsolete("Remote service has been removed")]
         public TronNetAddressBase58CheckRestJson CreateAddress(string passphrase)
         {
             if (string.IsNullOrEmpty(passphrase))
@@ -236,15 +235,17 @@ namespace AtomicCore.BlockChain.TronNet
         /// Validates address, returns either true or false.
         /// </summary>
         /// <param name="address">Tron Address</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetAddressValidRestJson ValidateAddress(string address)
+        public TronNetAddressValidRestJson ValidateAddress(string address, bool visible = true)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
-            string addressHex = Base58Encoder.DecodeFromBase58Check(address).ToHex();
+            //variables
+            string post_address = visible ? address : TronNetECKey.ConvertToHexAddress(address);
             string url = CreateFullNodeRestUrl("/wallet/validateaddress");
-            string resp = this.RestPostJson(url, new { address = addressHex });
+            string resp = this.RestPostJson(url, new { address = post_address, visible });
             TronNetAddressValidRestJson restJson = ObjectParse<TronNetAddressValidRestJson>(resp);
 
             return restJson;

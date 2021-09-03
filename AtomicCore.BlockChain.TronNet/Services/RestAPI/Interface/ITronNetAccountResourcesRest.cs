@@ -11,7 +11,7 @@
         /// <param name="address">address</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetAccountResourceJson GetAccountResource(string address, bool? visible = null);
+        TronNetAccountResourceJson GetAccountResource(string address, bool visible = true);
 
         /// <summary>
         /// Query bandwidth information.
@@ -19,7 +19,7 @@
         /// <param name="address">address</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetAccountNetResourceJson GetAccountNet(string address, bool? visible = null);
+        TronNetAccountNetResourceJson GetAccountNet(string address, bool visible = true);
 
         /// <summary>
         /// Stake an amount of TRX to obtain bandwidth OR Energy and TRON Power (voting rights) .

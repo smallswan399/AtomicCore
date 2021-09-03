@@ -424,21 +424,20 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="address">address</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetAccountResourceJson GetAccountResource(string address, bool? visible = null)
+        public TronNetAccountResourceJson GetAccountResource(string address, bool visible = true)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
             //variables
-            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+            string post_address = visible ? address : TronNetECKey.ConvertToHexAddress(address);
 
             //create request data
             dynamic reqData = new
             {
-                address = hex_address
+                address = post_address,
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/getaccountresource");
             string resp = this.RestPostJson(url, reqData);
@@ -453,21 +452,20 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="address">address</param>
         /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetAccountNetResourceJson GetAccountNet(string address, bool? visible = null)
+        public TronNetAccountNetResourceJson GetAccountNet(string address, bool visible = true)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
             //variables
-            string hex_address = TronNetECKey.ConvertToHexAddress(address);
+            string post_address = visible ? address : TronNetECKey.ConvertToHexAddress(address);
 
             //create request data
             dynamic reqData = new
             {
-                address = hex_address
+                address = post_address,
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/getaccountnet");
             string resp = this.RestPostJson(url, reqData);

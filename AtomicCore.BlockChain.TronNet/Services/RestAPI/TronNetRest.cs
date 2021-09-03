@@ -869,15 +869,16 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get Transaction By Txid
         /// </summary>
-        /// <param name="txid"></param>
+        /// <param name="txid">txid</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetTransactionRestJson GetTransactionByID(string txid)
+        public TronNetTransactionRestJson GetTransactionByID(string txid, bool visible = true)
         {
             if (string.IsNullOrEmpty(txid))
                 throw new ArgumentNullException(nameof(txid));
 
             string url = CreateFullNodeRestUrl("/wallet/gettransactionbyid");
-            string resp = this.RestPostJson(url, new { value = txid });
+            string resp = this.RestPostJson(url, new { value = txid, visible });
             TronNetTransactionRestJson restJson = ObjectParse<TronNetTransactionRestJson>(resp);
 
             return restJson;

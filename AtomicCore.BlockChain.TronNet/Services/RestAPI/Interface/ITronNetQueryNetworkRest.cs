@@ -48,9 +48,10 @@
         /// <summary>
         /// Get Transaction By Txid
         /// </summary>
-        /// <param name="txid"></param>
+        /// <param name="txid">txid</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetTransactionRestJson GetTransactionByID(string txid);
+        TronNetTransactionRestJson GetTransactionByID(string txid, bool visible = true);
 
         /// <summary>
         /// Get Transaction Info By Txid

@@ -36,20 +36,17 @@ namespace AtomicCore.BlockChain.TronNet
         #region Basic Property Getter
 
         /// <summary>
-        /// Get Owner EthAddress
+        /// Get Owner Address
         /// </summary>
         /// <param name="jobject"></param>
-        /// <param name="isUpper"></param>
         /// <returns></returns>
-        public static string GetOwnerEthAddress(this JObject jobject, bool isUpper = false)
+        public static string GetOwnerAddress(this JObject jobject)
         {
             bool flag = jobject.TryGetValue("owner_address", out JToken token);
             if (!flag)
                 return string.Empty;
 
-            string hexAddress = token.ToString();
-
-            return TronNetECKey.ConvertToEthAddressFromHexAddress(hexAddress, isUpper);
+            return token.ToString();
         }
 
         #endregion
@@ -57,54 +54,17 @@ namespace AtomicCore.BlockChain.TronNet
         #region Trx && Trc10 Property Getter
 
         /// <summary>
-        /// Get Owner TronAddress
+        /// Get TRC10 ToAddress
         /// </summary>
         /// <param name="jobject"></param>
-        /// <param name="network"></param>
         /// <returns></returns>
-        public static string GetOwnerTronAddress(this JObject jobject, TronNetwork network = TronNetwork.MainNet)
-        {
-            bool flag = jobject.TryGetValue("owner_address", out JToken token);
-            if (!flag)
-                return string.Empty;
-
-            string hexAddress = token.ToString();
-
-            return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress, network);
-        }
-
-        /// <summary>
-        /// Get TRC10 ToEthAddress
-        /// </summary>
-        /// <param name="jobject"></param>
-        /// <param name="isUpper"></param>
-        /// <returns></returns>
-        public static string GetTrc10ToEthAddress(this JObject jobject, bool isUpper = false)
+        public static string GetTrc10ToAddress(this JObject jobject)
         {
             bool flag = jobject.TryGetValue("to_address", out JToken token);
             if (!flag)
                 return string.Empty;
 
-            string hexAddress = token.ToString();
-
-            return TronNetECKey.ConvertToEthAddressFromHexAddress(hexAddress, isUpper);
-        }
-
-        /// <summary>
-        /// Get TRC10 ToTronAddress
-        /// </summary>
-        /// <param name="jobject"></param>
-        /// <param name="network"></param>
-        /// <returns></returns>
-        public static string GetTrc10ToTronAddress(this JObject jobject, TronNetwork network = TronNetwork.MainNet)
-        {
-            bool flag = jobject.TryGetValue("to_address", out JToken token);
-            if (!flag)
-                return string.Empty;
-
-            string hexAddress = token.ToString();
-
-            return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress, network);
+            return token.ToString();
         }
 
         /// <summary>
@@ -157,37 +117,17 @@ namespace AtomicCore.BlockChain.TronNet
         #region Trc20 Property Getter
 
         /// <summary>
-        /// Get Contract EthAddress
+        /// Get Contract Address
         /// </summary>
         /// <param name="jobject"></param>
-        /// <param name="isUpper"></param>
         /// <returns></returns>
-        public static string GetContractEthAddress(this JObject jobject, bool isUpper = false)
+        public static string GetContractAddress(this JObject jobject)
         {
             bool flag = jobject.TryGetValue("contract_address", out JToken token);
             if (!flag)
                 return string.Empty;
 
-            string hexAddress = token.ToString();
-
-            return TronNetECKey.ConvertToEthAddressFromHexAddress(hexAddress, isUpper);
-        }
-
-        /// <summary>
-        /// Get Contract TronAddress
-        /// </summary>
-        /// <param name="jobject"></param>
-        /// <param name="network"></param>
-        /// <returns></returns>
-        public static string GetContractTronAddress(this JObject jobject, TronNetwork network = TronNetwork.MainNet)
-        {
-            bool flag = jobject.TryGetValue("contract_address", out JToken token);
-            if (!flag)
-                return string.Empty;
-
-            string hexAddress = token.ToString();
-
-            return TronNetECKey.ConvertToTronAddressFromHexAddress(hexAddress, network);
+            return token.ToString();
         }
 
         /// <summary>

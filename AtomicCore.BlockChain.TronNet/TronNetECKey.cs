@@ -255,7 +255,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get Network Prefix
         /// </summary>
-        /// <param name="network"></param>
+        /// <param name="network">network</param>
         /// <returns></returns>
         public static byte GetNetworkPrefix(TronNetwork network = TronNetwork.MainNet)
         {
@@ -267,6 +267,26 @@ namespace AtomicCore.BlockChain.TronNet
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// is hex address format
+        /// rough verification is mainly based on the first character or length of the address
+        /// </summary>
+        /// <param name="address">address</param>
+        /// <param name="network">netowrk</param>
+        /// <returns></returns>
+        public static bool IsHexAddressFormat(string address, TronNetwork network = TronNetwork.MainNet)
+        {
+            if (string.IsNullOrEmpty(address))
+                return false;
+
+            if (address.Length == 21)
+                return address.StartsWith(GetNetworkPrefix(network).ToString(), StringComparison.OrdinalIgnoreCase);
+            else if (address.Length == 20)
+                return true;
+            else
+                return false;
         }
 
         #endregion

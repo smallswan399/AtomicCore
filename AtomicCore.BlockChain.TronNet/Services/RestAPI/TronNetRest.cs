@@ -905,10 +905,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get TransactionInfo By BlockHeight
         /// </summary>
-        /// <param name="blockHeight"></param>
+        /// <param name="blockHeight">block number</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
         [System.Obsolete("Please use method 'GetBlockByLimitNext' instead")]
-        public TronNetTransactionInfoJson GetTransactionInfoByBlockNum(ulong blockHeight)
+        public TronNetTransactionInfoJson GetTransactionInfoByBlockNum(ulong blockHeight, bool visible = true)
         {
             throw new NotImplementedException("Please use method 'GetBlockByLimitNext' instead");
         }

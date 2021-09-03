@@ -43,10 +43,10 @@
         /// <param name="ownerAddress">Owner address</param>
         /// <param name="resource">Stake TRX for 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress">Optional,the address that will lose the resource</param>
-        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, bool visible = true, int? permissionID = null);
 
         /// <summary>
         /// Returns all resources delegations from an account to another account. 
@@ -56,7 +56,7 @@
         /// <param name="toAddress">Energy delegation information</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        TronNetDelegatedResourceJson GetDelegatedResource(string fromAddress, string toAddress, bool? visible = null);
+        TronNetDelegatedResourceJson GetDelegatedResource(string fromAddress, string toAddress, bool visible = true);
 
         /// <summary>
         /// Query the energy delegation by an account. 

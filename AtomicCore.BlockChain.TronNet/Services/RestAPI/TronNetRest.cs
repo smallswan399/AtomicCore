@@ -509,8 +509,8 @@ namespace AtomicCore.BlockChain.TronNet
             reqData.visible = visible;
             if (!string.IsNullOrEmpty(receiverAddress))
             {
-                string hex_receiver_adddress = visible ? receiverAddress : TronNetECKey.ConvertToHexAddress(receiverAddress);
-                reqData.receiver_address = hex_receiver_adddress;
+                string post_receiver_adddress = visible ? receiverAddress : TronNetECKey.ConvertToHexAddress(receiverAddress);
+                reqData.receiver_address = post_receiver_adddress;
             }
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
@@ -529,32 +529,31 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="ownerAddress">Owner address</param>
         /// <param name="resource">Stake TRX for 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress">Optional,the address that will lose the resource</param>
-        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson UnfreezeBalance(string ownerAddress, TronNetResourceType resource, string receiverAddress = null, bool visible = true, int? permissionID = null)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
 
             //variables
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
 
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
-                resource = resource.ToString().ToUpper()
+                owner_address = post_owner_address,
+                resource = resource.ToString().ToUpper(),
+                visible
             };
             if (!string.IsNullOrEmpty(receiverAddress))
             {
-                string hex_receiver_adddress = TronNetECKey.ConvertToHexAddress(receiverAddress);
-                reqData.receiver_address = hex_receiver_adddress;
+                string post_receiver_adddress = visible ? receiverAddress : TronNetECKey.ConvertToHexAddress(receiverAddress);
+                reqData.receiver_address = post_receiver_adddress;
             }
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/unfreezebalance");
             string resp = this.RestPostJson(url, reqData);
@@ -571,7 +570,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="toAddress">Energy delegation information</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetDelegatedResourceJson GetDelegatedResource(string fromAddress, string toAddress, bool? visible = null)
+        public TronNetDelegatedResourceJson GetDelegatedResource(string fromAddress, string toAddress, bool visible = true)
         {
             if (string.IsNullOrEmpty(fromAddress))
                 throw new ArgumentNullException(nameof(fromAddress));
@@ -579,17 +578,16 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentNullException(nameof(toAddress));
 
             //variables
-            string hex_from_address = TronNetECKey.ConvertToHexAddress(fromAddress);
-            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
+            string post_from_address = visible ? fromAddress : TronNetECKey.ConvertToHexAddress(fromAddress);
+            string post_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
 
             //create request data
             dynamic reqData = new
             {
-                fromAddress = hex_from_address,
-                toAddress = hex_to_address
+                fromAddress = post_from_address,
+                toAddress = post_to_address,
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/getdelegatedresource");
             string resp = this.RestPostJson(url, reqData);

@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text;
 
 namespace AtomicCore.BlockChain.TronNet
@@ -484,10 +485,10 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="frozenDuration">TRX stake duration, only be specified as 3 days</param>
         /// <param name="resource">TRX stake type, 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress"></param>
-        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, bool visible = true, int? permissionID = null)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -495,29 +496,24 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("frozen trx balance must be greater than 0");
             if (frozenDuration < 3)
                 throw new ArgumentException("frozen duration day must be greater than 0");
-            if (string.IsNullOrEmpty(receiverAddress))
-                receiverAddress = ownerAddress;
 
             //variables
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
 
             //create request data
-            dynamic reqData = new
-            {
-                owner_address = hex_owner_address,
-                frozen_balance = (long)(frozenBalance * 1000000),
-                frozen_duration = frozenDuration,
-                resource = resource.ToString().ToUpper()
-            };
+            dynamic reqData = new ExpandoObject();
+            reqData.owner_address = post_owner_address;
+            reqData.frozen_balance = (long)(frozenBalance * 1000000);
+            reqData.frozen_duration = frozenDuration;
+            reqData.resource = resource.ToString().ToUpper();
+            reqData.visible = visible;
             if (!string.IsNullOrEmpty(receiverAddress))
             {
-                string hex_receiver_adddress = TronNetECKey.ConvertToHexAddress(receiverAddress);
+                string hex_receiver_adddress = visible ? receiverAddress : TronNetECKey.ConvertToHexAddress(receiverAddress);
                 reqData.receiver_address = hex_receiver_adddress;
             }
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/freezebalance");
             string resp = this.RestPostJson(url, reqData);

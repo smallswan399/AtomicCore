@@ -31,10 +31,10 @@
         /// <param name="frozenDuration">TRX stake duration, only be specified as 3 days</param>
         /// <param name="resource">TRX stake type, 'BANDWIDTH' or 'ENERGY'</param>
         /// <param name="receiverAddress"></param>
-        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
+        /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson FreezeBalance(string ownerAddress, decimal frozenBalance, int frozenDuration, TronNetResourceType resource, string receiverAddress = null, bool visible = true, int? permissionID = null);
 
         /// <summary>
         /// Unstake TRX that has passed the minimum stake duration to release bandwidth and energy 

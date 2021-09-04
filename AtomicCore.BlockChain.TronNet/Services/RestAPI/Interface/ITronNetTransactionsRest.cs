@@ -10,11 +10,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get Transaction Sign
         /// </summary>
-        /// <param name="privateKey"></param>
-        /// <param name="createTransaction"></param>
+        /// <param name="privateKey">address private key</param>
+        /// <param name="createTransaction">createTransaction Object</param>
+        /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
-        [Obsolete("Remote service has been removed")]
-        TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction);
+        TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction, bool visible = true);
 
         /// <summary>
         /// Broadcast Transaction
@@ -50,7 +50,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="amount"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        TronNetEasyTransferJson EasyTransferByPrivate(string privateKey,string toAddress, ulong amount);
+        TronNetEasyTransferJson EasyTransferByPrivate(string privateKey, string toAddress, ulong amount);
 
         /// <summary>
         /// Create a TRX transfer transaction. 
@@ -62,6 +62,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID = null, bool visible = true);
     }
 }

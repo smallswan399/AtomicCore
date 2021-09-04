@@ -646,9 +646,42 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="createTransaction"></param>
+        /// <param name="visible"></param>
         /// <returns></returns>
-        [Obsolete("Remote service has been removed")]
-        public TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction)
+        public TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction, bool visible = true)
+        {
+            if (string.IsNullOrEmpty(privateKey))
+                throw new ArgumentNullException(nameof(privateKey));
+            if (null == createTransaction)
+                throw new ArgumentException("createTransaction is null");
+
+            //create request data
+            dynamic reqData = new
+            {
+                transaction = new
+                {
+                    raw_data = createTransaction.RawData,
+                    raw_data_hex = createTransaction.RawDataHex,
+                    visible
+                },
+                privateKey
+            };
+
+            string url = CreateFullNodeRestUrl("/wallet/gettransactionsign");
+            string resp = this.RestPostJson(url, reqData);
+            TronNetSignedTransactionRestJson restJson = ObjectParse<TronNetSignedTransactionRestJson>(resp);
+
+            return restJson;
+        }
+
+        /// <summary>
+        /// Get Transaction Sign
+        /// Offline Signature
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="createTransaction"></param>
+        /// <returns></returns>
+        public TronNetSignedTransactionRestJson GetTransactionOffLineSign(string privateKey, TronNetCreateTransactionRestJson createTransaction)
         {
             if (string.IsNullOrEmpty(privateKey))
                 throw new ArgumentNullException(nameof(privateKey));
@@ -674,25 +707,7 @@ namespace AtomicCore.BlockChain.TronNet
                 Signature = new string[] { sign }
             };
             restJson.Signature = new string[] { sign };
-
             return restJson;
-
-            ////////create request data
-            //////dynamic reqData = new
-            //////{
-            //////    transaction = new 
-            //////    {
-            //////        txID = createTransaction.TxID,
-            //////        raw_data = createTransaction.RawData
-            //////    },
-            //////    privateKey
-            //////};
-
-            //////string url = CreateFullNodeRestUrl("/wallet/gettransactionsign");
-            //////string resp = this.RestPostJson(url, reqData);
-            //////TronNetSignedTransactionRestJson restJson = ObjectParse<TronNetSignedTransactionRestJson>(resp);
-
-            //////return restJson;
         }
 
         /// <summary>
@@ -765,7 +780,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson CreateTransaction(string ownerAddress, string toAddress, decimal amount, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -775,21 +790,20 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("amount must be greater than zero");
 
             //address to hex
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
-            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
             long trx_of_sun = (long)(amount * 1000000);
 
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
-                to_address = hex_to_address,
-                amount = trx_of_sun
+                owner_address = post_owner_address,
+                to_address = post_to_address,
+                amount = trx_of_sun,
+                visible
             };
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/createtransaction");
             string resp = this.RestPostJson(url, reqData);

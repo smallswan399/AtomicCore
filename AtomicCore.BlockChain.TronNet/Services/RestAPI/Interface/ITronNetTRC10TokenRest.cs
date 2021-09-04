@@ -11,30 +11,33 @@ namespace AtomicCore.BlockChain.TronNet
         /// Get AssetIssue By Account
         /// </summary>
         /// <param name="tronAddress">tron address</param>
-        /// <param name="visible"></param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetAssetCollectionJson GetAssetIssueByAccount(string tronAddress, bool? visible = null);
+        TronNetAssetCollectionJson GetAssetIssueByAccount(string tronAddress, bool visible = true);
 
         /// <summary>
         /// Get AssetIssue By Id
         /// </summary>
-        /// <param name="assertID"></param>
+        /// <param name="assertID">asset id</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetAssetInfoJson GetAssetIssueById(int assertID);
+        TronNetAssetInfoJson GetAssetIssueById(int assertID, bool visible = true);
 
         /// <summary>
         /// Get AssetIssue List
         /// </summary>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetAssetCollectionJson GetAssetIssueList();
+        TronNetAssetCollectionJson GetAssetIssueList(bool visible = true);
 
         /// <summary>
         /// Get Paginated AssentIssue LIst
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="offset">page offset</param>
+        /// <param name="limit">page limit</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit);
+        TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit, bool visible = true);
 
         /// <summary>
         /// Transfer TRC10 token.
@@ -46,7 +49,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID">Optional, for multi-signature use</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson TransferAsset(string ownerAddress, string toAddress, string assetName, ulong amount, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson TransferAsset(string ownerAddress, string toAddress, string assetName, ulong amount, int? permissionID = null, bool visible = true);
 
         /// <summary>
         /// Create AssetIssue
@@ -70,18 +73,18 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="publicFreeAssetNetLimit">Token Public Free Asset Net Limit</param>
         /// <param name="frozenSupply">Token Frozen Supply</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply);
+        TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply, bool visible = true);
 
         /// <summary>
-        /// Participate in an asset issue.
+        /// Participate sAssetIssue
         /// </summary>
-        /// <param name="toAddress"></param>
-        /// <param name="ownerAddress"></param>
-        /// <param name="amount"></param>
-        /// <param name="assetName"></param>
-        /// <param name="visible"></param>
+        /// <param name="toAddress">to address</param>
+        /// <param name="ownerAddress">owner address</param>
+        /// <param name="amount">amount</param>
+        /// <param name="assetName">asset name</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson ParticipateAssetIssue(string toAddress, string ownerAddress, ulong amount, string assetName, bool? visible = null);
+        TronNetCreateTransactionRestJson ParticipateAssetIssue(string toAddress, string ownerAddress, ulong amount, string assetName, bool visible = true);
 
         /// <summary>
         /// Unstake a token that has passed the minimum freeze duration.

@@ -987,17 +987,16 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="tronAddress"></param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        public TronNetAssetCollectionJson GetAssetIssueByAccount(string tronAddress, bool? visible = null)
+        public TronNetAssetCollectionJson GetAssetIssueByAccount(string tronAddress, bool visible = true)
         {
-            string address = TronNetECKey.ConvertToHexAddress(tronAddress);
+            string address = visible ? tronAddress : TronNetECKey.ConvertToHexAddress(tronAddress);
 
             //create request data
             dynamic reqData = new
             {
-                address
+                address,
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/getassetissuebyaccount");
             string resp = this.RestPostJson(url, reqData);
@@ -1007,14 +1006,15 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
-        /// Get AssetIssue By ID
+        /// Get AssetIssue By Id
         /// </summary>
-        /// <param name="assertID"></param>
+        /// <param name="assertID">asset id</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetAssetInfoJson GetAssetIssueById(int assertID)
+        public TronNetAssetInfoJson GetAssetIssueById(int assertID, bool visible = true)
         {
             string url = CreateFullNodeRestUrl("/wallet/getassetissuebyid");
-            string resp = this.RestPostJson(url, new { value = assertID });
+            string resp = this.RestPostJson(url, new { value = assertID, visible });
             TronNetAssetInfoJson restJson = ObjectParse<TronNetAssetInfoJson>(resp);
 
             return restJson;
@@ -1023,10 +1023,11 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get AssetIssue List
         /// </summary>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetAssetCollectionJson GetAssetIssueList()
+        public TronNetAssetCollectionJson GetAssetIssueList(bool visible = true)
         {
-            string url = CreateFullNodeRestUrl("/wallet/getassetissuelist");
+            string url = CreateFullNodeRestUrl(string.Format("/wallet/getassetissuelist?visible={0}", visible.ToString().ToLower()));
             string resp = this.RestGetJson(url);
             TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
 
@@ -1034,15 +1035,16 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
-        /// Get Paginated AssetIssue List
+        /// Get Paginated AssentIssue LIst
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="offset">page offset</param>
+        /// <param name="limit">page limit</param>
+        /// <param name="visible">Optional,whether the address is in base58 format</param>
         /// <returns></returns>
-        public TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit)
+        public TronNetAssetCollectionJson GetPaginatedAssetIssueList(int offset, int limit, bool visible = true)
         {
             string url = CreateFullNodeRestUrl("/wallet/getpaginatedassetissuelist");
-            string resp = this.RestPostJson(url, new { offset, limit });
+            string resp = this.RestPostJson(url, new { offset, limit, visible });
             TronNetAssetCollectionJson restJson = ObjectParse<TronNetAssetCollectionJson>(resp);
 
             return restJson;
@@ -1058,7 +1060,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permission_id">Optional, for multi-signature use</param>
         /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson TransferAsset(string ownerAddress, string toAddress, string assetName, ulong amount, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson TransferAsset(string ownerAddress, string toAddress, string assetName, ulong amount, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -1070,9 +1072,9 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("amount must be greater than 0");
 
             //variables
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
-            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
-            bool has_asset_id = int.TryParse(assetName, out int assert_id);
+            string hex_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
+            bool has_asset_id = int.TryParse(assetName, out _);
             if (!has_asset_id)
                 throw new ArgumentException("assert name error");
 
@@ -1082,12 +1084,11 @@ namespace AtomicCore.BlockChain.TronNet
                 owner_address = hex_owner_address,
                 to_address = hex_to_address,
                 asset_name = assetName,
-                amount
+                amount,
+                visible
             };
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/transferasset");
             string resp = this.RestPostJson(url, reqData);
@@ -1117,8 +1118,9 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="freeAssetNetLimit">Token Free Asset Net Limit</param>
         /// <param name="publicFreeAssetNetLimit">Token Public Free Asset Net Limit</param>
         /// <param name="frozenSupply">Token Frozen Supply</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply)
+        public TronNetCreateTransactionRestJson CreateAssetIssue(string ownerAddress, string tokenName, int tokenPrecision, string tokenAbbr, ulong totalSupply, ulong trxNum, ulong num, DateTime startTime, DateTime endTime, string tokenDescription, string tokenUrl, ulong freeAssetNetLimit, ulong publicFreeAssetNetLimit, TronNetFrozenSupplyJson frozenSupply, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -1137,7 +1139,7 @@ namespace AtomicCore.BlockChain.TronNet
             if (null == frozenSupply)
                 throw new ArgumentNullException(nameof(frozenSupply));
 
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
             string hex_token_name = TronNetUntils.StringToHexString(tokenName, true, Encoding.UTF8);
             string hex_token_abbr = TronNetUntils.StringToHexString(tokenAbbr, true, Encoding.UTF8);
             long start_time = TronNetUntils.LocalDatetimeToMillisecondTimestamp(startTime);
@@ -1162,7 +1164,8 @@ namespace AtomicCore.BlockChain.TronNet
                 url = hex_url,
                 free_asset_net_limit = freeAssetNetLimit,
                 public_free_asset_net_limit = publicFreeAssetNetLimit,
-                frozen_supply = frozenSupply
+                frozen_supply = frozenSupply,
+                visible
             };
 
             string url = CreateFullNodeRestUrl("/wallet/createassetissue");
@@ -1175,13 +1178,13 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Participate sAssetIssue
         /// </summary>
-        /// <param name="toAddress"></param>
-        /// <param name="ownerAddress"></param>
-        /// <param name="amount"></param>
-        /// <param name="assetName"></param>
-        /// <param name="visible"></param>
+        /// <param name="toAddress">to address</param>
+        /// <param name="ownerAddress">owner address</param>
+        /// <param name="amount">amount</param>
+        /// <param name="assetName">asset name</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson ParticipateAssetIssue(string toAddress, string ownerAddress, ulong amount, string assetName, bool? visible = null)
+        public TronNetCreateTransactionRestJson ParticipateAssetIssue(string toAddress, string ownerAddress, ulong amount, string assetName, bool visible = true)
         {
             if (string.IsNullOrEmpty(toAddress))
                 throw new ArgumentNullException(nameof(toAddress));
@@ -1193,9 +1196,9 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("amount must be greater than 0");
 
             //variables
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
-            string hex_to_address = TronNetECKey.ConvertToHexAddress(toAddress);
-            bool has_asset_id = int.TryParse(assetName, out int assert_id);
+            string hex_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string hex_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
+            bool has_asset_id = int.TryParse(assetName, out _);
             if (!has_asset_id)
                 throw new ArgumentException("assert name error");
 
@@ -1205,10 +1208,9 @@ namespace AtomicCore.BlockChain.TronNet
                 owner_address = hex_owner_address,
                 to_address = hex_to_address,
                 asset_name = assetName,
-                amount
+                amount,
+                visible
             };
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/participateassetissue");
             string resp = this.RestPostJson(url, reqData);

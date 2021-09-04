@@ -270,8 +270,6 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             );
             Assert.IsTrue(!string.IsNullOrEmpty(createTransaction.TxID));
 
-            string json_raw_data = Newtonsoft.Json.JsonConvert.SerializeObject(createTransaction);
-
             //sign transaction
             TronNetSignedTransactionRestJson signTransaction = _restAPI.GetTransactionSign(from_priv, createTransaction);
 
@@ -461,7 +459,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
 
             //create transactin
-            TronNetCreateTransactionRestJson createTransactionResult = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestMain.Address, "HuZiToken", 2, "HZT", 2100000000, 1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
+            TronNetCreateTransactionRestJson createTransactionResult = testRestAPI.CreateAssetIssue(TronTestAccountCollection.TestA.Address, "HuZiToken", 2, "HZT", 2100000000, 1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "hu hu hu", "http://www.google.com", 10000, 10000, new TronNetFrozenSupplyJson()
             {
                 FrozenAmount = 1,
                 FrozenDays = 2

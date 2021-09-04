@@ -63,6 +63,20 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
+        /// Create Super Node Rest Url
+        /// </summary>
+        /// <param name="actionUrl"></param>
+        /// <returns></returns>
+        private string CreateSuperNodeRestUrl(string actionUrl)
+        {
+            return string.Format(
+                "{0}{1}",
+                this._options.Value.SuperNodeRestAPI,
+                actionUrl
+            );
+        }
+
+        /// <summary>
         /// Rest Get Json Result
         /// </summary>
         /// <param name="url"></param>
@@ -968,8 +982,8 @@ namespace AtomicCore.BlockChain.TronNet
             if (blockHeight <= 0)
                 throw new ArgumentException("blockHeight must be greater than zero");
 
-            string url = CreateFullNodeRestUrl("/wallet/getblockbalance");
-            string resp = this.RestPostJson(url, new { hash = blockHash, number = blockHeight, visible });
+            string url = CreateSuperNodeRestUrl("/wallet/getblockbalance");
+            string resp = this.RestPostJson(url, new { hash = blockHash, number = blockHeight });
             TronNetBlockBalanceJson restJson = ObjectParse<TronNetBlockBalanceJson>(resp);
 
             return restJson;

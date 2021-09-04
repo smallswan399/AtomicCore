@@ -23,6 +23,11 @@ namespace AtomicCore.BlockChain.TronNet
         public string SolidityNodeRestAPI { get; set; }
 
         /// <summary>
+        /// Super Node Rest Api
+        /// </summary>
+        public string SuperNodeRestAPI { get; set; }
+
+        /// <summary>
         /// Event Srv Api
         /// </summary>
         public string EventSrvAPI { get; set; }

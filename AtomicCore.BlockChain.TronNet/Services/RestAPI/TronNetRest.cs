@@ -983,7 +983,7 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("blockHeight must be greater than zero");
 
             string url = CreateSuperNodeRestUrl("/wallet/getblockbalance");
-            string resp = this.RestPostJson(url, new { hash = blockHash, number = blockHeight });
+            string resp = this.RestPostJson(url, new { hash = blockHash, number = blockHeight, visible });
             TronNetBlockBalanceJson restJson = ObjectParse<TronNetBlockBalanceJson>(resp);
 
             return restJson;

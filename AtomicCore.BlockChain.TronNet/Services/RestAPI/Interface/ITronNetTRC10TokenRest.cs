@@ -93,7 +93,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID"></param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        TronNetCreateTransactionRestJson UnfreezeAsset(string ownerAddress, int? permissionID = null, bool? visible = null);
+        TronNetCreateTransactionRestJson UnfreezeAsset(string ownerAddress, int? permissionID = null, bool visible = true);
 
         /// <summary>
         /// Update basic TRC10 token information.
@@ -107,7 +107,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="visible"></param>
         /// <returns></returns>
         TronNetCreateTransactionRestJson UpdateAsset(string ownerAddress, string tokenDescription
-            , string tokenUrl, int newLimit, int newPublicLimit, int? permissionID, bool? visible);
+            , string tokenUrl, int newLimit, int newPublicLimit, int? permissionID, bool visible = true);
 
         /// <summary>
         /// Easy TRC10 token transfer. Create a TRC10 transfer transaction and broadcast directly.
@@ -119,7 +119,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="visible"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        TronNetCreateTransactionRestJson EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool? visible);
+        TronNetCreateTransactionRestJson EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool visible = true);
 
         /// <summary>
         /// TRC10 token easy transfer. Broadcast the created transaction directly.
@@ -131,6 +131,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="visible"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool? visible);
+        TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool visible = true);
     }
 }

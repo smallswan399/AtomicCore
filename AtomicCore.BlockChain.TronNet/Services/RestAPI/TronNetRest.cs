@@ -1072,8 +1072,8 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("amount must be greater than 0");
 
             //variables
-            string hex_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
-            string hex_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
             bool has_asset_id = int.TryParse(assetName, out _);
             if (!has_asset_id)
                 throw new ArgumentException("assert name error");
@@ -1081,8 +1081,8 @@ namespace AtomicCore.BlockChain.TronNet
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
-                to_address = hex_to_address,
+                owner_address = post_owner_address,
+                to_address = post_to_address,
                 asset_name = assetName,
                 amount,
                 visible
@@ -1139,7 +1139,7 @@ namespace AtomicCore.BlockChain.TronNet
             if (null == frozenSupply)
                 throw new ArgumentNullException(nameof(frozenSupply));
 
-            string hex_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
             string hex_token_name = TronNetUntils.StringToHexString(tokenName, true, Encoding.UTF8);
             string hex_token_abbr = TronNetUntils.StringToHexString(tokenAbbr, true, Encoding.UTF8);
             long start_time = TronNetUntils.LocalDatetimeToMillisecondTimestamp(startTime);
@@ -1151,7 +1151,7 @@ namespace AtomicCore.BlockChain.TronNet
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
+                owner_address = post_owner_address,
                 name = hex_token_name,
                 precision = tokenPrecision,
                 abbr = hex_token_abbr,
@@ -1176,7 +1176,7 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         /// <summary>
-        /// Participate sAssetIssue
+        /// Participate AssetIssue
         /// </summary>
         /// <param name="toAddress">to address</param>
         /// <param name="ownerAddress">owner address</param>
@@ -1196,8 +1196,8 @@ namespace AtomicCore.BlockChain.TronNet
                 throw new ArgumentException("amount must be greater than 0");
 
             //variables
-            string hex_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
-            string hex_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_to_address = visible ? toAddress : TronNetECKey.ConvertToHexAddress(toAddress);
             bool has_asset_id = int.TryParse(assetName, out _);
             if (!has_asset_id)
                 throw new ArgumentException("assert name error");
@@ -1205,8 +1205,8 @@ namespace AtomicCore.BlockChain.TronNet
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
-                to_address = hex_to_address,
+                owner_address = post_owner_address,
+                to_address = post_to_address,
                 asset_name = assetName,
                 amount,
                 visible
@@ -1222,27 +1222,25 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Unstake a token that has passed the minimum freeze duration.
         /// </summary>
-        /// <param name="ownerAddress"></param>
-        /// <param name="permissionID"></param>
-        /// <param name="visible"></param>
+        /// <param name="ownerAddress">owner address</param>
+        /// <param name="permissionID">permission id</param>
+        /// <param name="visible">Optional, Whether the address is in base58 format.</param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson UnfreezeAsset(string ownerAddress, int? permissionID = null, bool? visible = null)
+        public TronNetCreateTransactionRestJson UnfreezeAsset(string ownerAddress, int? permissionID = null, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
 
             //variables
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
 
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
+                owner_address = post_owner_address,
             };
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/unfreezeasset");
             string resp = this.RestPostJson(url, reqData);
@@ -1262,7 +1260,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="permissionID"></param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        public TronNetCreateTransactionRestJson UpdateAsset(string ownerAddress, string tokenDescription, string tokenUrl, int newLimit, int newPublicLimit, int? permissionID, bool? visible)
+        public TronNetCreateTransactionRestJson UpdateAsset(string ownerAddress, string tokenDescription, string tokenUrl, int newLimit, int newPublicLimit, int? permissionID, bool visible = true)
         {
             if (string.IsNullOrEmpty(ownerAddress))
                 throw new ArgumentNullException(nameof(ownerAddress));
@@ -1271,23 +1269,22 @@ namespace AtomicCore.BlockChain.TronNet
             if (string.IsNullOrEmpty(tokenUrl))
                 throw new ArgumentNullException(nameof(tokenUrl));
 
-            string hex_owner_address = TronNetECKey.ConvertToHexAddress(ownerAddress);
+            string post_owner_address = visible ? ownerAddress : TronNetECKey.ConvertToHexAddress(ownerAddress);
             string hex_token_desc = TronNetUntils.StringToHexString(tokenDescription, true, Encoding.UTF8);
             string hex_url = TronNetUntils.StringToHexString(tokenUrl, true, Encoding.UTF8);
 
             //create request data
             dynamic reqData = new
             {
-                owner_address = hex_owner_address,
+                owner_address = post_owner_address,
                 description = hex_token_desc,
                 url = hex_url,
                 free_asset_net_limit = newLimit,
                 public_free_asset_net_limit = newPublicLimit,
+                visible
             };
             if (null != permissionID)
                 reqData.permission_id = permissionID.Value;
-            if (null != visible)
-                reqData.visible = visible.Value;
 
             string url = CreateFullNodeRestUrl("/wallet/updateasset");
             string resp = this.RestPostJson(url, reqData);
@@ -1306,7 +1303,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="visible"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        public TronNetCreateTransactionRestJson EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool? visible)
+        public TronNetCreateTransactionRestJson EasyTransferAsset(string passPhrase, string toAddress, string assetId, ulong amount, bool visible = true)
         {
             throw new NotImplementedException("Remote service has been removed");
         }
@@ -1321,7 +1318,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="visible"></param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        public TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool? visible)
+        public TronNetCreateTransactionRestJson EasyTransferAssetByPrivate(string privateKey, string toAddress, string assetId, ulong amount, bool visible = true)
         {
             throw new NotImplementedException("Remote service has been removed");
         }

@@ -14,15 +14,18 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="createTransaction">createTransaction Object</param>
         /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
+        [Obsolete("Remote service has been removed")]
         TronNetSignedTransactionRestJson GetTransactionSign(string privateKey, TronNetCreateTransactionRestJson createTransaction, bool visible = true);
 
         /// <summary>
         /// Broadcast Transaction
         /// </summary>
-        /// <param name="singedTransaction"></param>
+        /// <param name="createTransaction">singedTransaction Object</param>
+        /// <param name="signature">signature</param>
+        /// <param name="visible">Optional.Whehter the address is in base58 format</param>
         /// <returns></returns>
         [Obsolete("Remote service has been removed")]
-        TronNetResultJson BroadcastTransaction(TronNetSignedTransactionRestJson singedTransaction);
+        TronNetResultJson BroadcastTransaction(TronNetCreateTransactionRestJson createTransaction, string[] signature, bool visible = true);
 
         /// <summary>
         /// Broadcast Hex

@@ -262,17 +262,21 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             string to = TronTestAccountCollection.TestA.Address;
             string from_priv = TronTestAccountCollection.TestMain.PirvateKey;
 
-            TronNetCreateTransactionRestJson createTransaction = testRestAPI.CreateTransaction(
-                from,
-                to,
+            //create transaction
+            TronNetCreateTransactionRestJson createTransaction = _restAPI.CreateTransaction(
+                "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm",
+                "TEEBzBuyVvE2YT1ub3xHe9UtcfwXtS1KeV",
                 1
             );
             Assert.IsTrue(!string.IsNullOrEmpty(createTransaction.TxID));
 
-            TronNetSignedTransactionRestJson signTransaction = testRestAPI.GetTransactionSign(from_priv, createTransaction);
+            string json_raw_data = Newtonsoft.Json.JsonConvert.SerializeObject(createTransaction);
 
-            TronNetResultJson result = testRestAPI.BroadcastTransaction(signTransaction);
+            //sign transaction
+            TronNetSignedTransactionRestJson signTransaction = _restAPI.GetTransactionSign(from_priv, createTransaction);
 
+            //broadcast transaction
+            TronNetResultJson result = testRestAPI.BroadcastTransaction(createTransaction, signTransaction.Signature);
             Assert.IsTrue(result.Result);
         }
 

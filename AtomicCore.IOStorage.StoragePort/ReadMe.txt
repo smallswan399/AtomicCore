@@ -1,0 +1,1 @@
+docker build -t 13871772983/atomiccore.iostorage.storageport .

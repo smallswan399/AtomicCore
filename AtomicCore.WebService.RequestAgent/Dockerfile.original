@@ -6,8 +6,8 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["AtomicCore.WebService.RequestAgent/AtomicCore.WebService.RequestAgent.csproj", "AtomicCore.WebService.RequestAgent/"]
-COPY ["AtomicCore/AtomicCore.csproj", "AtomicCore/"]
+COPY ["/AtomicCore.WebService.RequestAgent/AtomicCore.WebService.RequestAgent.csproj", "AtomicCore.WebService.RequestAgent/"]
+COPY ["/AtomicCore/AtomicCore.csproj", "AtomicCore/"]
 RUN dotnet restore "AtomicCore.WebService.RequestAgent/AtomicCore.WebService.RequestAgent.csproj"
 COPY . .
 WORKDIR "/src/AtomicCore.WebService.RequestAgent"

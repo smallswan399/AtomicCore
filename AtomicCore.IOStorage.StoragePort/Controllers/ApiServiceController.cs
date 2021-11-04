@@ -185,8 +185,12 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
 
                 //计算存储路径 + 上传文件
                 string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
+                Console.WriteLine($"--> savePath is {savePath},ready to save file!");
+
+                //开始异步写入磁盘
                 await WriteFileAsync(stream, savePath);
 
+                //获取当前文件存储的相对路径
                 relativePath = this.GetRelativePath(bizFolder, indexFolder, fileName);
             }
 
@@ -270,6 +274,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             Console.WriteLine($"--> check directory '{bizFolder}' exists?");
             if (!Directory.Exists(io_bizFolder))
             {
+                Console.WriteLine($"--> io_bizFolder path is '{io_bizFolder}' has not exists......");
                 Console.WriteLine($"--> directory '{bizFolder}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_bizFolder);
             }

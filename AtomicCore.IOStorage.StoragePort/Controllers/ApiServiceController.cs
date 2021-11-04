@@ -61,7 +61,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         public async Task<IActionResult> UploadingStream(string bizFolder, string indexFolder)
         {
             //权限判断
-            if(!this.HasPremission)
+            if (!this.HasPremission)
                 return Ok(new BizIOBatchUploadJsonResult("forbidden"));
 
             //基础判断
@@ -247,16 +247,34 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 throw new ArgumentNullException(nameof(bizFolder));
 
             string io_wwwroot = this._pathProvider.MapPath(string.Empty);
+            Console.WriteLine($"--> check wwwroot path '{io_wwwroot}' exists?");
             if (!Directory.Exists(io_wwwroot))
+            {
+                Console.WriteLine($"--> io wwwroot path '{io_wwwroot}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_wwwroot);
+            }
+            else
+                Console.WriteLine($"--> io wwwroot path '{io_wwwroot}' has existed...");
 
             string io_saveRoot = this._pathProvider.MapPath(string.Format("{0}", _pathProvider.SaveRootDir));
+            Console.WriteLine($"--> check save root path '{io_saveRoot}' exists?");
             if (!Directory.Exists(io_saveRoot))
+            {
+                Console.WriteLine($"--> save root path '{io_saveRoot}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_saveRoot);
+            }
+            else
+                Console.WriteLine($"--> save root path '{io_saveRoot}' has existed...");
 
             string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}", _pathProvider.SaveRootDir, bizFolder));
+            Console.WriteLine($"--> check directory '{bizFolder}' exists?");
             if (!Directory.Exists(io_bizFolder))
+            {
+                Console.WriteLine($"--> directory '{bizFolder}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_bizFolder);
+            }
+            else
+                Console.WriteLine($"--> directory '{bizFolder}' has existed...");
 
             string io_indexFolder;
             if (string.IsNullOrEmpty(indexFolder))

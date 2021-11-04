@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,9 +70,10 @@ namespace AtomicCore.IOStorage.StoragePort
             #region 运行环境部署（Linux or IIS）
 
             //如果部署在linux系统上，需要加上下面的配置：
-            //services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
+            services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
+
             //如果部署在IIS上，需要加上下面的配置：
-            //services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
+            services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
 
             #endregion
 

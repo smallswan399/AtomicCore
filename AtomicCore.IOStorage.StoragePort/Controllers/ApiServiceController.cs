@@ -108,7 +108,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                     string fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(buffer, false), fileExt);
 
                     //计算存储路径 + 上传文件
-                    string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
+                    string savePath = GetSaveIOPath(bizFolder, indexFolder, fileName);
                     await WriteFileAsync(buffer, savePath);
 
                     //将文件存储结果返回至集合
@@ -184,7 +184,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 string fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
 
                 //计算存储路径 + 上传文件
-                string savePath = this.GetSaveIOPath(bizFolder, indexFolder, fileName);
+                string savePath = GetSaveIOPath(bizFolder, indexFolder, fileName);
                 Console.WriteLine($"--> savePath is {savePath},ready to save file!");
 
                 //开始异步写入磁盘
@@ -225,7 +225,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
 
-            StringBuilder strb = new StringBuilder("/");
+            StringBuilder strb = new("/");
             strb.Append(_pathProvider.SaveRootDir);
             strb.Append('/');
             strb.Append(bizFolder);
@@ -247,48 +247,45 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <returns></returns>
         private string GetSaveIOPath(string bizFolder, string indexFolder, string fileName)
         {
+            //基础验证
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
 
+            //判断wwwroot文件夹是否存在,防止根目录不存在
             string io_wwwroot = this._pathProvider.MapPath(string.Empty);
-            Console.WriteLine($"--> check wwwroot path '{io_wwwroot}' exists?");
             if (!Directory.Exists(io_wwwroot))
-            {
-                Console.WriteLine($"--> io wwwroot path '{io_wwwroot}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_wwwroot);
-            }
-            else
-                Console.WriteLine($"--> io wwwroot path '{io_wwwroot}' has existed...");
 
-            string io_saveRoot = this._pathProvider.MapPath(string.Format("{0}", _pathProvider.SaveRootDir));
-            Console.WriteLine($"--> check save root path '{io_saveRoot}' exists?");
+            //判断wwwroot根目录下的逻辑存储根目录是否存在
+            string io_saveRoot = this._pathProvider.MapPath(_pathProvider.SaveRootDir);
             if (!Directory.Exists(io_saveRoot))
             {
                 Console.WriteLine($"--> save root path '{io_saveRoot}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_saveRoot);
             }
-            else
-                Console.WriteLine($"--> save root path '{io_saveRoot}' has existed...");
 
-            string io_bizFolder = this._pathProvider.MapPath(string.Format("{0}\\{1}", _pathProvider.SaveRootDir, bizFolder));
-            Console.WriteLine($"--> check directory '{bizFolder}' exists?");
+            //判断业务模块文件夹是否存在
+            string io_bizFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder));
             if (!Directory.Exists(io_bizFolder))
             {
                 Console.WriteLine($"--> io_bizFolder path is '{io_bizFolder}' has not exists......");
                 Console.WriteLine($"--> directory '{bizFolder}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_bizFolder);
             }
-            else
-                Console.WriteLine($"--> directory '{bizFolder}' has existed...");
 
+            //判断数据索引文件夹是否存在
             string io_indexFolder;
             if (string.IsNullOrEmpty(indexFolder))
                 io_indexFolder = io_bizFolder;
             else
             {
-                io_indexFolder = string.Format("{0}\\{1}", io_bizFolder, indexFolder);
+                io_indexFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder, indexFolder));
                 if (!Directory.Exists(io_indexFolder))
+                {
+                    Console.WriteLine($"--> io_indexFolder path is '{io_indexFolder}' has not exists......");
+                    Console.WriteLine($"--> directory '{indexFolder}' has not exists,ready to created!");
                     Directory.CreateDirectory(io_indexFolder);
+                }
             }
 
             return Path.Combine(io_indexFolder, fileName);
@@ -300,19 +297,19 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <param name="stream">流</param>
         /// <param name="path">文件保存路径</param>
         /// <returns></returns>
-        private async Task<int> WriteFileAsync(System.IO.Stream stream, string path)
+        private static async Task<int> WriteFileAsync(System.IO.Stream stream, string path)
         {
             const int FILE_WRITE_SIZE = 84975;
             int writeCount = 0;
 
-            using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write, FILE_WRITE_SIZE, true))
+            using (FileStream fileStream = new(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite, FILE_WRITE_SIZE, true))
             {
                 int readCount = 0;
                 byte[] byteArr = new byte[FILE_WRITE_SIZE];
 
-                while ((readCount = await stream.ReadAsync(byteArr, 0, byteArr.Length)) > 0)
+                while ((readCount = await stream.ReadAsync(byteArr.AsMemory(0, byteArr.Length))) > 0)
                 {
-                    await fileStream.WriteAsync(byteArr, 0, readCount);
+                    await fileStream.WriteAsync(byteArr.AsMemory(0, readCount));
                     writeCount += readCount;
                 }
             }
@@ -326,10 +323,10 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <param name="buffer">字节数组</param>
         /// <param name="path">文件保存路径</param>
         /// <returns></returns>
-        private async Task WriteFileAsync(byte[] buffer, string path)
+        private static async Task WriteFileAsync(byte[] buffer, string path)
         {
-            using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write))
-                await fs.WriteAsync(buffer.AsMemory(0, buffer.Length));
+            using FileStream fs = new(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            await fs.WriteAsync(buffer.AsMemory(0, buffer.Length));
         }
 
         /// <summary>
@@ -337,7 +334,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </summary>
         /// <param name="modelStateDic"></param>
         /// <returns></returns>
-        private string GetError(ModelStateDictionary modelStateDic)
+        private static string GetError(ModelStateDictionary modelStateDic)
         {
             foreach (var item in modelStateDic.Values)
             {

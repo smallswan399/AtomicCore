@@ -11,4 +11,4 @@ docker pull alpine
 
 docker run --name alpine-netcore-uploads -it -v uploads:/app/wwwroot/uploads alpine sh
 
-docker run -d -p 8777:80 --name=atomiccore.iostorage.storageport -it --volumes-from alpine-netcore-upload 13871772983/atomiccore.iostorage.storageport
+docker run -d -p 8777:80 --name=atomiccore.iostorage.storageport -it --volumes-from alpine-netcore-uploads 13871772983/atomiccore.iostorage.storageport

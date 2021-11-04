@@ -2,4 +2,4 @@ docker build -f "D:\GitHub_Pros\AtomicCore\AtomicCore.IOStorage.StoragePort\Dock
 
 docker push 13871772983/atomiccore.iostorage.storageport
 
-docker run -d -p 8778:80 --name=atomiccore.iostorage.storageport  13871772983/atomiccore.iostorage.storageport 
+docker run -d -p 8777:80 --name=atomiccore.iostorage.storageport  13871772983/atomiccore.iostorage.storageport 

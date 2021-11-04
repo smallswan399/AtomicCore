@@ -235,7 +235,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             else
                 strb.AppendFormat("{0}/{1}", indexFolder, fileName);
 
-            return strb.ToString();
+            return strb.ToString().ToLower();
         }
 
         /// <summary>
@@ -247,17 +247,25 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <returns></returns>
         private string GetSaveIOPath(string bizFolder, string indexFolder, string fileName)
         {
-            //基础验证
+            //判断业务文件夹是否为空
             if (string.IsNullOrEmpty(bizFolder))
                 throw new ArgumentNullException(nameof(bizFolder));
+            else
+                bizFolder = bizFolder.ToLower();
+
+            //判断文件名是否为空
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException(nameof(fileName));
+            else
+                fileName = fileName.ToLower();
 
             //判断wwwroot文件夹是否存在,防止根目录不存在
-            string io_wwwroot = this._pathProvider.MapPath(string.Empty);
+            string io_wwwroot = this._pathProvider.MapPath(string.Empty).ToLower();
             if (!Directory.Exists(io_wwwroot))
                 Directory.CreateDirectory(io_wwwroot);
 
             //判断wwwroot根目录下的逻辑存储根目录是否存在
-            string io_saveRoot = this._pathProvider.MapPath(_pathProvider.SaveRootDir);
+            string io_saveRoot = this._pathProvider.MapPath(_pathProvider.SaveRootDir).ToLower();
             if (!Directory.Exists(io_saveRoot))
             {
                 Console.WriteLine($"--> save root path '{io_saveRoot}' has not exists,ready to created!");
@@ -265,7 +273,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             }
 
             //判断业务模块文件夹是否存在
-            string io_bizFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder));
+            string io_bizFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder)).ToLower();
             if (!Directory.Exists(io_bizFolder))
             {
                 Console.WriteLine($"--> io_bizFolder path is '{io_bizFolder}' has not exists......");
@@ -279,7 +287,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 io_indexFolder = io_bizFolder;
             else
             {
-                io_indexFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder, indexFolder));
+                indexFolder = indexFolder.ToLower();
+                io_indexFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder, indexFolder)).ToLower();
                 if (!Directory.Exists(io_indexFolder))
                 {
                     Console.WriteLine($"--> io_indexFolder path is '{io_indexFolder}' has not exists......");

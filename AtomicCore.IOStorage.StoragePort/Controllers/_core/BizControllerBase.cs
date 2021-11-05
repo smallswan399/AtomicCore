@@ -60,7 +60,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 this.HasPremission = pathSrvProvider.AppToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase);
 
                 if (!this.HasPremission)
-                    Console.WriteLine($"--> app token is illegal, token must start with '{pathSrvProvider.AppToken.Substring(4)}*************.....'");
+                    Console.WriteLine($"--> app token is illegal, current request token is '{headTK}'");
             }
         }
 

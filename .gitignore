@@ -332,3 +332,5 @@ UpgradeLog*.XML
 /AtomicCore.Integration.MysqlDbProvider/bin
 /AtomicCore.IOStorage.StoragePort/Uploads
 /AtomicCore.IOStorage.StoragePort/wwwroot/Uploads
+/AtomicCore.IOStorage.StoragePort/ReadMe.txt
+/AtomicCore.IOStorage.StoragePort/ReadMe.txt

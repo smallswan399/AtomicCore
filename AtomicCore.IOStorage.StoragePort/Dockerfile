@@ -1,23 +1,17 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+﻿# syntax=docker/dockerfile:1
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /app
-EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /src
-COPY ["AtomicCore.IOStorage.StoragePort/AtomicCore.IOStorage.StoragePort.csproj", "AtomicCore.IOStorage.StoragePort/"]
-COPY ["AtomicCore/AtomicCore.csproj", "AtomicCore/"]
-COPY ["AtomicCore.IOStorage.Core/AtomicCore.IOStorage.Core.csproj", "AtomicCore.IOStorage.Core/"]
-RUN dotnet restore "AtomicCore.IOStorage.StoragePort/AtomicCore.IOStorage.StoragePort.csproj"
-COPY . .
-WORKDIR "/src/AtomicCore.IOStorage.StoragePort"
-RUN dotnet build "AtomicCore.IOStorage.StoragePort.csproj" -c Release -o /app/build
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore "AtomicCore.IOStorage.StoragePort.csproj"
 
-FROM build AS publish
-RUN dotnet publish "AtomicCore.IOStorage.StoragePort.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish "AtomicCore.IOStorage.StoragePort.csproj" -c Release -o out
 
-FROM base AS final
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "AtomicCore.IOStorage.StoragePort.dll"]

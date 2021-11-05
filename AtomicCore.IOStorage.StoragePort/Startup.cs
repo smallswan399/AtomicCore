@@ -70,10 +70,23 @@ namespace AtomicCore.IOStorage.StoragePort
             #region 运行环境部署（Linux or IIS）
 
             //如果部署在linux系统上，需要加上下面的配置：
-            services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
+            //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options?view=aspnetcore-5.0#maximum-client-connections
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+
+                // Handle requests up to 50 MB
+                options.Limits.MaxRequestBodySize = 52428800;
+            });
 
             //如果部署在IIS上，需要加上下面的配置：
-            services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+
+                // Handle requests up to 50 MB
+                options.MaxRequestBodySize = 52428800;
+            });
 
             #endregion
 

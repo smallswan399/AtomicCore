@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using System;
 
@@ -10,36 +10,25 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
     /// </summary>
     public abstract class BizControllerBase : Controller, IBizPremissionIntercept
     {
+        #region Variables
+
         /// <summary>
         /// 头部信息Token
         /// </summary>
         private const string c_head_token = "token";
 
-        private bool _hasReadConfig = false;
-        private BizIOStorageConfig _ioStorageConfig = null;
+        #endregion
 
-        /// <summary>
-        /// 存储配置数据
-        /// </summary>
-        public BizIOStorageConfig IOStorageConfig
-        {
-            get
-            {
-                if (null == this._ioStorageConfig || !_hasReadConfig)
-                {
-                    Type srvType = typeof(IOptionsMonitor<>).MakeGenericType(typeof(BizIOStorageConfig));
-                    IOptionsMonitor<BizIOStorageConfig> opm = (IOptionsMonitor<BizIOStorageConfig>)this.HttpContext.RequestServices.GetService(srvType);
-                    this._ioStorageConfig = opm.CurrentValue;
-                }
-
-                return this._ioStorageConfig;
-            }
-        }
+        #region Public Propertys
 
         /// <summary>
         /// 是否有权限
         /// </summary>
         public bool HasPremission { get; private set; } = true;
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// 请求拦截处理
@@ -47,17 +36,29 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <param name="requestContext"></param>
         public void OnIntercept(ActionContext requestContext)
         {
-            //判断系统是否配置了token权限
-            string cfgToken = null == this.IOStorageConfig ? string.Empty : this.IOStorageConfig.AppToken;
-            if (string.IsNullOrEmpty(cfgToken))
+            //判断接口实例是否获取的到
+            IBizPathSrvProvider pathSrvProvider = requestContext.HttpContext.RequestServices.GetService<IBizPathSrvProvider>();
+            if (null == pathSrvProvider)
+            {
+                Console.WriteLine($"'{nameof(IBizPathSrvProvider)}' is null, are you register the interface of '{nameof(IBizPathSrvProvider)}' in startup?");
+                this.HasPremission = false;
                 return;
+            }
+            if(string.IsNullOrEmpty(pathSrvProvider.AppToken))
+            {
+                Console.WriteLine($"'{nameof(pathSrvProvider.AppToken)}' is null, are you setting the env or appsetting?");
+                this.HasPremission = false;
+                return;
+            }
 
             //判断头部是否包含token
             bool hasHeadToken = requestContext.HttpContext.Request.Headers.TryGetValue(c_head_token, out StringValues headTK);
             if (!hasHeadToken)
                 this.HasPremission = false;
             else
-                this.HasPremission = cfgToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase);
+                this.HasPremission = pathSrvProvider.AppToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase);
         }
+
+        #endregion
     }
 }

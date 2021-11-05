@@ -6,6 +6,11 @@
     public interface IBizPathSrvProvider
     {
         /// <summary>
+        /// appToken密钥
+        /// </summary>
+        string AppToken { get; }
+
+        /// <summary>
         /// 文件存储根目录
         /// </summary>
         string SaveRootDir { get; }

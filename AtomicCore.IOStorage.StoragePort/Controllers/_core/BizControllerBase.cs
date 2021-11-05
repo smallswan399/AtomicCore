@@ -40,13 +40,13 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             IBizPathSrvProvider pathSrvProvider = requestContext.HttpContext.RequestServices.GetService<IBizPathSrvProvider>();
             if (null == pathSrvProvider)
             {
-                Console.WriteLine($"'{nameof(IBizPathSrvProvider)}' is null, are you register the interface of '{nameof(IBizPathSrvProvider)}' in startup?");
+                Console.WriteLine($"--> '{nameof(IBizPathSrvProvider)}' is null, are you register the interface of '{nameof(IBizPathSrvProvider)}' in startup?");
                 this.HasPremission = false;
                 return;
             }
             if(string.IsNullOrEmpty(pathSrvProvider.AppToken))
             {
-                Console.WriteLine($"'{nameof(pathSrvProvider.AppToken)}' is null, are you setting the env or appsetting?");
+                Console.WriteLine($"--> '{nameof(pathSrvProvider.AppToken)}' is null, are you setting the env or appsetting?");
                 this.HasPremission = false;
                 return;
             }
@@ -56,7 +56,12 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             if (!hasHeadToken)
                 this.HasPremission = false;
             else
+            {
                 this.HasPremission = pathSrvProvider.AppToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase);
+
+                if (!this.HasPremission)
+                    Console.WriteLine($"--> app token is illegal, token must start with '{pathSrvProvider.AppToken.Substring(4)}*************.....'");
+            }
         }
 
         #endregion

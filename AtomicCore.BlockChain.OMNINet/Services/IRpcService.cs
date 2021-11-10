@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.OMNINet
 {
+    /// <summary>
+    /// IRpcService
+    /// </summary>
     public interface IRpcService
     {
         string AddMultiSigAddress(int nRquired, List<string> publicKeys, string account = null);

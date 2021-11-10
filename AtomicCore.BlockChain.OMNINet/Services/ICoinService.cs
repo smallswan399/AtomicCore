@@ -6,7 +6,11 @@ namespace AtomicCore.BlockChain.OMNINet
     /// <summary>
     /// 数字货币服务接口定义
     /// </summary>
-    public interface ICoinService : IRpcService, IRpcExtenderService, ICoinParameters
+    public interface ICoinService : IRpcService, IRpcExtenderService
     {
+        /// <summary>
+        /// Parameters
+        /// </summary>
+        CoinParameters Parameters { get; }
     }
 }

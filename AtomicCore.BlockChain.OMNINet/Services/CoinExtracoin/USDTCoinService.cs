@@ -55,6 +55,8 @@ namespace AtomicCore.BlockChain.OMNINet
             get { return ExtracoinConstants.Constants.Instance; }
         }
 
+        ExtracoinConstants.Constants IExtracoinConstants.Constants => throw new System.NotImplementedException();
+
         #endregion
 
         #region IUSDTCoinService Methods
@@ -128,6 +130,41 @@ namespace AtomicCore.BlockChain.OMNINet
         public string OMNIFundedSendALL(string fromAddress, string toAddress, string feeAddress, int ecosystem = 1)
         {
             return _rpcConnector.MakeRequest<string>(RpcMethods.omni_funded_sendall, fromAddress, toAddress, ecosystem, feeAddress);
+        }
+
+        OMNI_GetInfoResponse IUSDTCoinService.GetOMNIInfo()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        OMNI_AddressBalanceResponse IUSDTCoinService.GetOMINBalance(string address, int propertyid)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        List<OMNI_WalletAddressBalanceResponse> IUSDTCoinService.GetOMNIWalletAddressBalances()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        string[] IUSDTCoinService.GetOMNIListBlockTransactions(ulong index)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        OMNI_GetTransactionResponse IUSDTCoinService.GetOMNITransaction(string txid)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        string IUSDTCoinService.OMNIFundedSend(string fromAddress, string toAddress, string feeAddress, decimal amount, int propertyid)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        string IUSDTCoinService.OMNIFundedSendALL(string fromAddress, string toAddress, string feeAddress, int ecosystem)
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

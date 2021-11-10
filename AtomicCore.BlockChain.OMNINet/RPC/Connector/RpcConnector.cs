@@ -74,9 +74,7 @@ namespace AtomicCore.BlockChain.OMNINet
             {
                 #region RPC Internal Server Error (with an Error Code)
 
-                HttpWebResponse webResponse = webException.Response as HttpWebResponse;
-
-                if (webResponse != null)
+                if (webException.Response is HttpWebResponse webResponse)
                 {
                     switch (webResponse.StatusCode)
                     {
@@ -207,9 +205,7 @@ namespace AtomicCore.BlockChain.OMNINet
             {
                 #region RPC Internal Server Error (with an Error Code)
 
-                HttpWebResponse webResponse = webException.Response as HttpWebResponse;
-
-                if (webResponse != null)
+                if (webException.Response is HttpWebResponse webResponse)
                 {
                     switch (webResponse.StatusCode)
                     {
@@ -256,9 +252,7 @@ namespace AtomicCore.BlockChain.OMNINet
                 #region RPC Time-Out
 
                 if (webException.Message == "The operation has timed out")
-                {
                     throw new RpcRequestTimeoutException(webException.Message);
-                }
 
                 #endregion
 

@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
@@ -17,15 +19,16 @@ namespace AtomicCore.BlockChain.OMNINet
     /// (note: this list is often out-of-date so call "help" in your bitcoin-cli 
     /// to get the latest signatures)
     /// </remarks>
-    public partial class CoinService : ICoinService
+    public class CoinService : ICoinService
     {
+        #region Variables
+
         protected readonly IRpcConnector _rpcConnector;
 
-        #region 构造函数
+        #endregion
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
+        #region Constructor
+
         public CoinService()
         {
             _rpcConnector = new RpcConnector(this);
@@ -52,6 +55,28 @@ namespace AtomicCore.BlockChain.OMNINet
         }
 
         #endregion
+
+        #region Propertys
+
+        /// <summary>
+        /// parameters ready only
+        /// </summary>
+        public CoinParameters Parameters { get; private set; }
+
+        CoinService ICoinParameters.Parameters => throw new NotImplementedException();
+
+        #endregion
+
+        #region Override Methods
+
+        public override string ToString()
+        {
+            return Parameters.CoinLongName;
+        }
+
+        #endregion
+
+        #region Rpc Service
 
         public string AddMultiSigAddress(int nRquired, List<string> publicKeys, string account)
         {
@@ -674,9 +699,528 @@ namespace AtomicCore.BlockChain.OMNINet
             return _rpcConnector.MakeRequest<string>(RpcMethods.walletpassphrasechange, oldPassphrase, newPassphrase);
         }
 
-        public override string ToString()
+        #endregion
+
+        #region RpcExtender Service
+
+        //  Note: This will return funky results if the address in question along with its private key have been used to create a multisig address with unspent funds
+        public decimal GetAddressBalance(string inWalletAddress, int minConf, bool validateAddressBeforeProcessing)
         {
-            return Parameters.CoinLongName;
+            if (validateAddressBeforeProcessing)
+            {
+                ValidateAddressResponse validateAddressResponse = ValidateAddress(inWalletAddress);
+
+                if (!validateAddressResponse.IsValid)
+                {
+                    throw new GetAddressBalanceException(string.Format("Address {0} is invalid!", inWalletAddress));
+                }
+
+                if (!validateAddressResponse.IsMine)
+                {
+                    throw new GetAddressBalanceException(string.Format("Address {0} is not an in-wallet address!", inWalletAddress));
+                }
+            }
+
+            List<ListUnspentResponse> listUnspentResponses = ListUnspent(minConf, 9999999, new List<string>
+                {
+                    inWalletAddress
+                });
+
+            return listUnspentResponses.Any() ? listUnspentResponses.Sum(x => x.Amount) : 0;
         }
+
+        public string GetImmutableTxId(string txId, bool getSha256Hash)
+        {
+            GetRawTransactionResponse response = GetRawTransaction(txId, 1);
+            string text = response.Vin.First().TxId + "|" + response.Vin.First().Vout + "|" + response.Vout.First().Value;
+            return getSha256Hash ? Hashing.GetSha256(text) : text;
+        }
+
+        //  Get a rough estimate on fees for non-free txs, depending on the total number of tx inputs and outputs
+        [Obsolete("Please don't use this method to calculate tx fees, its purpose is to provide a rough estimate only")]
+        public decimal GetMinimumNonZeroTransactionFeeEstimate(short numberOfInputs = 1, short numberOfOutputs = 1)
+        {
+            CreateRawTransactionRequest rawTransactionRequest = new CreateRawTransactionRequest(new List<CreateRawTransactionInput>(numberOfInputs), new Dictionary<string, decimal>(numberOfOutputs));
+
+            for (short i = 0; i < numberOfInputs; i++)
+            {
+                rawTransactionRequest.AddInput(new CreateRawTransactionInput { TxId = "dummyTxId" + i.ToString(CultureInfo.InvariantCulture), Vout = i });
+            }
+
+            for (short i = 0; i < numberOfOutputs; i++)
+            {
+                rawTransactionRequest.AddOutput(new CreateRawTransactionOutput { Address = "dummyAddress" + i.ToString(CultureInfo.InvariantCulture), Amount = i + 1 });
+            }
+
+            return GetTransactionFee(rawTransactionRequest, false, true);
+        }
+
+        public Dictionary<string, string> GetMyPublicAndPrivateKeyPairs()
+        {
+            const short secondsToUnlockTheWallet = 30;
+            Dictionary<string, string> keyPairs = new Dictionary<string, string>();
+            WalletPassphrase(Parameters.WalletPassword, secondsToUnlockTheWallet);
+            List<ListReceivedByAddressResponse> myAddresses = (this as ICoinService).ListReceivedByAddress(0, true);
+
+            foreach (ListReceivedByAddressResponse listReceivedByAddressResponse in myAddresses)
+            {
+                ValidateAddressResponse validateAddressResponse = ValidateAddress(listReceivedByAddressResponse.Address);
+
+                if (validateAddressResponse.IsMine && validateAddressResponse.IsValid && !validateAddressResponse.IsScript)
+                {
+                    string privateKey = DumpPrivKey(listReceivedByAddressResponse.Address);
+                    keyPairs.Add(validateAddressResponse.PubKey, privateKey);
+                }
+            }
+
+            WalletLock();
+            return keyPairs;
+        }
+
+        //  Note: As RPC's gettransaction works only for in-wallet transactions this had to be extended so it will work for every single transaction.
+        public DecodeRawTransactionResponse GetPublicTransaction(string txId)
+        {
+            string rawTransaction = GetRawTransaction(txId, 0).Hex;
+            return DecodeRawTransaction(rawTransaction);
+        }
+
+        [Obsolete("Please use EstimateFee() instead. You can however keep on using this method until the network fully adjusts to the new rules on fee calculation")]
+        public decimal GetTransactionFee(CreateRawTransactionRequest transaction, bool checkIfTransactionQualifiesForFreeRelay, bool enforceMinimumTransactionFeePolicy)
+        {
+            if (checkIfTransactionQualifiesForFreeRelay && IsTransactionFree(transaction))
+            {
+                return 0;
+            }
+
+            decimal transactionSizeInBytes = GetTransactionSizeInBytes(transaction);
+            decimal transactionFee = ((transactionSizeInBytes / Parameters.FreeTransactionMaximumSizeInBytes) + (transactionSizeInBytes % Parameters.FreeTransactionMaximumSizeInBytes == 0 ? 0 : 1)) * Parameters.FeePerThousandBytesInCoins;
+
+            if (transactionFee.GetNumberOfDecimalPlaces() > Parameters.CoinsPerBaseUnit.GetNumberOfDecimalPlaces())
+            {
+                transactionFee = decimal.Round(transactionFee, Parameters.CoinsPerBaseUnit.GetNumberOfDecimalPlaces(), MidpointRounding.AwayFromZero);
+            }
+
+            if (enforceMinimumTransactionFeePolicy && Parameters.MinimumTransactionFeeInCoins != 0 && transactionFee < Parameters.MinimumTransactionFeeInCoins)
+            {
+                transactionFee = Parameters.MinimumTransactionFeeInCoins;
+            }
+
+            return transactionFee;
+        }
+
+        public GetRawTransactionResponse GetRawTxFromImmutableTxId(string rigidTxId, int listTransactionsCount, int listTransactionsFrom, bool getRawTransactionVersbose, bool rigidTxIdIsSha256)
+        {
+            List<ListTransactionsResponse> allTransactions = (this as ICoinService).ListTransactions("*", listTransactionsCount, listTransactionsFrom);
+
+            return (from listTransactionsResponse in allTransactions
+                    where rigidTxId == GetImmutableTxId(listTransactionsResponse.TxId, rigidTxIdIsSha256)
+                    select GetRawTransaction(listTransactionsResponse.TxId, getRawTransactionVersbose ? 1 : 0)).FirstOrDefault();
+        }
+
+        public decimal GetTransactionPriority(CreateRawTransactionRequest transaction)
+        {
+            if (transaction.Inputs.Count == 0)
+            {
+                return 0;
+            }
+
+            List<ListUnspentResponse> unspentInputs = (this as ICoinService).ListUnspent(0).ToList();
+            decimal sumOfInputsValueInBaseUnitsMultipliedByTheirAge = transaction.Inputs.Select(input => unspentInputs.First(x => x.TxId == input.TxId)).Select(unspentResponse => (unspentResponse.Amount * Parameters.OneCoinInBaseUnits) * unspentResponse.Confirmations).Sum();
+            return sumOfInputsValueInBaseUnitsMultipliedByTheirAge / GetTransactionSizeInBytes(transaction);
+        }
+
+        public decimal GetTransactionPriority(IList<ListUnspentResponse> transactionInputs, int numberOfOutputs)
+        {
+            if (transactionInputs.Count == 0)
+            {
+                return 0;
+            }
+
+            return transactionInputs.Sum(input => input.Amount * Parameters.OneCoinInBaseUnits * input.Confirmations) / GetTransactionSizeInBytes(transactionInputs.Count, numberOfOutputs);
+        }
+
+        //  Note: Be careful when using GetTransactionSenderAddress() as it just gives you an address owned by someone who previously controlled the transaction's outputs
+        //  which might not actually be the sender (e.g. for e-wallets) and who may not intend to receive anything there in the first place. 
+        [Obsolete("Please don't use this method in production enviroment, it's for testing purposes only")]
+        public string GetTransactionSenderAddress(string txId)
+        {
+            string rawTransaction = GetRawTransaction(txId, 0).Hex;
+            DecodeRawTransactionResponse decodedRawTransaction = DecodeRawTransaction(rawTransaction);
+            List<Vin> transactionInputs = decodedRawTransaction.Vin;
+            string rawTransactionHex = GetRawTransaction(transactionInputs[0].TxId, 0).Hex;
+            DecodeRawTransactionResponse inputDecodedRawTransaction = DecodeRawTransaction(rawTransactionHex);
+            List<Vout> vouts = inputDecodedRawTransaction.Vout;
+            return vouts[0].ScriptPubKey.Addresses[0];
+        }
+
+        public int GetTransactionSizeInBytes(CreateRawTransactionRequest transaction)
+        {
+            return GetTransactionSizeInBytes(transaction.Inputs.Count, transaction.Outputs.Count);
+        }
+
+        public int GetTransactionSizeInBytes(int numberOfInputs, int numberOfOutputs)
+        {
+            return numberOfInputs * Parameters.TransactionSizeBytesContributedByEachInput
+                   + numberOfOutputs * Parameters.TransactionSizeBytesContributedByEachOutput
+                   + Parameters.TransactionSizeFixedExtraSizeInBytes
+                   + numberOfInputs;
+        }
+
+        public bool IsInWalletTransaction(string txId)
+        {
+            //  Note: This might not be efficient if iterated, consider caching ListTransactions' results.
+            return (this as ICoinService).ListTransactions(null, int.MaxValue).Any(listTransactionsResponse => listTransactionsResponse.TxId == txId);
+        }
+
+        public bool IsTransactionFree(CreateRawTransactionRequest transaction)
+        {
+            return transaction.Outputs.Any(x => x.Value < Parameters.FreeTransactionMinimumOutputAmountInCoins)
+                   && GetTransactionSizeInBytes(transaction) < Parameters.FreeTransactionMaximumSizeInBytes
+                   && GetTransactionPriority(transaction) > Parameters.FreeTransactionMinimumPriority;
+        }
+
+        public bool IsTransactionFree(IList<ListUnspentResponse> transactionInputs, int numberOfOutputs, decimal minimumAmountAmongOutputs)
+        {
+            return minimumAmountAmongOutputs < Parameters.FreeTransactionMinimumOutputAmountInCoins
+                   && GetTransactionSizeInBytes(transactionInputs.Count, numberOfOutputs) < Parameters.FreeTransactionMaximumSizeInBytes
+                   && GetTransactionPriority(transactionInputs, numberOfOutputs) > Parameters.FreeTransactionMinimumPriority;
+        }
+
+        public bool IsWalletEncrypted()
+        {
+            return !Help(RpcMethods.walletlock.ToString()).Contains("unknown command");
+        }
+
+        #endregion
+
+        #region Child Class
+
+        /// <summary>
+        /// digital currency parameter definition
+        /// </summary>
+        public class CoinParameters
+        {
+            #region Constructor
+
+            /// <summary>
+            /// constructor
+            /// </summary>
+            /// <param name="coinService"></param>
+            /// <param name="daemonUrl"></param>
+            /// <param name="rpcUsername"></param>
+            /// <param name="rpcPassword"></param>
+            /// <param name="walletPassword"></param>
+            /// <param name="rpcRequestTimeoutInSeconds"></param>
+            public CoinParameters(ICoinService coinService,
+                string daemonUrl,
+                string rpcUsername,
+                string rpcPassword,
+                string walletPassword,
+                short rpcRequestTimeoutInSeconds)
+            {
+                #region 设置RPC请求URL地址
+
+                CoinRpcSetting rpcSetting = null;
+
+                if (!string.IsNullOrWhiteSpace(daemonUrl))
+                {
+                    DaemonUrl = daemonUrl;
+                    RpcUsername = rpcUsername;
+                    RpcPassword = rpcPassword;
+                    WalletPassword = walletPassword;
+
+                    // this will force the CoinParameters.SelectedDaemonUrl dynamic property to automatically pick the daemonUrl defined above
+                    UseTestnet = false;
+
+                    // ignore config files
+                    IgnoreConfigFiles = true;
+                }
+                else
+                    rpcSetting = CoinRpcSetting.LoadFromConfig();
+
+                #endregion
+
+                #region 设置或读取RPC请求超时设置
+
+                if (IgnoreConfigFiles)
+                    if (rpcRequestTimeoutInSeconds > 0)
+                        RpcRequestTimeoutInSeconds = rpcRequestTimeoutInSeconds;
+                    else
+                        RpcRequestTimeoutInSeconds = 60;
+                else
+                    RpcRequestTimeoutInSeconds = (short)rpcSetting.RpcTimeout;
+
+                #endregion
+
+                #region 配置加载策略
+
+                if (IgnoreConfigFiles && (string.IsNullOrWhiteSpace(DaemonUrl) || string.IsNullOrWhiteSpace(RpcUsername) || string.IsNullOrWhiteSpace(RpcPassword)))
+                {
+                    throw new Exception(string.Format("One or more required parameters, as defined in {0}, were not found in the configuration file!", GetType().Name));
+                }
+
+                if (IgnoreConfigFiles && Debugger.IsAttached && string.IsNullOrWhiteSpace(WalletPassword))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("[WARNING] The wallet password is either null or empty");
+                    Console.ResetColor();
+                }
+
+                if (!IgnoreConfigFiles)
+                {
+                    //获取值
+                    DaemonUrl = rpcSetting.RpcUrl;
+                    if (string.IsNullOrEmpty(DaemonUrl))
+                        throw new Exception("DaemonUrl is null or empty");
+
+                    DaemonUrlTestnet = rpcSetting.RpcTestnet;
+                    if (string.IsNullOrEmpty(DaemonUrlTestnet))
+                        DaemonUrlTestnet = DaemonUrl;
+
+                    RpcUsername = rpcSetting.RpcUserName;
+                    RpcPassword = rpcSetting.RpcPassword;
+                    WalletPassword = rpcSetting.WalletPassword;
+                    if (string.IsNullOrEmpty(WalletPassword))
+                        WalletPassword = string.Empty;
+                }
+
+                #endregion
+
+                #region 货币配置加载
+
+                if (coinService is ExtracoinService)
+                {
+                    #region BTC COIN
+
+                    CoinShortName = "BTC";//modify
+                    CoinLongName = "Bit Coin ";//modify
+                    IsoCurrencyCode = "XBT";//比特币是XBT,X开头即可
+
+                    TransactionSizeBytesContributedByEachInput = 148;
+                    TransactionSizeBytesContributedByEachOutput = 34;
+                    TransactionSizeFixedExtraSizeInBytes = 10;
+
+                    FreeTransactionMaximumSizeInBytes = 1000;
+                    FreeTransactionMinimumOutputAmountInCoins = 0.01M;
+                    FreeTransactionMinimumPriority = 57600000;
+                    FeePerThousandBytesInCoins = 0.0001M;
+                    MinimumTransactionFeeInCoins = 0.0001M;
+                    MinimumNonDustTransactionAmountInCoins = 0.0000543M;
+
+                    TotalCoinSupplyInCoins = 21000000;
+                    EstimatedBlockGenerationTimeInMinutes = 10;
+                    BlocksHighestPriorityTransactionsReservedSizeInBytes = 50000;
+
+                    BaseUnitName = "Satoshi";
+                    BaseUnitsPerCoin = 100000000;
+                    CoinsPerBaseUnit = 0.00000001M;
+
+                    #endregion
+                }
+                else if (coinService is BlackCoinService)
+                {
+                    #region BLOCK COIN
+
+                    CoinShortName = "HBC";//modify
+                    CoinLongName = "Blackcoin ";//modify
+                    IsoCurrencyCode = "XHB";//比特币是XBT,X开头即可
+
+                    TransactionSizeBytesContributedByEachInput = 148;
+                    TransactionSizeBytesContributedByEachOutput = 34;
+                    TransactionSizeFixedExtraSizeInBytes = 10;
+
+                    FreeTransactionMaximumSizeInBytes = 1000;
+                    FreeTransactionMinimumOutputAmountInCoins = 0.01M;
+                    FreeTransactionMinimumPriority = 57600000;
+                    FeePerThousandBytesInCoins = 0.0001M;
+                    MinimumTransactionFeeInCoins = 0.0001M;
+                    MinimumNonDustTransactionAmountInCoins = 0.0000543M;
+
+                    TotalCoinSupplyInCoins = 21000000;
+                    EstimatedBlockGenerationTimeInMinutes = 10;
+                    BlocksHighestPriorityTransactionsReservedSizeInBytes = 50000;
+
+                    BaseUnitName = "Satoshi";
+                    BaseUnitsPerCoin = 100000000;
+                    CoinsPerBaseUnit = 0.00000001M;
+
+                    #endregion
+                }
+                else if (coinService is USDTCoinService)
+                {
+                    #region USDT COIN
+
+                    CoinShortName = "USDT";//modify
+                    CoinLongName = "TetherUS ";//modify
+                    IsoCurrencyCode = "XUSDT";//比特币是XBT,X开头即可
+
+                    TransactionSizeBytesContributedByEachInput = 148;
+                    TransactionSizeBytesContributedByEachOutput = 34;
+                    TransactionSizeFixedExtraSizeInBytes = 10;
+
+                    FreeTransactionMaximumSizeInBytes = 1000;
+                    FreeTransactionMinimumOutputAmountInCoins = 0.01M;
+                    FreeTransactionMinimumPriority = 57600000;
+                    FeePerThousandBytesInCoins = 0.0001M;
+                    MinimumTransactionFeeInCoins = 0.0001M;
+                    MinimumNonDustTransactionAmountInCoins = 0.0000543M;
+
+                    TotalCoinSupplyInCoins = 21000000;
+                    EstimatedBlockGenerationTimeInMinutes = 10;
+                    BlocksHighestPriorityTransactionsReservedSizeInBytes = 50000;
+
+                    BaseUnitName = "Satoshi";
+                    BaseUnitsPerCoin = 100000000;
+                    CoinsPerBaseUnit = 0.00000001M;
+
+                    #endregion
+                }
+                else
+                    throw new Exception("Unknown coin!");
+
+                #endregion
+
+                #region Invalid configuration / Missing parameters
+
+                if (RpcRequestTimeoutInSeconds <= 0)
+                {
+                    throw new Exception("RpcRequestTimeoutInSeconds must be greater than zero");
+                }
+
+                if (string.IsNullOrWhiteSpace(DaemonUrl)
+                    || string.IsNullOrWhiteSpace(RpcUsername)
+                    || string.IsNullOrWhiteSpace(RpcPassword))
+                {
+                    throw new Exception(string.Format("One or more required parameters, as defined in {0}, were not found in the configuration file!", GetType().Name));
+                }
+
+                #endregion
+            }
+
+            #endregion
+
+            #region Propertys
+
+            /// <summary>
+            /// 忽略配置文件
+            /// </summary>
+            public bool IgnoreConfigFiles { get; private set; }
+
+            /// <summary>
+            /// 货币单位,例如:Satoshi Koinu Litetoshi
+            /// </summary>
+            public string BaseUnitName { get; private set; }
+
+            /// <summary>
+            /// 个人货币ichu单位
+            /// </summary>
+            public uint BaseUnitsPerCoin { get; private set; }
+
+            /// <summary>
+            /// 区块索引优先交易保留的字节大小
+            /// </summary>
+            public int BlocksHighestPriorityTransactionsReservedSizeInBytes { get; private set; }
+
+            /// <summary>
+            /// Block Maximum Size In Bytes
+            /// </summary>
+            public int BlockMaximumSizeInBytes { get; private set; }
+
+            /// <summary>
+            /// 货币缩写,例如:比特币 BTC,夺宝币 DBC
+            /// </summary>
+            public string CoinShortName { get; private set; }
+
+            /// <summary>
+            /// 货币全称,例如:比特币 Bitcoin
+            /// </summary>
+            public string CoinLongName { get; private set; }
+
+            /// <summary>
+            /// 货币个人基础单位
+            /// </summary>
+            public decimal CoinsPerBaseUnit { get; private set; }
+
+            /// <summary>
+            /// 估计每分钟生成数据块的数量
+            /// </summary>
+            public double EstimatedBlockGenerationTimeInMinutes { get; set; }
+
+            /// <summary>
+            /// 估计前一天生成数据块的数量
+            /// </summary>
+            public int ExpectedNumberOfBlocksGeneratedPerDay
+            {
+                get
+                {
+                    return (int)EstimatedBlockGenerationTimeInMinutes * GlobalConstants.MinutesInADay;
+                }
+            }
+
+            public decimal FeePerThousandBytesInCoins { get; set; }
+            public short FreeTransactionMaximumSizeInBytes { get; set; }
+            public decimal FreeTransactionMinimumOutputAmountInCoins { get; set; }
+            public int FreeTransactionMinimumPriority { get; set; }
+
+            public string IsoCurrencyCode { get; set; }
+            public decimal MinimumNonDustTransactionAmountInCoins { get; set; }
+            public decimal MinimumTransactionFeeInCoins { get; set; }
+            public decimal OneBaseUnitInCoins
+            {
+                get { return CoinsPerBaseUnit; }
+            }
+            public uint OneCoinInBaseUnits
+            {
+                get { return BaseUnitsPerCoin; }
+            }
+
+
+            public ulong TotalCoinSupplyInCoins { get; set; }
+            public int TransactionSizeBytesContributedByEachInput { get; set; }
+            public int TransactionSizeBytesContributedByEachOutput { get; set; }
+            public int TransactionSizeFixedExtraSizeInBytes { get; set; }
+
+
+            /// <summary>
+            /// RPC线路地址
+            /// </summary>
+            public string DaemonUrl { get; private set; }
+            /// <summary>
+            /// 线路地址（测试）
+            /// </summary>
+            public string DaemonUrlTestnet { get; private set; }
+            /// <summary>
+            /// RPC用户名
+            /// </summary>
+            public string RpcUsername { get; private set; }
+            /// <summary>
+            /// RPC密码
+            /// </summary>
+            public string RpcPassword { get; private set; }
+            /// <summary>
+            /// 钱包密码
+            /// </summary>
+            public string WalletPassword { get; private set; }
+            /// <summary>
+            /// RPC连接超时设置
+            /// </summary>
+            public short RpcRequestTimeoutInSeconds { get; private set; }
+            /// <summary>
+            /// 是否是用户测试线路
+            /// </summary>
+            public bool UseTestnet { get; set; }
+
+            /// <summary>
+            /// RPC线路选项适配器
+            /// </summary>
+            public string SelectedDaemonUrl
+            {
+                get { return !UseTestnet ? DaemonUrl : DaemonUrlTestnet; }
+            }
+
+            #endregion
+        }
+
+        #endregion
     }
 }

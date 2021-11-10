@@ -63,8 +63,6 @@ namespace AtomicCore.BlockChain.OMNINet
         /// </summary>
         public CoinParameters Parameters { get; private set; }
 
-        CoinService ICoinParameters.Parameters => throw new NotImplementedException();
-
         #endregion
 
         #region Override Methods

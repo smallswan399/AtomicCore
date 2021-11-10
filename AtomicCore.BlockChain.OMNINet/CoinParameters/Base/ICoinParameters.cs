@@ -11,6 +11,6 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <summary>
         /// Parameters
         /// </summary>
-        CoinService Parameters { get; }
+        CoinService.CoinParameters Parameters { get; }
     }
 }

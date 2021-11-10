@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.Trons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.TronNet", "AtomicCore.BlockChain.TronNet\AtomicCore.BlockChain.TronNet.csproj", "{64F31BE3-366A-42F2-813F-FD37BB75DCD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.TronNetUnitTest", "AtomicCore.BlockChain.TronNetUnitTest\AtomicCore.BlockChain.TronNetUnitTest.csproj", "{D733B8A6-6BFC-4C98-9C1E-9811C03784AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.TronNetUnitTest", "AtomicCore.BlockChain.TronNetUnitTest\AtomicCore.BlockChain.TronNetUnitTest.csproj", "{D733B8A6-6BFC-4C98-9C1E-9811C03784AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

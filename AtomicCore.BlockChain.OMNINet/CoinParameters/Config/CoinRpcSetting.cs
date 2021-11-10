@@ -1,10 +1,5 @@
-﻿#if NET472_OR_GREATER
-using System.Configuration;
-#else
-using Microsoft.Extensions.Configuration;
-#endif
+﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 
 namespace AtomicCore.BlockChain.OMNINet
 {
@@ -13,46 +8,17 @@ namespace AtomicCore.BlockChain.OMNINet
     /// </summary>
     public class CoinRpcSetting
     {
-        #region Variable
-
-        /// <summary>
-        /// rpc-url
-        /// </summary>
-        private const string key_rpc_Url = "rpc_url";
-
-        /// <summary>
-        /// rpc-url-test
-        /// </summary>
-        private const string key_rpc_Url_test = "rpc_url_test";
-
-        /// <summary>
-        /// rpc-username
-        /// </summary>
-        private const string key_rpc_username = "rpc_username";
-
-        /// <summary>
-        /// rpc-password
-        /// </summary>
-        private const string key_rpc_password = "rpc_password";
-
-        /// <summary>
-        /// rpc-timeout
-        /// </summary>
-        private const string key_rpc_timeout = "rpc_timeout";
-
-        /// <summary>
-        /// wallet-password
-        /// </summary>
-        private const string key_rpc_wallet_password = "wallet_password";
-
-        #endregion
-
         #region Propertys
 
         /// <summary>
         /// rpc url
         /// </summary>
         public string RpcUrl { get; set; }
+
+        /// <summary>
+        /// rpc test net
+        /// </summary>
+        public string RpcTestnet { get; set; }
 
         /// <summary>
         /// rpc userName
@@ -84,13 +50,22 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <returns></returns>
         public static CoinRpcSetting LoadFromConfig()
         {
-            CoinRpcSetting cfg = new CoinRpcSetting();
+            CoinRpcSetting cfg;
 
-#if NET472_OR_GREATER
+            string fileName = "omni.json";
+            string baseDir = System.IO.Directory.GetCurrentDirectory();
+            string jsonPath = string.Format("{0}\\{1}", baseDir, fileName);
+            if (!System.IO.File.Exists(jsonPath))
+                throw new System.IO.FileNotFoundException($"config json file '{fileName}' not exists!");
 
-#else
-using Microsoft.Extensions.Configuration;
-#endif
+            IConfiguration _configuration = new ConfigurationBuilder()
+                    .SetBasePath(baseDir)
+                    .AddJsonFile(jsonPath, optional: true, reloadOnChange: true)
+                    .Build();
+            cfg = _configuration.Get<CoinRpcSetting>();
+
+            if (null == cfg)
+                throw new Exception($"NETSTANDARD2.0+ OR NETFRAMEWORK...");
 
             return cfg;
         }

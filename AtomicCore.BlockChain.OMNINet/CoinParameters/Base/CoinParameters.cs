@@ -21,35 +21,6 @@ namespace AtomicCore.BlockChain.OMNINet
         /// </summary>
         public class CoinParameters
         {
-            #region Variable
-
-            /// <summary>
-            /// rpc-url
-            /// </summary>
-            public const string key_rpc_Url = "rpc_url";
-            /// <summary>
-            /// rpc-url-test
-            /// </summary>
-            public const string key_rpc_Url_test = "rpc_url_test";
-            /// <summary>
-            /// rpc-username
-            /// </summary>
-            public const string key_rpc_username = "rpc_username";
-            /// <summary>
-            /// rpc-password
-            /// </summary>
-            public const string key_rpc_password = "rpc_password";
-            /// <summary>
-            /// rpc-timeout
-            /// </summary>
-            public const string key_rpc_timeout = "rpc_timeout";
-            /// <summary>
-            /// wallet-password
-            /// </summary>
-            public const string key_rpc_wallet_password = "wallet_password";
-
-            #endregion
-
             #region Constructor
 
             /// <summary>
@@ -70,6 +41,8 @@ namespace AtomicCore.BlockChain.OMNINet
             {
                 #region 设置RPC请求URL地址
 
+                CoinRpcSetting rpcSetting = null;
+
                 if (!string.IsNullOrWhiteSpace(daemonUrl))
                 {
                     DaemonUrl = daemonUrl;
@@ -78,38 +51,25 @@ namespace AtomicCore.BlockChain.OMNINet
                     WalletPassword = walletPassword;
 
                     // this will force the CoinParameters.SelectedDaemonUrl dynamic property to automatically pick the daemonUrl defined above
-                    UseTestnet = false; 
+                    UseTestnet = false;
 
                     // ignore config files
                     IgnoreConfigFiles = true;
                 }
+                else
+                    rpcSetting = CoinRpcSetting.LoadFromConfig();
 
                 #endregion
 
                 #region 设置或读取RPC请求超时设置
 
                 if (IgnoreConfigFiles)
-                {
                     if (rpcRequestTimeoutInSeconds > 0)
                         RpcRequestTimeoutInSeconds = rpcRequestTimeoutInSeconds;
                     else
                         RpcRequestTimeoutInSeconds = 60;
-                }
                 else
-                {
-                    if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_timeout) > -1)
-                    {
-                        short rpcRequestTimeoutTryParse = 60;
-                        if (short.TryParse(ConfigurationManager.AppSettings[key_rpc_timeout], out rpcRequestTimeoutTryParse))
-                        {
-                            RpcRequestTimeoutInSeconds = rpcRequestTimeoutTryParse;
-                        }
-                    }
-                    else
-                    {
-                        RpcRequestTimeoutInSeconds = 60;
-                    }
-                }
+                    RpcRequestTimeoutInSeconds = (short)rpcSetting.RpcTimeout;
 
                 #endregion
 
@@ -127,6 +87,24 @@ namespace AtomicCore.BlockChain.OMNINet
                     Console.ResetColor();
                 }
 
+                if (!IgnoreConfigFiles)
+                {
+                    //获取值
+                    DaemonUrl = rpcSetting.RpcUrl;
+                    if (string.IsNullOrEmpty(DaemonUrl))
+                        throw new Exception("DaemonUrl is null or empty");
+
+                    DaemonUrlTestnet = rpcSetting.RpcTestnet;
+                    if (string.IsNullOrEmpty(DaemonUrlTestnet))
+                        DaemonUrlTestnet = DaemonUrl;
+
+                    RpcUsername = rpcSetting.RpcUserName;
+                    RpcPassword = rpcSetting.RpcPassword;
+                    WalletPassword = rpcSetting.WalletPassword;
+                    if (string.IsNullOrEmpty(WalletPassword))
+                        WalletPassword = string.Empty;
+                }
+
                 #endregion
 
                 #region 货币配置加载
@@ -134,42 +112,6 @@ namespace AtomicCore.BlockChain.OMNINet
                 if (coinService is ExtracoinService)
                 {
                     #region BTC COIN
-
-                    if (!IgnoreConfigFiles)
-                    {
-                        //Required Check
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_Url) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_Url + "'");
-                        }
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_username) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_username + "'");
-                        }
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_password) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_password + "'");
-                        }
-
-                        //获取值
-                        DaemonUrl = ConfigurationManager.AppSettings[key_rpc_Url];
-                        if (string.IsNullOrEmpty(DaemonUrl))
-                        {
-                            throw new Exception("set appsetting key " + key_rpc_Url + "'s value");
-                        }
-                        DaemonUrlTestnet = ConfigurationManager.AppSettings[key_rpc_Url_test];
-                        if (string.IsNullOrEmpty(DaemonUrlTestnet))
-                        {
-                            DaemonUrlTestnet = DaemonUrl;
-                        }
-                        RpcUsername = ConfigurationManager.AppSettings[key_rpc_username];
-                        RpcPassword = ConfigurationManager.AppSettings[key_rpc_password];
-                        WalletPassword = ConfigurationManager.AppSettings[key_rpc_wallet_password];
-                        if (string.IsNullOrEmpty(WalletPassword))
-                        {
-                            WalletPassword = string.Empty;
-                        }
-                    }
 
                     CoinShortName = "BTC";//modify
                     CoinLongName = "Bit Coin ";//modify
@@ -200,42 +142,6 @@ namespace AtomicCore.BlockChain.OMNINet
                 {
                     #region BLOCK COIN
 
-                    if (!IgnoreConfigFiles)
-                    {
-                        //Required Check
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_Url) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_Url + "'");
-                        }
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_username) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_username + "'");
-                        }
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_password) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_password + "'");
-                        }
-
-                        //获取值
-                        DaemonUrl = ConfigurationManager.AppSettings[key_rpc_Url];
-                        if (string.IsNullOrEmpty(DaemonUrl))
-                        {
-                            throw new Exception("set appsetting key " + key_rpc_Url + "'s value");
-                        }
-                        DaemonUrlTestnet = ConfigurationManager.AppSettings[key_rpc_Url_test];
-                        if (string.IsNullOrEmpty(DaemonUrlTestnet))
-                        {
-                            DaemonUrlTestnet = DaemonUrl;
-                        }
-                        RpcUsername = ConfigurationManager.AppSettings[key_rpc_username];
-                        RpcPassword = ConfigurationManager.AppSettings[key_rpc_password];
-                        WalletPassword = ConfigurationManager.AppSettings[key_rpc_wallet_password];
-                        if (string.IsNullOrEmpty(WalletPassword))
-                        {
-                            WalletPassword = string.Empty;
-                        }
-                    }
-
                     CoinShortName = "HBC";//modify
                     CoinLongName = "Blackcoin ";//modify
                     IsoCurrencyCode = "XHB";//比特币是XBT,X开头即可
@@ -264,42 +170,6 @@ namespace AtomicCore.BlockChain.OMNINet
                 else if (coinService is USDTCoinService)
                 {
                     #region USDT COIN
-
-                    if (!IgnoreConfigFiles)
-                    {
-                        //Required Check
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_Url) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_Url + "'");
-                        }
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_username) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_username + "'");
-                        }
-                        if (Array.IndexOf(ConfigurationManager.AppSettings.AllKeys, key_rpc_password) <= -1)
-                        {
-                            throw new Exception("appsetting missing config '" + key_rpc_password + "'");
-                        }
-
-                        //获取值
-                        DaemonUrl = ConfigurationManager.AppSettings[key_rpc_Url];
-                        if (string.IsNullOrEmpty(DaemonUrl))
-                        {
-                            throw new Exception("set appsetting key " + key_rpc_Url + "'s value");
-                        }
-                        DaemonUrlTestnet = ConfigurationManager.AppSettings[key_rpc_Url_test];
-                        if (string.IsNullOrEmpty(DaemonUrlTestnet))
-                        {
-                            DaemonUrlTestnet = DaemonUrl;
-                        }
-                        RpcUsername = ConfigurationManager.AppSettings[key_rpc_username];
-                        RpcPassword = ConfigurationManager.AppSettings[key_rpc_password];
-                        WalletPassword = ConfigurationManager.AppSettings[key_rpc_wallet_password];
-                        if (string.IsNullOrEmpty(WalletPassword))
-                        {
-                            WalletPassword = string.Empty;
-                        }
-                    }
 
                     CoinShortName = "USDT";//modify
                     CoinLongName = "TetherUS ";//modify

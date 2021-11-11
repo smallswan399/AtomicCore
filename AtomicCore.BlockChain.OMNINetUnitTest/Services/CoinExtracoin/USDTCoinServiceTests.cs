@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.OMNINet.Tests
         [TestMethod()]
         public void GetOMNIInfoTest()
         {
-            IUSDTCoinService usdtHandler = new USDTCoinService("http://127.0.0.1:8332", "root", "123456", string.Empty);
+            IUSDTCoinService usdtHandler = new USDTCoinService();
 
             var info = usdtHandler.GetOMNIInfo();
 

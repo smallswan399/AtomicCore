@@ -137,8 +137,7 @@ namespace AtomicCore.WebService.RequestAgent
                 *  首字母小写 -> CamelCasePropertyNamesContractResolver
                 */
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            });
 
             /*
              * 《Cookie相关中间件》

@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Dockerfile~RF230620.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AtomicCore" Version="1.1.3" />
     <PackageReference Include="AtomicCore.IOStorage.Core" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />

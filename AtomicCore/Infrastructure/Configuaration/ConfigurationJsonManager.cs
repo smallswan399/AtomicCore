@@ -62,7 +62,7 @@ namespace AtomicCore
             List<IConfigurationSection> childSections = connectionJsonConf.GetChildren().ToList();
             if (null != childSections && childSections.Any())
             {
-                ConnectionStringJsonSettings jsonSetting = null;
+                ConnectionStringJsonSettings jsonSetting;
                 foreach (IConfigurationSection child in childSections)
                 {
                     string each_connectionString = child[c_connectionString];

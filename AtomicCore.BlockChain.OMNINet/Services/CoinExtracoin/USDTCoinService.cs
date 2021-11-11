@@ -55,8 +55,6 @@ namespace AtomicCore.BlockChain.OMNINet
             get { return ExtracoinConstants.Constants.Instance; }
         }
 
-        ExtracoinConstants.Constants IExtracoinConstants.Constants => throw new System.NotImplementedException();
-
         #endregion
 
         #region IUSDTCoinService Methods

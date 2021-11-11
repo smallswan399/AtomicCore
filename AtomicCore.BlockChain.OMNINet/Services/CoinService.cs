@@ -29,25 +29,47 @@ namespace AtomicCore.BlockChain.OMNINet
 
         #region Constructor
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CoinService()
         {
             _rpcConnector = new RpcConnector(this);
             Parameters = new CoinParameters(this, null, null, null, null, 0);
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="useTestnet"></param>
         public CoinService(bool useTestnet)
             : this()
         {
             Parameters.UseTestnet = useTestnet;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="daemonUrl"></param>
+        /// <param name="rpcUsername"></param>
+        /// <param name="rpcPassword"></param>
+        /// <param name="walletPassword"></param>
         public CoinService(string daemonUrl, string rpcUsername, string rpcPassword, string walletPassword)
         {
             _rpcConnector = new RpcConnector(this);
             Parameters = new CoinParameters(this, daemonUrl, rpcUsername, rpcPassword, walletPassword, 0);
         }
 
-        //  this provides support for cases where *.config files are not an option
+        /// <summary>
+        /// Constructor
+        /// this provides support for cases where *.config files are not an option
+        /// </summary>
+        /// <param name="daemonUrl"></param>
+        /// <param name="rpcUsername"></param>
+        /// <param name="rpcPassword"></param>
+        /// <param name="walletPassword"></param>
+        /// <param name="rpcRequestTimeoutInSeconds"></param>
         public CoinService(string daemonUrl, string rpcUsername, string rpcPassword, string walletPassword, short rpcRequestTimeoutInSeconds)
         {
             _rpcConnector = new RpcConnector(this);
@@ -67,6 +89,10 @@ namespace AtomicCore.BlockChain.OMNINet
 
         #region Override Methods
 
+        /// <summary>
+        /// get coin long name
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Parameters.CoinLongName;

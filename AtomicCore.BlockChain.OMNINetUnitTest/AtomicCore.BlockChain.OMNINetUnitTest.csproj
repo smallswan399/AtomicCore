@@ -17,4 +17,10 @@
     <ProjectReference Include="..\AtomicCore.BlockChain.OMNINet\AtomicCore.BlockChain.OMNINet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="omni.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

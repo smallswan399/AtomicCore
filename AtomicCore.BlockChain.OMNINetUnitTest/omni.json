@@ -1,0 +1,8 @@
+{
+    "RpcUrl": "http://localhost:8339",
+    "RpcTestnet": null,
+    "RpcUserName": "user",
+    "RpcPassword": "123qwe...",
+    "RpcTimeout": 59,
+    "WalletPassword": "123456"
+}

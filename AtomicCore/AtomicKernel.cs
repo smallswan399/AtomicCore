@@ -45,7 +45,7 @@ namespace AtomicCore
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// 获取数据驱动接口实例

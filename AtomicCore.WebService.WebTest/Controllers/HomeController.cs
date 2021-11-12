@@ -10,7 +10,7 @@ namespace AtomicCore.WebService.WebTest.Controllers
     {
         public IActionResult Index()
         {
-
+            var app = ConfigurationJsonManager.AppSettings;
 
             return Ok(DateTime.Now.ToString());
         }

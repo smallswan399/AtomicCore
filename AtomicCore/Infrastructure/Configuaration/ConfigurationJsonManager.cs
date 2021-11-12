@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,8 +43,12 @@ namespace AtomicCore
         static ConfigurationJsonManager()
         {
             string baseDir = System.IO.Directory.GetCurrentDirectory();
-            string appsettingJsonPath = string.Format("{0}\\{1}", baseDir, c_appsettingsFileName);
-            string connectionsJsonPath = string.Format("{0}\\{1}", baseDir, c_connectionsFileName);
+            string appsettingJsonPath = Path.Combine(baseDir, c_appsettingsFileName);
+            string connectionsJsonPath = Path.Combine(baseDir, c_connectionsFileName);
+
+            Console.WriteLine($"--> appsetting.json path is '{appsettingJsonPath}'");
+            Console.WriteLine($"--> connection.json path is '{connectionsJsonPath}'");
+
             if (!File.Exists(appsettingJsonPath))
                 throw new FileNotFoundException(string.Format("{0}文件不存在,请检查是否项目中是否添加了该文件并设置为'如果较新则复制'!", c_appsettingsFileName));
             if (!File.Exists(connectionsJsonPath))

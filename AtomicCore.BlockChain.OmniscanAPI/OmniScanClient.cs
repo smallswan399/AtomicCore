@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -108,6 +109,30 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         }
 
         /// <summary>
+        /// json -> check error propertys
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private string HasResponseError(string resp)
+        {
+            JObject json_obj;
+            try
+            {
+                json_obj = JObject.Parse(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            JToken error_json;
+            if (json_obj.TryGetValue("error", StringComparison.OrdinalIgnoreCase, out error_json))
+                return error_json.ToString();
+
+            return null;
+        }
+
+        /// <summary>
         /// json -> object
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -147,7 +172,13 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             string url = this.CreateRestUrl(OmniRestVersion.V2, "address/addr/");
             string resp = this.RestPost(url, data);
 
-            return null;
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            Dictionary<string, OmniAssetCollectionJson> result = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
+
+            return result;
         }
 
         #endregion

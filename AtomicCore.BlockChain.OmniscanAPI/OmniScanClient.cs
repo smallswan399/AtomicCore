@@ -48,7 +48,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         private string CreateRestUrl(OmniRestVersion version, string actionUrl)
         {
-            return $"{C_APIREST_BASEURL}/{version}/{actionUrl}";
+            return $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower();
         }
 
         /// <summary>
@@ -91,13 +91,13 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             try
             {
                 if (string.IsNullOrEmpty(this._agentGetTmp))
-                    resp = HttpProtocol.HttpPost(url, data);
+                    resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
                 else
                 {
                     string encodeUrl = UrlEncoder.UrlEncode(url);
                     string remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
 
-                    resp = HttpProtocol.HttpPost(url, data);
+                    resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
                 }
             }
             catch (Exception ex)

@@ -12,7 +12,9 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     {
         #region Propertys
 
-        [JsonProperty("balance")]
+        /// <summary>
+        /// Address Balance
+        /// </summary>
         public Dictionary<string, OmniAssetCollectionJson> AddressBalances { get; set; }
 
         #endregion

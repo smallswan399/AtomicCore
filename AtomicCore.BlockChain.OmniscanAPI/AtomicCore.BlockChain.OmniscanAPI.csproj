@@ -9,9 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
     <Folder Include="Infrastructure\JsonConverters\" />
     <Folder Include="Request\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>
 
 </Project>

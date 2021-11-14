@@ -5,8 +5,20 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     /// <summary>
     /// Omni Json Result
     /// </summary>
-    public class OmniBaseResponse
+    public class OmniErrorResponse
     {
+        #region Constructor
+
+        /// <summary>
+        /// Defalut Constructor
+        /// </summary>
+        public OmniErrorResponse()
+        {
+
+        }
+
+        #endregion
+
         #region Propertys
 
         /// <summary>

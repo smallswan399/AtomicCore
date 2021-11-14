@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public OmniAddressV2Response GetAddressV2(params string[] address)
+        public Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] address)
         {
             return null;
         }

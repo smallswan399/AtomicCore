@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
@@ -9,22 +7,58 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     /// </summary>
     public class OmniAssetBalanceJson
     {
-        public int id { get; set; }
+        /// <summary>
+        /// asset id
+        /// </summary>
+        [JsonProperty("id")]
+        public int AssetID { get; set; }
 
-        public string symbol { get; set; }
+        /// <summary>
+        /// asset symbol
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string AssetSymbol { get; set; }
 
-        public decimal value { get; set; }
+        /// <summary>
+        /// asset value
+        /// </summary>
+        [JsonProperty("value")]
+        public decimal AssetValue { get; set; }
 
-        public decimal frozen { get; set; }
+        /// <summary>
+        /// Asset frozen
+        /// </summary>
+        [JsonProperty("frozen")]
+        public decimal AssetFrozen { get; set; }
 
-        public decimal reserved { get; set; }
+        /// <summary>
+        /// Asset Reserved
+        /// </summary>
+        [JsonProperty("reserved")]
+        public decimal AssetReserved { get; set; }
 
-        public bool divisible { get; set; }
+        /// <summary>
+        /// Asset Divisible
+        /// </summary>
+        [JsonProperty("divisible")]
+        public bool AssetDivisible { get; set; }
 
-        public string pendingpos { get; set; }
+        /// <summary>
+        /// Asset Pendingpos
+        /// </summary>
+        [JsonProperty("pendingpos")]
+        public string AssetPendingpos { get; set; }
 
-        public string pendingneg { get; set; }
+        /// <summary>
+        /// Asset Pendingneg
+        /// </summary>
+        [JsonProperty("pendingneg")]
+        public string AssetPendingneg { get; set; }
 
-        public bool error { get; set; }
+        /// <summary>
+        /// Asset Error
+        /// </summary>
+        [JsonProperty("error")]
+        public bool AssetError { get; set; }
     }
 }

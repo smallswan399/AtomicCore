@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.OMNINet
     /// <summary>
     /// OMNI-USDT
     /// </summary>
-    public sealed class USDTCoinService : CoinService, IUSDTCoinService
+    public sealed class OMNICoinService : CoinService, IOMNICoinService
     {
         #region Constructor
 
@@ -13,7 +13,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// 构造函数
         /// </summary>
         /// <param name="useTestnet">是否使用测试线路</param>
-        public USDTCoinService(bool useTestnet = false)
+        public OMNICoinService(bool useTestnet = false)
             : base(useTestnet)
         {
         }
@@ -25,7 +25,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <param name="rpcUsername">RPC接口用户名</param>
         /// <param name="rpcPassword">RPC接口密码</param>
         /// <param name="walletPassword">钱包密码</param>
-        public USDTCoinService(string daemonUrl, string rpcUsername, string rpcPassword, string walletPassword)
+        public OMNICoinService(string daemonUrl, string rpcUsername, string rpcPassword, string walletPassword)
             : base(daemonUrl, rpcUsername, rpcPassword, walletPassword)
         {
         }
@@ -38,7 +38,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <param name="rpcPassword">RPC接口密码</param>
         /// <param name="walletPassword">钱包密码</param>
         /// <param name="rpcRequestTimeoutInSeconds">RPC请求超时时间</param>
-        public USDTCoinService(string daemonUrl, string rpcUsername, string rpcPassword, string walletPassword, short rpcRequestTimeoutInSeconds)
+        public OMNICoinService(string daemonUrl, string rpcUsername, string rpcPassword, string walletPassword, short rpcRequestTimeoutInSeconds)
             : base(daemonUrl, rpcUsername, rpcPassword, walletPassword, rpcRequestTimeoutInSeconds)
         {
         }
@@ -130,37 +130,37 @@ namespace AtomicCore.BlockChain.OMNINet
             return _rpcConnector.MakeRequest<string>(RpcMethods.omni_funded_sendall, fromAddress, toAddress, ecosystem, feeAddress);
         }
 
-        OMNI_GetInfoResponse IUSDTCoinService.GetOMNIInfo()
+        OMNI_GetInfoResponse IOMNICoinService.GetOMNIInfo()
         {
             throw new System.NotImplementedException();
         }
 
-        OMNI_AddressBalanceResponse IUSDTCoinService.GetOMINBalance(string address, int propertyid)
+        OMNI_AddressBalanceResponse IOMNICoinService.GetOMINBalance(string address, int propertyid)
         {
             throw new System.NotImplementedException();
         }
 
-        List<OMNI_WalletAddressBalanceResponse> IUSDTCoinService.GetOMNIWalletAddressBalances()
+        List<OMNI_WalletAddressBalanceResponse> IOMNICoinService.GetOMNIWalletAddressBalances()
         {
             throw new System.NotImplementedException();
         }
 
-        string[] IUSDTCoinService.GetOMNIListBlockTransactions(ulong index)
+        string[] IOMNICoinService.GetOMNIListBlockTransactions(ulong index)
         {
             throw new System.NotImplementedException();
         }
 
-        OMNI_GetTransactionResponse IUSDTCoinService.GetOMNITransaction(string txid)
+        OMNI_GetTransactionResponse IOMNICoinService.GetOMNITransaction(string txid)
         {
             throw new System.NotImplementedException();
         }
 
-        string IUSDTCoinService.OMNIFundedSend(string fromAddress, string toAddress, string feeAddress, decimal amount, int propertyid)
+        string IOMNICoinService.OMNIFundedSend(string fromAddress, string toAddress, string feeAddress, decimal amount, int propertyid)
         {
             throw new System.NotImplementedException();
         }
 
-        string IUSDTCoinService.OMNIFundedSendALL(string fromAddress, string toAddress, string feeAddress, int ecosystem)
+        string IOMNICoinService.OMNIFundedSendALL(string fromAddress, string toAddress, string feeAddress, int ecosystem)
         {
             throw new System.NotImplementedException();
         }

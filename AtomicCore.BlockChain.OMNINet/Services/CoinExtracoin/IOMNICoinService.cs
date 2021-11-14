@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.OMNINet
     /// <summary>
     /// OMIN-USDT
     /// </summary>
-    public interface IUSDTCoinService : ICoinService, IExtracoinConstants
+    public interface IOMNICoinService : ICoinService, IExtracoinConstants
     {
         /// <summary>
         /// 获取OMNI信息

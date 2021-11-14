@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.OMNINet.Tests
         [TestMethod()]
         public void GetOMNIInfoTest()
         {
-            IUSDTCoinService usdtHandler = new USDTCoinService();
+            IOMNICoinService usdtHandler = new OMNICoinService();
 
             var info = usdtHandler.GetOMNIInfo();
 

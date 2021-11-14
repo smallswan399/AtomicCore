@@ -154,7 +154,7 @@ namespace AtomicCore.BlockChain.OMNINet
 
                 #endregion
             }
-            else if (coinService is USDTCoinService)
+            else if (coinService is OMNICoinService)
             {
                 #region USDT COIN
 

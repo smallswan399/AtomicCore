@@ -12,6 +12,15 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
     public class OmniScanClientTests
     {
         [TestMethod()]
+        public void GetAddressV1Test()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.GetAddressV1("1KYiKJEfdJtap9QX2v9BXJMpz2SfU4pgZw");
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
         public void GetAddressV2Test()
         {
             IOmniScanClient client = new OmniScanClient();

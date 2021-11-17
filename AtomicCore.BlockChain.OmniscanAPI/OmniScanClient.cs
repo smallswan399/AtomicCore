@@ -159,6 +159,29 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #region IOmniScanClient Methods
 
         /// <summary>
+        /// Get Address V1
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public OmniAssetCollectionJson GetAddressV1(string address)
+        {
+            if (null == address || address.Length <= 0)
+                throw new ArgumentNullException(nameof(address));
+
+            string data = $"addr={address}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            OmniAssetCollectionJson result = ObjectParse<OmniAssetCollectionJson>(resp);
+
+            return result;
+        }
+
+        /// <summary>
         /// Get Address V2
         /// </summary>
         /// <param name="address"></param>

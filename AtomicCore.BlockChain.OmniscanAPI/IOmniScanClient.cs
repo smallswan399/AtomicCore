@@ -10,6 +10,13 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     public interface IOmniScanClient
     {
         /// <summary>
+        /// Get Address V1
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        OmniAssetCollectionJson GetAddressV1(string address);
+
+        /// <summary>
         /// Get Address V2
         /// </summary>
         /// <param name="address"></param>

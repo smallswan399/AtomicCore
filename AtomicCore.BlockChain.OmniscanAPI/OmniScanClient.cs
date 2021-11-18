@@ -159,7 +159,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #region IOmniScanClient Methods
 
         /// <summary>
-        /// Get Address V1
+        /// Returns the balance information for a given address. 
+        /// For multiple addresses in a single query use the v2 endpoint
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -182,7 +183,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         }
 
         /// <summary>
-        /// Get Address V2
+        /// Returns the balance information for multiple addresses
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -200,6 +201,29 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                 throw new Exception(error);
 
             Dictionary<string, OmniAssetCollectionJson> result = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the balance information and transaction history list for a given address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public OmniAddressDetailsResponse GetAddressDetails(string address)
+        {
+            if (null == address || address.Length <= 0)
+                throw new ArgumentNullException(nameof(address));
+
+            string data = $"addr={address}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/details/");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            OmniAddressDetailsResponse result = ObjectParse<OmniAddressDetailsResponse>(resp);
 
             return result;
         }

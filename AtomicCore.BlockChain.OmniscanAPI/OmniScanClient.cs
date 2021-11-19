@@ -328,9 +328,30 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>
+        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         public OmniDecodeResponse Decode(string hex)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(hex))
+                throw new ArgumentNullException(nameof(hex));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(Decode), hex);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniDecodeResponse cacheData);
+            if (!exists)
+            {
+                string data = $"hex={hex}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "decode/");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniDecodeResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
         }
 
         #endregion

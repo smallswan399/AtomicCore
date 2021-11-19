@@ -59,6 +59,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>
+        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         OmniDecodeResponse Decode(string hex);
     }
 }

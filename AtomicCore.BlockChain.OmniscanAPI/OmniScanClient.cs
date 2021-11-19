@@ -254,6 +254,39 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Returns the Armory encoded version of an unsigned transaction for 
+        /// use with Armory offline transactions. 
+        /// Data: unsigned_hex : raw bitcoin hex formatted tx to be converted pubkey : pubkey of the sending address
+        /// </summary>
+        /// <param name="unsignedHex"></param>
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        public OmniArmoryUnsignedResponse GetUnsigned(string unsignedHex, string publicKey)
+        {
+            if (string.IsNullOrEmpty(unsignedHex))
+                throw new ArgumentNullException(nameof(unsignedHex));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetUnsigned), unsignedHex, publicKey);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniArmoryUnsignedResponse cacheData);
+            if (!exists)
+            {
+                string data = $"unsigned_hex={unsignedHex}&pubkey={publicKey}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "armory/getunsigned");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniArmoryUnsignedResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

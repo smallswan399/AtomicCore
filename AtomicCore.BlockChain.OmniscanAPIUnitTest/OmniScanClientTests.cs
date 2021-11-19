@@ -37,5 +37,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(!string.IsNullOrEmpty(result.Address));
         }
+
+        [TestMethod()]
+        public void GetUnsignedTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.GetUnsigned("01000000011c2d89d15d4853194e0e617e5d6d6d151752b09f72bf62a34453643270ebc763000000001976a914946cb2e08075bcbaf157e47bcb67eb2b2339d24288acffffffff01d8d60000000000001976a914946cb2e08075bcbaf157e47bcb67eb2b2339d24288ac00000000", "04ad90e5b6bc86b3ec7fac2c5fbda7423fc8ef0d58df594c773fa05e2c281b2bfe877677c668bd13603944e34f4818ee03cadd81a88542b8b4d5431264180e2c28");
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

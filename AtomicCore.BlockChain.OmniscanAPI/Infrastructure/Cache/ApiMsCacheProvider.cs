@@ -31,6 +31,26 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #region Public Methods
 
         /// <summary>
+        /// generate cache key
+        /// </summary>
+        /// <param name="methodName"></param>
+        /// <param name="paramData"></param>
+        /// <returns></returns>
+        public static string GenerateCacheKey(string methodName, params string[] paramData)
+        {
+            if (string.IsNullOrEmpty(methodName))
+                throw new ArgumentNullException(nameof(methodName));
+
+            string origText;
+            if (null == paramData || paramData.Length <= 0)
+                origText = $"{methodName}";
+            else
+                origText = $"{methodName}:{string.Join(",", paramData)}";
+
+            return AtomicCore.MD5Handler.Generate(origText.ToLower(), false);
+        }
+
+        /// <summary>
         /// del cache data
         /// </summary>
         /// <param name="key"></param>

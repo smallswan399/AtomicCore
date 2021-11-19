@@ -14,6 +14,11 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #region Variables
 
         /// <summary>
+        /// cache seconds
+        /// </summary>
+        private const int c_cacheSeconds = 10;
+
+        /// <summary>
         /// api rest base url
         /// </summary>
         private const string C_APIREST_BASEURL = "https://api.omniwallet.org";
@@ -169,17 +174,24 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string data = $"addr={address}";
-            string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/");
-            string resp = this.RestPost(url, data);
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV1), address);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniAssetCollectionJson cacheData);
+            if (!exists)
+            {
+                string data = $"addr={address}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/");
+                string resp = this.RestPost(url, data);
 
-            string error = HasResponseError(resp);
-            if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
 
-            OmniAssetCollectionJson result = ObjectParse<OmniAssetCollectionJson>(resp);
+                cacheData = ObjectParse<OmniAssetCollectionJson>(resp);
 
-            return result;
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
         }
 
         /// <summary>

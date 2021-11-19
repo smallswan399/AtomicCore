@@ -30,5 +30,11 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         [JsonProperty("pages")]
         public int Pages { get; set; }
+
+        /// <summary>
+        /// txcount
+        /// </summary>
+        [JsonProperty("txcount")]
+        public int TxCount { get; set; }
     }
 }

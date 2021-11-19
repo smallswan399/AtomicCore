@@ -74,6 +74,12 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         public string Propertyname { get; set; }
 
         /// <summary>
+        /// reference address
+        /// </summary>
+        [JsonProperty("referenceaddress")]
+        public string ReferenceAddress { get; set; }
+
+        /// <summary>
         /// sendingaddress
         /// </summary>
         [JsonProperty("sendingaddress")]

@@ -354,6 +354,42 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Return a list of currently active/available base currencies the omnidex 
+        /// has open orders against. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for main / production ecosystem 
+        ///         or 
+        ///         2 for test/development ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        public OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem)
+        {
+            if (ecosystem != 1 && ecosystem != 2)
+                throw new ArgumentException("1 for main / production ecosystem or 2 for test/development ecosystem");
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(DesignatingCurrencies), ecosystem.ToString());
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniDesignatingCurrenciesResponse cacheData);
+            if (!exists)
+            {
+                string data = $"ecosystem={ecosystem}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "omnidex/designatingcurrencies");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniDesignatingCurrenciesResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

@@ -61,5 +61,18 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         OmniDecodeResponse Decode(string hex);
+
+        /// <summary>
+        /// Return a list of currently active/available base currencies the omnidex 
+        /// has open orders against. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for main / production ecosystem 
+        ///         or 
+        ///         2 for test/development ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem);
     }
 }

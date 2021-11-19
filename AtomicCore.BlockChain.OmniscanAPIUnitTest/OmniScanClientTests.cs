@@ -64,5 +64,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void DesignatingCurrenciesTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.DesignatingCurrencies(1);
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

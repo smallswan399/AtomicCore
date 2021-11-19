@@ -204,17 +204,24 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string data = string.Join("&", address.Select(s => $"addr={s}"));
-            string url = this.CreateRestUrl(OmniRestVersion.V2, "address/addr/");
-            string resp = this.RestPost(url, data);
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV2), address);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out Dictionary<string, OmniAssetCollectionJson> cacheData);
+            if (!exists)
+            {
+                string data = string.Join("&", address.Select(s => $"addr={s}"));
+                string url = this.CreateRestUrl(OmniRestVersion.V2, "address/addr/");
+                string resp = this.RestPost(url, data);
 
-            string error = HasResponseError(resp);
-            if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
 
-            Dictionary<string, OmniAssetCollectionJson> result = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
+                cacheData = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
 
-            return result;
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
         }
 
         /// <summary>
@@ -227,17 +234,24 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string data = $"addr={address}";
-            string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/details/");
-            string resp = this.RestPost(url, data);
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV2), address);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniAddressDetailsResponse cacheData);
+            if (!exists)
+            {
+                string data = $"addr={address}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/details/");
+                string resp = this.RestPost(url, data);
 
-            string error = HasResponseError(resp);
-            if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
 
-            OmniAddressDetailsResponse result = ObjectParse<OmniAddressDetailsResponse>(resp);
+                cacheData = ObjectParse<OmniAddressDetailsResponse>(resp);
 
-            return result;
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
         }
 
         #endregion

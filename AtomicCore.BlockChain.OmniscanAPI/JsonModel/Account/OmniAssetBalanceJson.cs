@@ -56,6 +56,12 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         public string AssetPendingneg { get; set; }
 
         /// <summary>
+        /// propertyinfo
+        /// </summary>
+        [JsonProperty("propertyinfo")]
+        public OmniPropertyInfoJson PropertyInfo { get; set; }
+
+        /// <summary>
         /// Asset Error
         /// </summary>
         [JsonProperty("error")]

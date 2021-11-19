@@ -426,6 +426,36 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Return list of properties created by a queried address.
+        /// </summary>
+        /// <param name="addresses"></param>
+        /// <returns></returns>
+        public OmniListByOwnerResponse ListByOwner(params string[] addresses)
+        {
+            if (null == addresses || addresses.Length <= 0)
+                throw new ArgumentNullException(nameof(addresses));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListByOwner), addresses);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniListByOwnerResponse cacheData);
+            if (!exists)
+            {
+                string data = string.Join("&", addresses.Select(s => $"addresses={s}"));
+                string url = this.CreateRestUrl(OmniRestVersion.V1, $"properties/listbyowner");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniListByOwnerResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

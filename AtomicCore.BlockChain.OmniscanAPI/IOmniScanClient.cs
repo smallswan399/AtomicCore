@@ -86,6 +86,11 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         OmniTxHistoryResponse GetHistory(int propertyId, int page = 1);
 
-        void ListByOwner(string issuerAddress);
+        /// <summary>
+        /// Return list of properties created by a queried address.
+        /// </summary>
+        /// <param name="addresses"></param>
+        /// <returns></returns>
+        OmniListByOwnerResponse ListByOwner(params string[] addresses);
     }
 }

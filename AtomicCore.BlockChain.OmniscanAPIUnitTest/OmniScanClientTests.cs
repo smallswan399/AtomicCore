@@ -82,5 +82,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void ListByOwnerTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.ListByOwner("1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu");
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

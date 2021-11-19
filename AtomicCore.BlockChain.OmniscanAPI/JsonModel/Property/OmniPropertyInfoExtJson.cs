@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
     /// <summary>
     /// omni property info ext json
     /// </summary>
-    public class OmniPropertyInfoExtJson : OmniPropertyInfoJson
+    public class OmniPropertyInfoExtJson
     {
         /// <summary>
         /// active

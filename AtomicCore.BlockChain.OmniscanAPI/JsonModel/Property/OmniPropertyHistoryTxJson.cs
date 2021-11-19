@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     /// <summary>
     /// omni history tx info json
     /// </summary>
-    public class OmniHistoryTxInfoJson
+    public class OmniPropertyHistoryTxJson
     {
         /// <summary>
         /// amount

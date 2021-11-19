@@ -11,6 +11,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// Transaction list
         /// </summary>
         [JsonProperty("transactions")]
-        public OmniHistoryTxInfoJson[] Transactions { get; set; }
+        public OmniPropertyHistoryTxJson[] Transactions { get; set; }
     }
 }

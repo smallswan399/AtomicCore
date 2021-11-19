@@ -73,5 +73,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void GetHistoryTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.GetHistory(3, 0);
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

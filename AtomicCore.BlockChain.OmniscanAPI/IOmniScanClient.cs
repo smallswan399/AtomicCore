@@ -74,5 +74,16 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="ecosystem"></param>
         /// <returns></returns>
         OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem);
+
+        /// <summary>
+        /// Returns list of transactions (up to 10 per page) relevant to queried Property ID. 
+        /// Returned transaction types include: 
+        /// Creation Tx, Change issuer txs, Grant Txs, Revoke Txs, Crowdsale Participation Txs, 
+        /// Close Crowdsale earlier tx
+        /// </summary>
+        /// <param name="propertyId"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        OmniTxHistoryResponse GetHistory(int propertyId, int page = 1);
     }
 }

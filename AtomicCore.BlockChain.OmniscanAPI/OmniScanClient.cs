@@ -390,6 +390,42 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Returns list of transactions (up to 10 per page) relevant to queried Property ID. 
+        /// Returned transaction types include: 
+        /// Creation Tx, Change issuer txs, Grant Txs, Revoke Txs, Crowdsale Participation Txs, 
+        /// Close Crowdsale earlier tx
+        /// </summary>
+        /// <param name="propertyId"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public OmniTxHistoryResponse GetHistory(int propertyId, int page = 0)
+        {
+            if (propertyId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(propertyId));
+            if (page < 0)
+                page = 0;
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetHistory), propertyId.ToString(), page.ToString());
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniTxHistoryResponse cacheData);
+            if (!exists)
+            {
+                string data = $"page={page}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, $"properties/gethistory/{propertyId}");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniTxHistoryResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

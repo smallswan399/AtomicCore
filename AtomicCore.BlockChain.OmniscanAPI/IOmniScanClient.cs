@@ -34,11 +34,22 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <summary>
         /// Returns the Armory encoded version of an unsigned transaction for 
         /// use with Armory offline transactions. 
-        /// Data: unsigned_hex : raw bitcoin hex formatted tx to be converted pubkey : pubkey of the sending address
+        /// Data: 
+        ///     unsigned_hex : raw bitcoin hex formatted tx to be converted 
+        ///     pubkey : pubkey of the sending address
         /// </summary>
         /// <param name="unsignedHex"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
         OmniArmoryUnsignedResponse GetUnsigned(string unsignedHex, string publicKey);
+
+        /// <summary>
+        /// Decodes and returns the raw hex and signed status from an armory transaction. 
+        /// Data: 
+        ///     armory_tx : armory transaction in text format
+        /// </summary>
+        /// <param name="armoryTx"></param>
+        /// <returns></returns>
+        OmniRawTransactionResponse GetRawtransaction(string armoryTx);
     }
 }

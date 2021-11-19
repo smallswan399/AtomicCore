@@ -257,7 +257,9 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <summary>
         /// Returns the Armory encoded version of an unsigned transaction for 
         /// use with Armory offline transactions. 
-        /// Data: unsigned_hex : raw bitcoin hex formatted tx to be converted pubkey : pubkey of the sending address
+        /// Data: 
+        ///     unsigned_hex : raw bitcoin hex formatted tx to be converted 
+        ///     pubkey : pubkey of the sending address
         /// </summary>
         /// <param name="unsignedHex"></param>
         /// <param name="publicKey"></param>
@@ -280,6 +282,38 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                     throw new Exception(error);
 
                 cacheData = ObjectParse<OmniArmoryUnsignedResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
+        /// <summary>
+        /// Decodes and returns the raw hex and signed status from an armory transaction. 
+        /// Data: 
+        ///     armory_tx : armory transaction in text format
+        /// </summary>
+        /// <param name="armoryTx"></param>
+        /// <returns></returns>
+        public OmniRawTransactionResponse GetRawtransaction(string armoryTx)
+        {
+            if (string.IsNullOrEmpty(armoryTx))
+                throw new ArgumentNullException(nameof(armoryTx));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetRawtransaction), armoryTx);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniRawTransactionResponse cacheData);
+            if (!exists)
+            {
+                string data = $"armory_tx={armoryTx}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "armory/getrawtransaction");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniRawTransactionResponse>(resp);
 
                 ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }

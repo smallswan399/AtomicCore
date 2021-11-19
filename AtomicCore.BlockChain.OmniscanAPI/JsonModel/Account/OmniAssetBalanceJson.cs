@@ -3,7 +3,7 @@
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
     /// <summary>
-    /// omni asset balance json
+    /// omni asset property info json
     /// </summary>
     public class OmniAssetBalanceJson
     {

@@ -197,18 +197,18 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <summary>
         /// Returns the balance information for multiple addresses
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="addresses"></param>
         /// <returns></returns>
-        public Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] address)
+        public Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] addresses)
         {
-            if (null == address || address.Length <= 0)
-                throw new ArgumentNullException(nameof(address));
+            if (null == addresses || addresses.Length <= 0)
+                throw new ArgumentNullException(nameof(addresses));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV2), address);
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV2), addresses);
             bool exists = ApiMsCacheProvider.Get(cacheKey, out Dictionary<string, OmniAssetCollectionJson> cacheData);
             if (!exists)
             {
-                string data = string.Join("&", address.Select(s => $"addr={s}"));
+                string data = string.Join("&", addresses.Select(s => $"addr={s}"));
                 string url = this.CreateRestUrl(OmniRestVersion.V2, "address/addr/");
                 string resp = this.RestPost(url, data);
 
@@ -264,6 +264,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="unsignedHex"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
+        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         public OmniArmoryUnsignedResponse GetUnsigned(string unsignedHex, string publicKey)
         {
             if (string.IsNullOrEmpty(unsignedHex))
@@ -296,6 +297,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="armoryTx"></param>
         /// <returns></returns>
+        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         public OmniRawTransactionResponse GetRawtransaction(string armoryTx)
         {
             if (string.IsNullOrEmpty(armoryTx))
@@ -319,6 +321,16 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             }
 
             return cacheData;
+        }
+
+        /// <summary>
+        /// Decodes raw hex returning Omni and Bitcoin transaction information
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        public OmniDecodeResponse Decode(string hex)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

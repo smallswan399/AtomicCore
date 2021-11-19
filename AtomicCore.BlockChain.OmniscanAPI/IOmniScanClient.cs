@@ -20,9 +20,9 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <summary>
         /// Returns the balance information for multiple addresses
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="addresses"></param>
         /// <returns></returns>
-        Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] address);
+        Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] addresses);
 
         /// <summary>
         /// Returns the balance information and transaction history list for a given address
@@ -41,6 +41,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="unsignedHex"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
+        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         OmniArmoryUnsignedResponse GetUnsigned(string unsignedHex, string publicKey);
 
         /// <summary>
@@ -50,6 +51,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="armoryTx"></param>
         /// <returns></returns>
+        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
         OmniRawTransactionResponse GetRawtransaction(string armoryTx);
+
+        /// <summary>
+        /// Decodes raw hex returning Omni and Bitcoin transaction information
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        OmniDecodeResponse Decode(string hex);
     }
 }

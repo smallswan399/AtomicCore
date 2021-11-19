@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\JsonConverters\" />
+    <Folder Include="JsonModel\Omni\" />
   </ItemGroup>
 
   <ItemGroup>

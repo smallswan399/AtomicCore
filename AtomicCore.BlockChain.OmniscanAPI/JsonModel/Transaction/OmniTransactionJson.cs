@@ -59,7 +59,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// positioninblock
         /// </summary>
         [JsonProperty("positioninblock")]
-        public int PositionInBlock { get; set; }
+        public int PositionInblock { get; set; }
 
         /// <summary>
         /// propertyid

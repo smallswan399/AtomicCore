@@ -234,7 +234,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV2), address);
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressDetails), address);
             bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniAddressDetailsResponse cacheData);
             if (!exists)
             {

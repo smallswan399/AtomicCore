@@ -120,10 +120,28 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
         }
 
         [TestMethod()]
-        public void SearchTest()
+        public void SearchAddressTest()
         {
             IOmniScanClient client = new OmniScanClient();
             var result = client.Search("1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu");
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
+        public void SearchAssetTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.Search("3");
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
+        public void SearchTxTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.Search("ccc0c74b4875b20b3c00409520142cc24865d6d5aba355c8f2f21de7f2b65fa4");
 
             Assert.IsTrue(null != result);
         }

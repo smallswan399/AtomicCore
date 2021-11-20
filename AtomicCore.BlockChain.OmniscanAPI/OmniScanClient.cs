@@ -368,7 +368,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         public OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem)
         {
             if (ecosystem != 1 && ecosystem != 2)
-                throw new ArgumentException("1 for main / production ecosystem or 2 for test/development ecosystem");
+                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
             string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(DesignatingCurrencies), ecosystem.ToString());
             bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniDesignatingCurrenciesResponse cacheData);
@@ -449,6 +449,40 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                     throw new Exception(error);
 
                 cacheData = ObjectParse<OmniListByOwnerResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
+        /// <summary>
+        /// Returns list of currently active crowdsales. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for production/main ecosystem. 
+        ///         2 for test/dev ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        public OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem)
+        {
+            if (ecosystem != 1 && ecosystem != 2)
+                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniCrowdSalesResponse cacheData);
+            if (!exists)
+            {
+                string data = $"ecosystem={ecosystem}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/listactivecrowdsales");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniCrowdSalesResponse>(resp);
 
                 ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }

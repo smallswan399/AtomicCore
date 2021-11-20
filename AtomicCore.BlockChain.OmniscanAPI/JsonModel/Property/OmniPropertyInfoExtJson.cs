@@ -221,7 +221,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// tokensperunit
         /// </summary>
         [JsonProperty("tokensperunit")]
-        public string tokensperunit { get; set; }
+        public string Tokensperunit { get; set; }
 
         /// <summary>
         /// totaltokens

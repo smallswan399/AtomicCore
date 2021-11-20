@@ -92,5 +92,16 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="addresses"></param>
         /// <returns></returns>
         OmniListByOwnerResponse ListByOwner(params string[] addresses);
+
+        /// <summary>
+        /// Returns list of currently active crowdsales. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for production/main ecosystem. 
+        ///         2 for test/dev ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem);
     }
 }

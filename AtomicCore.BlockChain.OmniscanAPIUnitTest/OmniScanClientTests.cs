@@ -91,5 +91,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void ListActiveCrowdSalesTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.ListActiveCrowdSales(1);
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

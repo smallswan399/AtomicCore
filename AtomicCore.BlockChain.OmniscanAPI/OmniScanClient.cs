@@ -504,7 +504,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListByEcosystem), ecosystem.ToString());
             bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniListByEcosystemResponse cacheData);
             if (!exists)
             {
@@ -517,6 +517,31 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                     throw new Exception(error);
 
                 cacheData = ObjectParse<OmniListByEcosystemResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
+        /// <summary>
+        /// Returns list of all created properties.
+        /// </summary>
+        /// <returns></returns>
+        public OmniCoinListResponse PropertyList()
+        {
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(PropertyList));
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniCoinListResponse cacheData);
+            if (!exists)
+            {
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/list");
+                string resp = this.RestGet(url);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniCoinListResponse>(resp);
 
                 ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }

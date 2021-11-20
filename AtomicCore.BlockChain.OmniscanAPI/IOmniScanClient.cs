@@ -114,5 +114,11 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="ecosystem"></param>
         /// <returns></returns>
         OmniListByEcosystemResponse ListByEcosystem(int ecosystem);
+
+        /// <summary>
+        /// Returns list of all created properties.
+        /// </summary>
+        /// <returns></returns>
+        OmniCoinListResponse PropertyList();
     }
 }

@@ -109,5 +109,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void PropertyListTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.PropertyList();
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

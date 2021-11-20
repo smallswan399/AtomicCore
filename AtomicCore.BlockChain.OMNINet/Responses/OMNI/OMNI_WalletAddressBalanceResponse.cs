@@ -26,7 +26,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <summary>
         /// 代币令牌
         /// </summary>
-        public int propertyid { get; set; }
+        public ulong propertyid { get; set; }
 
         /// <summary>
         /// 代币名称

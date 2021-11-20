@@ -11,7 +11,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// PropertyId
         /// </summary>
         [JsonProperty("propertyid")]
-        public int PropertyId { get; set; }
+        public ulong PropertyId { get; set; }
 
         /// <summary>
         /// PropertyName

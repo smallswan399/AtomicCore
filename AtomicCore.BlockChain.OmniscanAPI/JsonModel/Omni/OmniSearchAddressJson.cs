@@ -11,6 +11,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// balance
         /// </summary>
         [JsonProperty("balance")]
-        public OmniAssetBalanceJson[] Balance { get; set; }
+        public OmniSearchBalanceJson[] Balance { get; set; }
     }
 }

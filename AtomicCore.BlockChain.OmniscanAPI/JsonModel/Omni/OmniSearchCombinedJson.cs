@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     /// <summary>
     /// omni search data json
     /// </summary>
-    public class OmniSearchDataJson
+    public class OmniSearchCombinedJson
     {
         /// <summary>
         /// address result

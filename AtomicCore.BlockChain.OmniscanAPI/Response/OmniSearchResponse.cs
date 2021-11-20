@@ -23,6 +23,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// data
         /// </summary>
         [JsonProperty("data")]
-        public OmniSearchDataJson Data { get; set; }
+        public OmniSearchCombinedJson Data { get; set; }
     }
 }

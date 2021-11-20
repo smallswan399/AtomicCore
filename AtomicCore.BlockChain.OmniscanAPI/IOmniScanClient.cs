@@ -103,5 +103,16 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="ecosystem"></param>
         /// <returns></returns>
         OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem);
+
+        /// <summary>
+        /// returns list of created properties filtered by ecosystem. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for production/main ecosystem. 
+        ///         2 for test/dev ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        OmniListByEcosystemResponse ListByEcosystem(int ecosystem);
     }
 }

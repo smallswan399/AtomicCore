@@ -490,6 +490,40 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// returns list of created properties filtered by ecosystem. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for production/main ecosystem. 
+        ///         2 for test/dev ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        public OmniListByEcosystemResponse ListByEcosystem(int ecosystem)
+        {
+            if (ecosystem != 1 && ecosystem != 2)
+                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniListByEcosystemResponse cacheData);
+            if (!exists)
+            {
+                string data = $"ecosystem={ecosystem}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/listbyecosystem");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniListByEcosystemResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

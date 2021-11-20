@@ -100,5 +100,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void ListbyecosystemTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.ListByEcosystem(1);
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

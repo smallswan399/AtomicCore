@@ -549,6 +549,39 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Search by transaction id, address or property id. 
+        /// Data: 
+        ///     query : 
+        ///         text string of either Transaction ID, Address, or property id to search for
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public OmniSearchResponse Search(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException(nameof(query));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(Search), query);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniSearchResponse cacheData);
+            if (!exists)
+            {
+                string data = $"query={query}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "search");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniSearchResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

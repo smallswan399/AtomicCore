@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\JsonConverters\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>
 

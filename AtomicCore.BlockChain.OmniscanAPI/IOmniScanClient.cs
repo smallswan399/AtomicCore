@@ -120,5 +120,15 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <returns></returns>
         OmniCoinListResponse PropertyList();
+
+        /// <summary>
+        /// Search by transaction id, address or property id. 
+        /// Data: 
+        ///     query : 
+        ///         text string of either Transaction ID, Address, or property id to search for
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        OmniSearchResponse Search(string query);
     }
 }

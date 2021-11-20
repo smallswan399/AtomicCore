@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
@@ -575,6 +574,41 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                     throw new Exception(error);
 
                 cacheData = ObjectParse<OmniSearchResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
+        /// <summary>
+        /// Returns list of transactions for queried address. 
+        /// Data: 
+        ///     addr : 
+        ///         address to query page : 
+        ///             cycle through available response pages (10 txs per page)
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public OmniTransactionListResponse GetTxList(string address, int page = 0)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetTxList), address);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniTransactionListResponse cacheData);
+            if (!exists)
+            {
+                string data = $"addr={address}&page={page}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "transaction/address");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniTransactionListResponse>(resp);
 
                 ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }

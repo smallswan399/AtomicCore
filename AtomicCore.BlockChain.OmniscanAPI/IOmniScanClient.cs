@@ -130,5 +130,17 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="query"></param>
         /// <returns></returns>
         OmniSearchResponse Search(string query);
+
+        /// <summary>
+        /// Returns list of transactions for queried address. 
+        /// Data: 
+        ///     addr : 
+        ///         address to query page : 
+        ///             cycle through available response pages (10 txs per page)
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        OmniTransactionListResponse GetTxList(string address, int page = 0);
     }
 }

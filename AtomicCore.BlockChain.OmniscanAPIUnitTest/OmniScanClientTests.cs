@@ -145,5 +145,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+        [TestMethod()]
+        public void GetTxListTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.GetTxList("1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu");
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

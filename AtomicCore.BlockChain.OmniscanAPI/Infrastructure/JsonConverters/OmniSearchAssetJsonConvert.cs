@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
@@ -33,34 +33,28 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             //bool isNullable = this.IsNullableType(objectType);
             //Type t = isNullable ? Nullable.GetUnderlyingType(objectType) : objectType;
 
-            if (reader.TokenType == JsonToken.Null)
+            if (reader.TokenType == JsonToken.StartArray)
             {
-                if (!IsNullableType(objectType))
-                    throw new Exception(string.Format("can not null value convert to {0}.", objectType));
+                JArray jarr = JArray.Load(reader);
 
-                return null;
-            }
-            if (reader.TokenType == JsonToken.String)
-            {
-                if (!DateTime.TryParse(reader.Value.ToString(), out DateTime dt))
-                    throw new Exception(string.Format("Error converting value {0} to type '{1}'", reader.Value, objectType));
+                List<OmniSearchAssetJson> list = new List<OmniSearchAssetJson>();
 
-                return null;
-                //return (long)dt.Subtract(utc_1970).TotalSeconds;
-            }
-            if (reader.TokenType == JsonToken.Date)
-            {
-                if (!DateTime.TryParse(reader.Value.ToString(), out DateTime dt))
-                    throw new Exception(string.Format("Error converting value {0} to type '{1}'", reader.Value, objectType));
+                OmniSearchAssetJson model = null;
+                foreach (JToken item in jarr.AsJEnumerable())
+                {
+                    object[] objs = item.ToObject<object[]>();
+                    if (objs.Length < 3)
+                        continue;
 
-                return null;
-                //return (long)dt.Subtract(utc_1970).TotalSeconds;
-            }
-            if (reader.TokenType == JsonToken.Integer)
-            {
-                //数值
-                return null;
-                //return Convert.ToInt64(reader.Value);
+                    model = new OmniSearchAssetJson();
+                    model.PropertyId = Convert.ToUInt64(objs[0]);
+                    model.PropertyName = objs[1].ToString();
+                    model.ReferenceAddress = objs[2].ToString();
+
+                    list.Add(model);
+                }
+
+                return list.ToArray();
             }
 
             throw new Exception(string.Format("Unexpected token {0} when parsing enum,Value is {1}", reader.TokenType, reader.ToString()));

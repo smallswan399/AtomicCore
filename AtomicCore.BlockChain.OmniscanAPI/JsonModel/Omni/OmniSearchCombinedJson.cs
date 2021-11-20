@@ -18,7 +18,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         [JsonProperty("asset")]
         [JsonConverter(typeof(OmniSearchAssetJsonConvert))]
-        public OmniSearchAssetJson Asset { get; set; }
+        public OmniSearchAssetJson[] Asset { get; set; }
 
         /// <summary>
         /// tx

@@ -3,9 +3,9 @@
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
     /// <summary>
-    /// omni transaction json
+    /// omni tx info response
     /// </summary>
-    public class OmniTransactionJson
+    public class OmniTxInfoResponse
     {
         /// <summary>
         /// amount

@@ -151,5 +151,12 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="signedTransaction"></param>
         /// <returns></returns>
         OmniPushTxResponse PushTx(string signedTransaction);
+
+        /// <summary>
+        /// Returns transaction details of a queried transaction hash.
+        /// </summary>
+        /// <param name="txHash"></param>
+        /// <returns></returns>
+        OmniTxInfoResponse GetTx(string txHash);
     }
 }

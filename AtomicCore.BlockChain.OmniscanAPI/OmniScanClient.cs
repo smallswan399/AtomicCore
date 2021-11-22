@@ -648,6 +648,35 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Returns transaction details of a queried transaction hash.
+        /// </summary>
+        /// <param name="txHash"></param>
+        /// <returns></returns>
+        public OmniTxInfoResponse GetTx(string txHash)
+        {
+            if (string.IsNullOrEmpty(txHash))
+                throw new ArgumentNullException(nameof(txHash));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetTx), txHash);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniTxInfoResponse cacheData);
+            if (!exists)
+            {
+                string url = this.CreateRestUrl(OmniRestVersion.V1, $"transaction/tx/{txHash}");
+                string resp = this.RestGet(url);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniTxInfoResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

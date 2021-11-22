@@ -23,6 +23,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// transactions
         /// </summary>
         [JsonProperty("transactions")]
-        public OmniTransactionJson Transaction { get; set; }
+        public OmniTransactionJson[] Transaction { get; set; }
     }
 }

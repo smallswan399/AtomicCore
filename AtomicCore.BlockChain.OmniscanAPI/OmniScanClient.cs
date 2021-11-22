@@ -616,6 +616,38 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             return cacheData;
         }
 
+        /// <summary>
+        /// Broadcast a signed transaction to the network. 
+        /// Data: 
+        ///     signedTransaction : signed hex to broadcast
+        /// </summary>
+        /// <param name="signedTransaction"></param>
+        /// <returns></returns>
+        public OmniPushTxResponse PushTx(string signedTransaction)
+        {
+            if (string.IsNullOrEmpty(signedTransaction))
+                throw new ArgumentNullException(nameof(signedTransaction));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(PushTx), signedTransaction);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniPushTxResponse cacheData);
+            if (!exists)
+            {
+                string data = $"signedTransaction={signedTransaction}";
+                string url = this.CreateRestUrl(OmniRestVersion.V1, "transaction/pushtx/");
+                string resp = this.RestPost(url, data);
+
+                string error = HasResponseError(resp);
+                if (!string.IsNullOrEmpty(error))
+                    throw new Exception(error);
+
+                cacheData = ObjectParse<OmniPushTxResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
         #endregion
     }
 }

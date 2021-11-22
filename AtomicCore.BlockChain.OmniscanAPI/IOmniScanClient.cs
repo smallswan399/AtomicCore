@@ -142,5 +142,14 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="page"></param>
         /// <returns></returns>
         OmniTransactionListResponse GetTxList(string address, int page = 0);
+
+        /// <summary>
+        /// Broadcast a signed transaction to the network. 
+        /// Data: 
+        ///     signedTransaction : signed hex to broadcast
+        /// </summary>
+        /// <param name="signedTransaction"></param>
+        /// <returns></returns>
+        OmniPushTxResponse PushTx(string signedTransaction);
     }
 }

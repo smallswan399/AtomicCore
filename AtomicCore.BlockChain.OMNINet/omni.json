@@ -1,8 +1,8 @@
 {
-    "RpcUrl": "http://localhost:8339",
-    "RpcTestnet": "http://localhost:8449",
-    "RpcUserName": "user",
-    "RpcPassword": "123qwe...",
-    "RpcTimeout": 59,
-    "WalletPassword": "123456"
+  "RpcUrl": "http://localhost:8339",
+  "RpcUserName": "user",
+  "RpcPassword": "123qwe...",
+  "RpcTimeout": 59,
+  "WalletPassword": "123456",
+  "UsdtPropertyId": "31"
 }

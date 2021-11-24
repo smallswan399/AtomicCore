@@ -16,11 +16,6 @@ namespace AtomicCore.BlockChain.OMNINet
         public string RpcUrl { get; set; }
 
         /// <summary>
-        /// rpc test net
-        /// </summary>
-        public string RpcTestnet { get; set; }
-
-        /// <summary>
         /// rpc userName
         /// </summary>
         public string RpcUserName { get; set; }
@@ -39,6 +34,11 @@ namespace AtomicCore.BlockChain.OMNINet
         /// wallet password
         /// </summary>
         public string WalletPassword { get; set; }
+
+        /// <summary>
+        /// Usdt PropertyId
+        /// </summary>
+        public int UsdtPropertyId { get; set; }
 
         #endregion
 

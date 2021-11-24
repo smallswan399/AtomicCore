@@ -81,10 +81,7 @@ namespace AtomicCore.BlockChain.OMNINet
                 if (string.IsNullOrEmpty(DaemonUrl))
                     throw new Exception("DaemonUrl is null or empty");
 
-                DaemonUrlTestnet = rpcSetting.RpcTestnet;
-                if (string.IsNullOrEmpty(DaemonUrlTestnet))
-                    DaemonUrlTestnet = DaemonUrl;
-
+                DaemonUrlTestnet = DaemonUrl;
                 RpcUsername = rpcSetting.RpcUserName;
                 RpcPassword = rpcSetting.RpcPassword;
                 WalletPassword = rpcSetting.WalletPassword;

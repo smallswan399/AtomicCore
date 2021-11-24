@@ -42,7 +42,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <summary>
         /// 从1970-01-01的时间戳 单位秒
         /// </summary>
-        public int time { get; set; }
+        public ulong time { get; set; }
 
         public string nonce { get; set; }
 

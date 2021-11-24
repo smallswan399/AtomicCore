@@ -68,7 +68,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// 每几秒就更新
         /// len:4
         /// </summary>
-        public int Time { get; set; }
+        public ulong Time { get; set; }
 
         /// <summary>
         /// 从0开始的32位随机

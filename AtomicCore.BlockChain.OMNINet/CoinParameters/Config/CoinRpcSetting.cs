@@ -35,11 +35,6 @@ namespace AtomicCore.BlockChain.OMNINet
         /// </summary>
         public string WalletPassword { get; set; }
 
-        /// <summary>
-        /// Usdt PropertyId
-        /// </summary>
-        public int UsdtPropertyId { get; set; }
-
         #endregion
 
         #region Static Methods

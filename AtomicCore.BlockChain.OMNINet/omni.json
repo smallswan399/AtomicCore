@@ -2,7 +2,6 @@
   "RpcUrl": "http://localhost:8339",
   "RpcUserName": "user",
   "RpcPassword": "123qwe...",
-  "RpcTimeout": 59,
-  "WalletPassword": "123456",
-  "UsdtPropertyId": "31"
+  "RpcTimeout": 60,
+  "WalletPassword": "123456"
 }

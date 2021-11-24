@@ -21,7 +21,7 @@ namespace AtomicCore.BlockChain.OMNINet
 
         public double mint { get; set; }
 
-        public long time { get; set; }
+        public ulong time { get; set; }
 
         public string nonce { get; set; }
 

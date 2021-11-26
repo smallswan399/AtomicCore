@@ -27,6 +27,11 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         private readonly string _agentGetTmp;
 
+        /// <summary>
+        /// agent url tmp
+        /// </summary>
+        private readonly string _agentPostTmp;
+
         #endregion
 
         #region Constructor
@@ -35,9 +40,11 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// constructor
         /// </summary>
         /// <param name="agentGetTmp"></param>
-        public OmniScanClient(string agentGetTmp = null)
+        /// <param name="agentPostTmp"></param>
+        public OmniScanClient(string agentGetTmp = null, string agentPostTmp = null)
         {
-            this._agentGetTmp = agentGetTmp;
+            _agentGetTmp = agentGetTmp;
+            _agentPostTmp = agentPostTmp;
         }
 
         #endregion
@@ -52,10 +59,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         private string CreateRestUrl(OmniRestVersion version, string actionUrl)
         {
-            if (string.IsNullOrEmpty(this._agentGetTmp))
-                return $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower();
-            else
-                return string.Format(this._agentGetTmp, $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower());
+            return $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower();
         }
 
         /// <summary>
@@ -97,12 +101,12 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             string resp;
             try
             {
-                if (string.IsNullOrEmpty(this._agentGetTmp))
+                if (string.IsNullOrEmpty(this._agentPostTmp))
                     resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
                 else
                 {
                     string encodeUrl = UrlEncoder.UrlEncode(url);
-                    string remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
+                    string remoteUrl = string.Format(this._agentPostTmp, encodeUrl);
 
                     resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
                 }

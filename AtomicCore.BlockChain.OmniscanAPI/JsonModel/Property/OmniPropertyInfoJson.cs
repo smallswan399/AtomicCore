@@ -144,7 +144,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// rdata
         /// </summary>
         [JsonProperty("rdata")]
-        public JObject RData { get; set; }
+        public string RData { get; set; }
 
         /// <summary>
         /// registered

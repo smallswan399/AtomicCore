@@ -52,7 +52,10 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         private string CreateRestUrl(OmniRestVersion version, string actionUrl)
         {
-            return $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower();
+            if (string.IsNullOrEmpty(this._agentGetTmp))
+                return $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower();
+            else
+                return string.Format(this._agentGetTmp, $"{C_APIREST_BASEURL}/{version}/{actionUrl}".ToLower());
         }
 
         /// <summary>

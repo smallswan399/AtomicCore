@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
         [TestMethod()]
         public void GetAddressBTCTest()
         {
-            IOmniScanClient client = new OmniScanClient();
+            IOmniScanClient client = new OmniScanClient("http://agent.intoken.club/Remote/Get?url={0}");
             var result = client.GetAddressBTC("19dENFt4wVwos6xtgwStA6n8bbA57WCS58");
 
             Assert.IsTrue(null != result);

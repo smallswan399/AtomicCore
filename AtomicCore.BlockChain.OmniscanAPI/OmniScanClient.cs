@@ -92,6 +92,42 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         }
 
         /// <summary>
+        /// rest get request(Using HttpClient)
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <returns></returns>
+        private string RestGet2(string url)
+        {
+            string resp;
+            try
+            {
+                string remoteUrl;
+                if (string.IsNullOrEmpty(this._agentGetTmp))
+                    remoteUrl = url;
+                else
+                {
+                    string encodeUrl = UrlEncoder.UrlEncode(url);
+                    remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
+                }
+
+                using (HttpClient cli = new HttpClient())
+                {
+                    HttpResponseMessage respMessage = cli.GetAsync(remoteUrl).Result;
+                    if (!respMessage.IsSuccessStatusCode)
+                        throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
+
+                    resp = respMessage.Content.ReadAsStringAsync().Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return resp;
+        }
+
+        /// <summary>
         /// rest post request
         /// </summary>
         /// <param name="url"></param>
@@ -184,23 +220,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (!exists)
             {
                 string url = $"https://blockchain.info/balance?cors=true&active={address}";
-                string resp;
-
-                using (HttpClient cli = new HttpClient())
-                {
-                    try
-                    {
-                        HttpResponseMessage respMessage = cli.GetAsync(url).Result;
-                        if (!respMessage.IsSuccessStatusCode)
-                            throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
-
-                        resp = respMessage.Content.ReadAsStringAsync().Result;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
+                string resp = RestGet2(url);
 
                 cacheData = ObjectParse<Dictionary<string, OmniBtcBalanceJson>>(resp);
 

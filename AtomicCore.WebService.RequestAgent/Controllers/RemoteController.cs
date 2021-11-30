@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Net.Http;
 
 namespace AtomicCore.WebService.RequestAgent.Controllers
 {
@@ -30,17 +31,17 @@ namespace AtomicCore.WebService.RequestAgent.Controllers
 
             string get_url = System.Web.HttpUtility.UrlDecode(url);
 
-            string res;
-            try
+            string resp;
+            using (HttpClient cli = new HttpClient())
             {
-                res = HttpProtocol.HttpGet(get_url, string.Empty, null, null);
-            }
-            catch (Exception ex)
-            {
-                return Content(null == ex.InnerException ? ex.Message : ex.InnerException.Message);
+                HttpResponseMessage respMessage = cli.GetAsync(get_url).Result;
+                if (!respMessage.IsSuccessStatusCode)
+                    throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, Request Error!");
+
+                resp = respMessage.Content.ReadAsStringAsync().Result;
             }
 
-            return Content(res);
+            return Content(resp);
         }
 
         /// <summary>

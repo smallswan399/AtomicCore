@@ -12,9 +12,18 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
     public class OmniScanClientTests
     {
         [TestMethod()]
+        public void GetAddressBTCTest()
+        {
+            IOmniScanClient client = new OmniScanClient();
+            var result = client.GetAddressBTC("19dENFt4wVwos6xtgwStA6n8bbA57WCS58");
+
+            Assert.IsTrue(null != result);
+        }
+
+        [TestMethod()]
         public void GetAddressV1Test()
         {
-            IOmniScanClient client = new OmniScanClient("http://agent.intoken.club/Remote/Get?url={0}");
+            IOmniScanClient client = new OmniScanClient();
             var result = client.GetAddressV1("1KYiKJEfdJtap9QX2v9BXJMpz2SfU4pgZw");
 
             Assert.IsTrue(null != result);

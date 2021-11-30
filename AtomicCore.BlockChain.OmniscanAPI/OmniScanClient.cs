@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace AtomicCore.BlockChain.OmniscanAPI
 {
@@ -136,8 +137,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                 throw ex;
             }
 
-            JToken error_json;
-            if (json_obj.TryGetValue("error", StringComparison.OrdinalIgnoreCase, out error_json))
+            if (json_obj.TryGetValue("error", StringComparison.OrdinalIgnoreCase, out JToken error_json))
                 return error_json.ToString();
 
             return null;
@@ -168,6 +168,47 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #endregion
 
         #region IOmniScanClient Methods
+
+        /// <summary>
+        /// Returns the balance for a given address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public Dictionary<string, OmniBtcBalanceJson> GetAddressBTC(string address)
+        {
+            if (null == address || address.Length <= 0)
+                throw new ArgumentNullException(nameof(address));
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressBTC), address);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out Dictionary<string, OmniBtcBalanceJson> cacheData);
+            if (!exists)
+            {
+                string url = $"https://blockchain.info/balance?cors=true&active={address}";
+                string resp;
+
+                using (HttpClient cli = new HttpClient())
+                {
+                    try
+                    {
+                        HttpResponseMessage respMessage = cli.GetAsync(url).Result;
+                        if (!respMessage.IsSuccessStatusCode)
+                            throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
+
+                        resp = respMessage.Content.ReadAsStringAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+
+                cacheData = ObjectParse<Dictionary<string, OmniBtcBalanceJson>>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
 
         /// <summary>
         /// Returns the balance information for a given address. 

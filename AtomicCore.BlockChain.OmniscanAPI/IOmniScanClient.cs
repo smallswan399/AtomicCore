@@ -10,6 +10,13 @@ namespace AtomicCore.BlockChain.OmniscanAPI
     public interface IOmniScanClient
     {
         /// <summary>
+        /// Returns the balance for a given address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        Dictionary<string, OmniBtcBalanceJson> GetAddressBTC(string address);
+
+        /// <summary>
         /// Returns the balance information for a given address. 
         /// For multiple addresses in a single query use the v2 endpoint
         /// </summary>

@@ -151,6 +151,78 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// bandwidth
         /// </summary>
         [JsonProperty("bandwidth")]
-        public JObject Bandwidth { get; set; }
+        public TronAccountBandwidthJson Bandwidth { get; set; }
+
+        /// <summary>
+        /// date_created
+        /// </summary>
+        [JsonProperty("date_created")]
+        public ulong DateCreated { get; set; }
+
+        /// <summary>
+        /// accountType
+        /// </summary>
+        [JsonProperty("accountType")]
+        public int AccountType { get; set; }
+
+        /// <summary>
+        /// exchanges
+        /// </summary>
+        [JsonProperty("exchanges")]
+        public JObject Exchanges { get; set; }
+
+        /// <summary>
+        /// frozen
+        /// </summary>
+        [JsonProperty("frozen")]
+        public JObject Frozen { get; set; }
+
+        /// <summary>
+        /// accountResource
+        /// </summary>
+        [JsonProperty("accountResource")]
+        public JObject AccountResource { get; set; }
+
+        /// <summary>
+        /// transactions
+        /// </summary>
+        [JsonProperty("transactions")]
+        public ulong Transactions { get; set; }
+
+        /// <summary>
+        /// witness
+        /// </summary>
+        [JsonProperty("witness")]
+        public ulong Witness { get; set; }
+
+        /// <summary>
+        /// delegateFrozenForBandWidth
+        /// </summary>
+        [JsonProperty("delegateFrozenForBandWidth")]
+        public BigInteger DelegateFrozenForBandWidth { get; set; }
+
+        /// <summary>
+        /// name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// frozenForEnergy
+        /// </summary>
+        [JsonProperty("frozenForEnergy")]
+        public ulong FrozenForEnergy { get; set; }
+
+        /// <summary>
+        /// acquiredDelegateFrozenForEnergy
+        /// </summary>
+        [JsonProperty("acquiredDelegateFrozenForEnergy")]
+        public ulong AcquiredDelegateFrozenForEnergy { get; set; }
+
+        /// <summary>
+        /// activePermissions
+        /// </summary>
+        [JsonProperty("activePermissions")]
+        public TronAccountOperatePermissionJson[] ActivePermissions { get; set; }
     }
 }

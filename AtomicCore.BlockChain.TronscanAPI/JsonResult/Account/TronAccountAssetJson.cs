@@ -61,7 +61,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// trc721token_balances
         /// </summary>
         [JsonProperty("trc721token_balances")]
-        public JObject TRC721TokenBalances { get; set; }
+        public JArray TRC721TokenBalances { get; set; }
 
         /// <summary>
         /// TRX Balance
@@ -127,13 +127,13 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// addressTagLogo
         /// </summary>
         [JsonProperty("addressTagLogo")]
-        public JObject AddressTagLogo { get; set; }
+        public string AddressTagLogo { get; set; }
 
         /// <summary>
         /// allowExchange
         /// </summary>
         [JsonProperty("allowExchange")]
-        public JObject AllowExchange { get; set; }
+        public JArray AllowExchange { get; set; }
 
         /// <summary>
         /// address
@@ -145,7 +145,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// frozen_supply
         /// </summary>
         [JsonProperty("frozen_supply")]
-        public JObject FrozenSupply { get; set; }
+        public JArray FrozenSupply { get; set; }
 
         /// <summary>
         /// bandwidth
@@ -169,7 +169,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// exchanges
         /// </summary>
         [JsonProperty("exchanges")]
-        public JObject Exchanges { get; set; }
+        public JArray Exchanges { get; set; }
 
         /// <summary>
         /// frozen

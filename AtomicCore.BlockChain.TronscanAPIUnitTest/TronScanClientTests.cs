@@ -54,7 +54,7 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         public void GetAccountAssetsTest()
         {
             ITronScanClient client = new TronScanClient();
-            var result = client.GetAccountAssets("TWd4WrZ9wn84f5x1hZhL4DHvk738ns5jwb");
+            var result = client.GetAccountAssets("TQ4nYdhWEUPumhEdNN9Ft3ymg3LtWWsa9L");
 
             Assert.IsTrue(null != result);
         }

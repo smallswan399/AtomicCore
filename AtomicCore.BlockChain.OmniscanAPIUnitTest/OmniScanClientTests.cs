@@ -11,10 +11,13 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
     [TestClass()]
     public class OmniScanClientTests
     {
+        private const string AGENT_GET = "http://agent.intoken.club/Remote/Get?url={0}";
+        private const string AGENT_POST = "http://agent.intoken.club/Remote/Post?url={0}&contentType={1}";
+
         [TestMethod()]
         public void GetAddressBTCTest()
         {
-            IOmniScanClient client = new OmniScanClient("http://agent.intoken.club/Remote/Get?url={0}");
+            IOmniScanClient client = new OmniScanClient(AGENT_GET);
             var result = client.GetAddressBTC("19dENFt4wVwos6xtgwStA6n8bbA57WCS58");
 
             Assert.IsTrue(null != result);
@@ -23,8 +26,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
         [TestMethod()]
         public void GetAddressV1Test()
         {
-            IOmniScanClient client = new OmniScanClient();
-            var result = client.GetAddressV1("1KYiKJEfdJtap9QX2v9BXJMpz2SfU4pgZw");
+            IOmniScanClient client = new OmniScanClient(AGENT_GET, AGENT_POST);
+            var result = client.GetAddressV1("1LifmNfXAeMYnyFgySGyQpnJBSguWcuJdW");
 
             Assert.IsTrue(null != result);
         }

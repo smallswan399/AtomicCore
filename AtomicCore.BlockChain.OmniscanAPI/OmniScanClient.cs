@@ -143,7 +143,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                 else
                 {
                     string encodeUrl = UrlEncoder.UrlEncode(url);
-                    string remoteUrl = string.Format(this._agentPostTmp, encodeUrl);
+                    string remoteUrl = string.Format(this._agentPostTmp, url, encodeUrl);
 
                     resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
                 }

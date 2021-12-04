@@ -61,5 +61,13 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <param name="ecosystem"></param>
         /// <returns></returns>
         string OMNIFundedSendALL(string fromAddress, string toAddress, string feeAddress, int ecosystem = 1);
+
+        /// <summary>
+        /// 发送OMNI RawTransaction
+        /// </summary>
+        /// <param name="rawTransactionHexString"></param>
+        /// <param name="maxfeerate"></param>
+        /// <returns></returns>
+        string OMNISendRawTransaction(string rawTransactionHexString, decimal maxfeerate = decimal.Zero);
     }
 }

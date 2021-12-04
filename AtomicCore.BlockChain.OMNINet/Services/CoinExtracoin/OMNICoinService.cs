@@ -165,6 +165,11 @@ namespace AtomicCore.BlockChain.OMNINet
             throw new System.NotImplementedException();
         }
 
+        public string OMNISendRawTransaction(string rawTransactionHexString, decimal maxfeerate = 0)
+        {
+            return _rpcConnector.MakeRequest<string>(RpcMethods.sendrawtransaction, rawTransactionHexString, maxfeerate);
+        }
+
         #endregion
     }
 }

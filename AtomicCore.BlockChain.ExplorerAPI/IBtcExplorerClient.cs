@@ -7,7 +7,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
     /// <summary>
     /// IBlockChainExplorer
     /// </summary>
-    public interface IBlockChainExplorer
+    public interface IBtcExplorerClient
     {
         /// <summary>
         /// Get Address Balance(BTC)

@@ -1,37 +1,25 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
     /// <summary>
-    /// BlockChain Explorer
+    /// explorer base client
     /// </summary>
-    public class BlockChainExplorer : IBlockChainExplorer
+    public abstract class BaseExplorerClient
     {
         #region Variables
 
         /// <summary>
-        /// cache seconds
+        /// agent url tmp
         /// </summary>
-        private const int c_cacheSeconds = 10;
-
-        /// <summary>
-        /// api rest base url
-        /// </summary>
-        private const string C_APIREST_BASEURL = "https://api.blockchain.info";
+        protected readonly string _agentGetTmp;
 
         /// <summary>
         /// agent url tmp
         /// </summary>
-        private readonly string _agentGetTmp;
-
-        /// <summary>
-        /// agent url tmp
-        /// </summary>
-        private readonly string _agentPostTmp;
+        protected readonly string _agentPostTmp;
 
         #endregion
 
@@ -42,7 +30,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// </summary>
         /// <param name="agentGetTmp"></param>
         /// <param name="agentPostTmp"></param>
-        public BlockChainExplorer(string agentGetTmp = null, string agentPostTmp = null)
+        public BaseExplorerClient(string agentGetTmp = null, string agentPostTmp = null)
         {
             _agentGetTmp = agentGetTmp;
             _agentPostTmp = agentPostTmp;
@@ -50,14 +38,14 @@ namespace AtomicCore.BlockChain.ExplorerAPI
 
         #endregion
 
-        #region Private Methods
+        #region Protected Methods
 
         /// <summary>
         /// rest get request
         /// </summary>
         /// <param name="url">URL</param>
         /// <returns></returns>
-        private string RestGet(string url)
+        protected string RestGet(string url)
         {
             string resp;
             try
@@ -85,7 +73,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// </summary>
         /// <param name="url">URL</param>
         /// <returns></returns>
-        private string RestGet2(string url)
+        protected string RestGet2(string url)
         {
             string resp;
             try
@@ -122,7 +110,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// <param name="url"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private string RestPost(string url, string data)
+        protected string RestPost(string url, string data)
         {
             string resp;
             try
@@ -150,7 +138,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// </summary>
         /// <param name="resp"></param>
         /// <returns></returns>
-        private string HasResponseError(string resp)
+        protected string HasResponseError(string resp)
         {
             JObject json_obj;
             try
@@ -174,7 +162,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// <typeparam name="T"></typeparam>
         /// <param name="resp"></param>
         /// <returns></returns>
-        private T ObjectParse<T>(string resp)
+        protected T ObjectParse<T>(string resp)
             where T : class, new()
         {
             T jsonResult;
@@ -188,20 +176,6 @@ namespace AtomicCore.BlockChain.ExplorerAPI
             }
 
             return jsonResult;
-        }
-
-        #endregion
-
-        #region IBlockChainExplorer
-
-        /// <summary>
-        /// Get Address Balance(BTC)
-        /// </summary>
-        /// <param name="address"></param>
-        /// <returns></returns>
-        public BtcAddressBalanceResponse GetAddressBTCBalance(string address)
-        {
-            return null;
         }
 
         #endregion

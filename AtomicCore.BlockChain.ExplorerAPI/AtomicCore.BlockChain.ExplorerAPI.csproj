@@ -16,7 +16,6 @@
 
 	<ItemGroup>
 	  <Folder Include="JsonModel\" />
-	  <Folder Include="Response\" />
 	</ItemGroup>
 
 </Project>

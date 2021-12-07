@@ -41,7 +41,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// inputs
         /// </summary>
         [JsonProperty("inputs")]
-        public object[] Inputs { get; set; }
+        public BtcTransactionInputJson[] Inputs { get; set; }
 
         /// <summary>
         /// outputs

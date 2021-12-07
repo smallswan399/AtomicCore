@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
     /// <summary>
     /// btc address txs response
     /// </summary>
-    public class BtcAddressTxsResponse
+    public class BtcAddressTxsResponse : List<BtcTransactionJson>
     {
     }
 }

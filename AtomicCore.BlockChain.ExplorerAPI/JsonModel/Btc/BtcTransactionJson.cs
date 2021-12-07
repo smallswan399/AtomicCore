@@ -3,7 +3,7 @@
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
     /// <summary>
-    /// https://api.blockchain.info/haskoin-store/btc/address/1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu/transactions/full
+    /// BtcTransactionJson
     /// </summary>
     public class BtcTransactionJson
     {
@@ -47,13 +47,13 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// outputs
         /// </summary>
         [JsonProperty("outputs")]
-        public object[] Outputs { get; set; }
+        public BtcTransactionOutputJson[] Outputs { get; set; }
 
         /// <summary>
         /// block
         /// </summary>
         [JsonProperty("block")]
-        public object Block { get; set; }
+        public BtcTransactionPositionJson Block { get; set; }
 
         /// <summary>
         /// deleted

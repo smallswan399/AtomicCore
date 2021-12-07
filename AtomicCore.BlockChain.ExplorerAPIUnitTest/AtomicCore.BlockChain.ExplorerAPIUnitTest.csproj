@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AtomicCore.BlockChain.ExplorerAPI\AtomicCore.BlockChain.ExplorerAPI.csproj" />
+  </ItemGroup>
+
 </Project>

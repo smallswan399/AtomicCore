@@ -16,8 +16,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AtomicCore.BlockChain.EtherscanAPI\AtomicCore.BlockChain.EtherscanAPI.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.Omnis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.OmniscanAPIUnitTest", "AtomicCore.BlockChain.OmniscanAPIUnitTest\AtomicCore.BlockChain.OmniscanAPIUnitTest.csproj", "{1EC73451-A0DC-42CE-8277-B965FD36DC6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.ExplorerAPI", "AtomicCore.BlockChain.ExplorerAPI\AtomicCore.BlockChain.ExplorerAPI.csproj", "{97E18264-2835-4666-B802-319D01F9AC60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.ExplorerAPI", "AtomicCore.BlockChain.ExplorerAPI\AtomicCore.BlockChain.ExplorerAPI.csproj", "{97E18264-2835-4666-B802-319D01F9AC60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.ExplorerAPIUnitTest", "AtomicCore.BlockChain.ExplorerAPIUnitTest\AtomicCore.BlockChain.ExplorerAPIUnitTest.csproj", "{2902D0F1-1897-401C-BAD3-AC04DCEFD905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -153,6 +155,10 @@ Global
 		{97E18264-2835-4666-B802-319D01F9AC60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97E18264-2835-4666-B802-319D01F9AC60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97E18264-2835-4666-B802-319D01F9AC60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2902D0F1-1897-401C-BAD3-AC04DCEFD905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2902D0F1-1897-401C-BAD3-AC04DCEFD905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2902D0F1-1897-401C-BAD3-AC04DCEFD905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2902D0F1-1897-401C-BAD3-AC04DCEFD905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,6 +186,7 @@ Global
 		{6279D5A3-2A1C-4079-8422-3C221770096F} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
 		{1EC73451-A0DC-42CE-8277-B965FD36DC6F} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 		{97E18264-2835-4666-B802-319D01F9AC60} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
+		{2902D0F1-1897-401C-BAD3-AC04DCEFD905} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {942DB662-B41D-4454-8FF9-2F118FA2B541}

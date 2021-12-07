@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
@@ -84,7 +85,13 @@ namespace AtomicCore.BlockChain.ExplorerAPI
             if (!exists)
             {
                 //https://api.blockchain.info/haskoin-store/btc/address/1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu/transactions/full
-                string url = $"{C_APIREST_BASEURL}haskoin-store/btc/address/{address}/transactions/full";
+                StringBuilder urlBuilder = new StringBuilder($"{C_APIREST_BASEURL}haskoin-store/btc/address/{address}/transactions/full");
+                if (offset > 0)
+                    urlBuilder.Append($"offset={offset}");
+                if(limit > 0)
+                    urlBuilder.Append($"limit={limit}");
+
+                string url = urlBuilder.ToString();
                 string resp = RestGet2(url);
 
                 cacheData = ObjectParse<BtcAddressTxsResponse>(resp);

@@ -5,9 +5,9 @@ using System.Text;
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
     /// <summary>
-    /// the btc balance of address
+    /// btc address txs response
     /// </summary>
-    public class BtcAddressBalanceResponse
+    public class BtcAddressTxsResponse
     {
     }
 }

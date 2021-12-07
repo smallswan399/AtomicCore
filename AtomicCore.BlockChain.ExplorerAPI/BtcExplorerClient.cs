@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+﻿using System;
 
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
@@ -32,7 +28,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// </summary>
         /// <param name="agentGetTmp"></param>
         /// <param name="agentPostTmp"></param>
-        public BtcExplorerClient(string agentGetTmp = null, string agentPostTmp = null) 
+        public BtcExplorerClient(string agentGetTmp = null, string agentPostTmp = null)
             : base(agentGetTmp, agentPostTmp)
         {
 
@@ -47,14 +43,14 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public BtcAddressBalanceResponse GetAddressBTCBalance(string address)
+        public BtcAddressBalanceResponse GetAddressBalance(string address)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
             if (34 != address.Length)
                 throw new ArgumentException("illegal address parameter format");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressBTCBalance), address);
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressBalance), address);
             bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcAddressBalanceResponse cacheData);
             if (!exists)
             {
@@ -62,6 +58,36 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string resp = RestGet2(url);
 
                 cacheData = ObjectParse<BtcAddressBalanceResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
+
+        /// <summary>
+        /// Get Address Txs
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="offset"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public BtcAddressTxsResponse GetAddressTxs(string address, int offset = 0, int limit = 0)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+            if (34 != address.Length)
+                throw new ArgumentException("illegal address parameter format");
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressTxs), address, offset.ToString(), limit.ToString());
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcAddressTxsResponse cacheData);
+            if (!exists)
+            {
+                //https://api.blockchain.info/haskoin-store/btc/address/1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu/transactions/full
+                string url = $"{C_APIREST_BASEURL}haskoin-store/btc/address/{address}/transactions/full";
+                string resp = RestGet2(url);
+
+                cacheData = ObjectParse<BtcAddressTxsResponse>(resp);
 
                 ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }

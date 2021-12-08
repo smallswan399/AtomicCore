@@ -11,17 +11,22 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         #region Variables
 
         /// <summary>
-        /// cache seconds
+        /// cache seconds short(10 seconds)
         /// </summary>
-        private const int c_cacheSeconds = 10;
+        private const int c_cacheSeconds_short = 10;
 
         /// <summary>
-        /// https://blockchain.info
+        /// cache seconds of new blocks(10 minutes a new block,half is 5 minutes)
+        /// </summary>
+        private const int c_cacheSeconds_halfNewBlockTimes = 300;
+
+        /// <summary>
+        /// Blockchain Data API, eg : https://blockchain.info
         /// </summary>
         private const string C_BLOCKCHAIN_INFOS = "https://blockchain.info";
 
         /// <summary>
-        /// api rest base url
+        /// api rest base url, eg : https://api.blockchain.info
         /// </summary>
         private const string C_APIREST_BASEURL = "https://api.blockchain.info";
 
@@ -64,11 +69,38 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string url = $"{C_BLOCKCHAIN_INFOS}/rawblock/{blockHash}";
                 if (hex)
                     url = $"{url}?format=hex";
-                string resp = RestGet2(url);
+                string resp = RestGet(url);
 
                 cacheData = ObjectParse<BtcSingleBlockResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_short));
+            }
+
+            return cacheData;
+        }
+
+        /// <summary>
+        /// Unspent Outputs
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public BtcUnspentOutputResponse UnspentOutputs(string address)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+            if (34 != address.Length)
+                throw new ArgumentException("illegal address parameter format");
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(UnspentOutputs), address);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcUnspentOutputResponse cacheData);
+            if (!exists)
+            {
+                string url = $"{C_BLOCKCHAIN_INFOS}/unspent?active={address}";
+                string resp = RestGet(url);
+
+                cacheData = ObjectParse<BtcUnspentOutputResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_halfNewBlockTimes));
             }
 
             return cacheData;
@@ -91,11 +123,11 @@ namespace AtomicCore.BlockChain.ExplorerAPI
             if (!exists)
             {
                 string url = $"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/balance";
-                string resp = RestGet2(url);
+                string resp = RestGet(url);
 
                 cacheData = ObjectParse<BtcAddressBalanceResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_short));
             }
 
             return cacheData;
@@ -126,11 +158,11 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                     urlBuilder.Append($"limit={limit}");
 
                 string url = urlBuilder.ToString();
-                string resp = RestGet2(url);
+                string resp = RestGet(url);
 
                 cacheData = ObjectParse<BtcAddressTxsResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_short));
             }
 
             return cacheData;

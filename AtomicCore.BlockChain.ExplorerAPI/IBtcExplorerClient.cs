@@ -21,6 +21,13 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         BtcSingleBlockResponse GetSingleBlock(string blockHash, bool hex = false);
 
         /// <summary>
+        /// Unspent Outputs
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        BtcUnspentOutputResponse UnspentOutputs(string address);
+
+        /// <summary>
         /// Get Address Balance(BTC)
         /// </summary>
         /// <param name="address"></param>

@@ -41,39 +41,11 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         #region Protected Methods
 
         /// <summary>
-        /// rest get request
-        /// </summary>
-        /// <param name="url">URL</param>
-        /// <returns></returns>
-        protected string RestGet(string url)
-        {
-            string resp;
-            try
-            {
-                if (string.IsNullOrEmpty(this._agentGetTmp))
-                    resp = HttpProtocol.HttpGet(url);
-                else
-                {
-                    string encodeUrl = UrlEncoder.UrlEncode(url);
-                    string remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
-
-                    resp = HttpProtocol.HttpGet(remoteUrl);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return resp;
-        }
-
-        /// <summary>
         /// rest get request(Using HttpClient)
         /// </summary>
         /// <param name="url">URL</param>
         /// <returns></returns>
-        protected string RestGet2(string url)
+        protected string RestGet(string url)
         {
             string resp;
             try
@@ -94,35 +66,6 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                         throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
 
                     resp = respMessage.Content.ReadAsStringAsync().Result;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return resp;
-        }
-
-        /// <summary>
-        /// rest post request
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        protected string RestPost(string url, string data)
-        {
-            string resp;
-            try
-            {
-                if (string.IsNullOrEmpty(this._agentPostTmp))
-                    resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
-                else
-                {
-                    string encodeUrl = UrlEncoder.UrlEncode(url);
-                    string remoteUrl = string.Format(this._agentPostTmp, url, encodeUrl);
-
-                    resp = HttpProtocol.HttpPost(url, data, HttpProtocol.XWWWFORMURLENCODED);
                 }
             }
             catch (Exception ex)

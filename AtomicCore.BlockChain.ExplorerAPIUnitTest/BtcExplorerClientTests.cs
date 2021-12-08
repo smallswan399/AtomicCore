@@ -24,6 +24,16 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        [TestMethod()]
+        public void UnspentOutputsTest()
+        {
+            IBtcExplorerClient cli = new BtcExplorerClient();
+
+            var result = cli.UnspentOutputs("1DeRF2bLsSFRjsFBuyhfjJ9BE5PD9Uy7gL");
+
+            Assert.IsTrue(null != result);
+        }
+
         /// <summary>
         /// Get Address Balance 1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu
         /// </summary>
@@ -49,7 +59,5 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
 
             Assert.IsTrue(null != result);
         }
-
-
     }
 }

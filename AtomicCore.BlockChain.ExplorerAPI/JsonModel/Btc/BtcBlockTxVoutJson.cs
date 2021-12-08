@@ -29,7 +29,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// spending_outpoints
         /// </summary>
         [JsonProperty("spending_outpoints")]
-        public BtcBlockTxSpendingOutpointJson SpendingOutpoints { get; set; }
+        public BtcBlockTxSpendingOutpointJson[] SpendingOutpoints { get; set; }
 
         /// <summary>
         /// n
@@ -41,7 +41,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// tx_index
         /// </summary>
         [JsonProperty("tx_index")]
-        public int TxIndex { get; set; }
+        public ulong TxIndex { get; set; }
 
         /// <summary>
         /// script

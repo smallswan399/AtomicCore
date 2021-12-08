@@ -12,6 +12,19 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
     public class BtcExplorerClientTests
     {
         /// <summary>
+        /// 0000000000000bae09a7a393a8acded75aa67e46cb81f7acaa5ad94f9eacd103
+        /// </summary>
+        [TestMethod()]
+        public void GetSingleBlockTest()
+        {
+            IBtcExplorerClient cli = new BtcExplorerClient();
+
+            var result = cli.GetSingleBlock("0000000000000bae09a7a393a8acded75aa67e46cb81f7acaa5ad94f9eacd103");
+
+            Assert.IsTrue(null != result);
+        }
+
+        /// <summary>
         /// Get Address Balance 1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu
         /// </summary>
         [TestMethod()]
@@ -36,5 +49,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
 
             Assert.IsTrue(null != result);
         }
+
+
     }
 }

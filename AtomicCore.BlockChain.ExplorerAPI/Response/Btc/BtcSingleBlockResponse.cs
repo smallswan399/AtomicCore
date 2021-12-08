@@ -47,7 +47,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// next_block
         /// </summary>
         [JsonProperty("next_block")]
-        public string NextBlockHash { get; set; }
+        public string[] NextBlockHash { get; set; }
 
         /// <summary>
         /// fee

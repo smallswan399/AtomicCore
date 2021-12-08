@@ -29,7 +29,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// tx_index
         /// </summary>
         [JsonProperty("tx_index")]
-        public int TxIndex { get; set; }
+        public ulong TxIndex { get; set; }
 
         /// <summary>
         /// value

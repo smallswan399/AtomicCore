@@ -90,5 +90,11 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// </summary>
         [JsonProperty("inputs")]
         public BtcBlockTxVinJson[] TxVins { get; set; }
+
+        /// <summary>
+        /// tx out
+        /// </summary>
+        [JsonProperty("out")]
+        public BtcBlockTxVoutJson[] TxVouts { get; set; }
     }
 }

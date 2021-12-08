@@ -14,7 +14,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         public bool Spents { get; set; }
 
         /// <summary>
-        /// sigscript
+        /// script
         /// </summary>
         [JsonProperty("script")]
         public string Script { get; set; }

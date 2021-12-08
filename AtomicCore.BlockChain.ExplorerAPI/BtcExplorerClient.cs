@@ -48,8 +48,9 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// Get Block By Hash
         /// </summary>
         /// <param name="blockHash"></param>
+        /// <param name="hex"></param>
         /// <returns></returns>
-        public BtcSingleBlockResponse GetSingleBlock(string blockHash)
+        public BtcSingleBlockResponse GetSingleBlock(string blockHash, bool hex = false)
         {
             if (string.IsNullOrEmpty(blockHash))
                 throw new ArgumentNullException(nameof(blockHash));
@@ -61,6 +62,8 @@ namespace AtomicCore.BlockChain.ExplorerAPI
             if (!exists)
             {
                 string url = $"{C_BLOCKCHAIN_INFOS}/rawblock/{blockHash}";
+                if (hex)
+                    url = $"{url}?format=hex";
                 string resp = RestGet2(url);
 
                 cacheData = ObjectParse<BtcSingleBlockResponse>(resp);

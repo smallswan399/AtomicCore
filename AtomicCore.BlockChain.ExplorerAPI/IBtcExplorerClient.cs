@@ -16,8 +16,9 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// Get Single Block By Hash
         /// </summary>
         /// <param name="blockHash"></param>
+        /// <param name="hex"></param>
         /// <returns></returns>
-        BtcSingleBlockResponse GetSingleBlock(string blockHash);
+        BtcSingleBlockResponse GetSingleBlock(string blockHash, bool hex = false);
 
         /// <summary>
         /// Get Address Balance(BTC)

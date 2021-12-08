@@ -16,6 +16,11 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         private const int c_cacheSeconds = 10;
 
         /// <summary>
+        /// https://blockchain.info
+        /// </summary>
+        private const string C_BLOCKCHAIN_INFOS = "https://blockchain.info";
+
+        /// <summary>
         /// api rest base url
         /// </summary>
         private const string C_APIREST_BASEURL = "https://api.blockchain.info";
@@ -38,6 +43,33 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         #endregion
 
         #region IBlockChainExplorer
+
+        /// <summary>
+        /// Get Block By Hash
+        /// </summary>
+        /// <param name="blockHash"></param>
+        /// <returns></returns>
+        public BtcSingleBlockResponse GetSingleBlock(string blockHash)
+        {
+            if (string.IsNullOrEmpty(blockHash))
+                throw new ArgumentNullException(nameof(blockHash));
+            if (64 != blockHash.Length)
+                throw new ArgumentException("illegal blockHash parameter format");
+
+            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetSingleBlock), blockHash);
+            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcSingleBlockResponse cacheData);
+            if (!exists)
+            {
+                string url = $"{C_BLOCKCHAIN_INFOS}/rawblock/{blockHash}";
+                string resp = RestGet2(url);
+
+                cacheData = ObjectParse<BtcSingleBlockResponse>(resp);
+
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+            }
+
+            return cacheData;
+        }
 
         /// <summary>
         /// Get Address Balance(BTC)
@@ -87,7 +119,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 StringBuilder urlBuilder = new StringBuilder($"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full");
                 if (offset > 0)
                     urlBuilder.Append($"offset={offset}");
-                if(limit > 0)
+                if (limit > 0)
                     urlBuilder.Append($"limit={limit}");
 
                 string url = urlBuilder.ToString();

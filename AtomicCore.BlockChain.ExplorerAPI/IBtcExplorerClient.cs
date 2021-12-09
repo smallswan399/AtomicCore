@@ -22,13 +22,15 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         BtcSingleBlockResponse GetSingleBlock(string blockHash, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None);
 
         /// <summary>
-        /// Unspent Outputs
+        /// UnspentOutputs
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="address">Address can be base58 or xpub</param>
+        /// <param name="limit">Optional limit parameter to show n transactions e.g. &limit=50 (Default: 250, Max: 1000)</param>
+        /// <param name="confirmations">Optional confirmations parameter to limit the minimum confirmations e.g. &confirmations=6</param>
         /// <param name="cacheSeconds"></param>
         /// <param name="cacheMode"></param>
         /// <returns></returns>
-        BtcUnspentOutputResponse UnspentOutputs(string address, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None);
+        BtcUnspentOutputResponse UnspentOutputs(string address, int? limit = null, int? confirmations = null, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None);
 
         /// <summary>
         /// Get Address Balance(BTC)

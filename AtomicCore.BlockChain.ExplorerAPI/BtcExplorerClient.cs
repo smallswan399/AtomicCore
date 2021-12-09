@@ -87,21 +87,32 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// <summary>
         /// UnspentOutputs
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="address">Address can be base58 or xpub</param>
+        /// <param name="limit">Optional limit parameter to show n transactions e.g. &limit=50 (Default: 250, Max: 1000)</param>
+        /// <param name="confirmations">Optional confirmations parameter to limit the minimum confirmations e.g. &confirmations=6</param>
         /// <param name="cacheSeconds"></param>
         /// <param name="cacheMode"></param>
         /// <returns></returns>
-        public BtcUnspentOutputResponse UnspentOutputs(string address, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None)
+        public BtcUnspentOutputResponse UnspentOutputs(string address, int? limit = null, int? confirmations = null, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
             if (34 != address.Length)
                 throw new ArgumentException("illegal address parameter format");
+            if (null != limit)
+                if (limit.Value > 1000)
+                    limit = 1000;
 
             BtcUnspentOutputResponse resultData = null;
             if (cacheSeconds <= 0 || ExplorerAPICacheMode.None == cacheMode)
             {
-                string url = $"{C_BLOCKCHAIN_INFOS}/unspent?active={address}";
+                StringBuilder urlBuilder = new StringBuilder($"{C_BLOCKCHAIN_INFOS}/unspent?active={address}");
+                if (null != limit && limit.Value > 0)
+                    urlBuilder.Append($"&limit={limit.Value}");
+                if (null != confirmations && confirmations.Value > 0)
+                    urlBuilder.Append($"&confirmations={confirmations.Value}");
+
+                string url = urlBuilder.ToString();
                 string resp = RestGet(url);
 
                 resultData = ObjectParse<BtcUnspentOutputResponse>(resp);
@@ -112,7 +123,13 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 bool exists = ApiMsCacheProvider.Get(cacheKey, out resultData);
                 if (!exists)
                 {
-                    string url = $"{C_BLOCKCHAIN_INFOS}/unspent?active={address}";
+                    StringBuilder urlBuilder = new StringBuilder($"{C_BLOCKCHAIN_INFOS}/unspent?active={address}");
+                    if (null != limit && limit.Value > 0)
+                        urlBuilder.Append($"&limit={limit.Value}");
+                    if (null != confirmations && confirmations.Value > 0)
+                        urlBuilder.Append($"&confirmations={confirmations.Value}");
+
+                    string url = urlBuilder.ToString();
                     string resp = RestGet(url);
 
                     resultData = ObjectParse<BtcUnspentOutputResponse>(resp);

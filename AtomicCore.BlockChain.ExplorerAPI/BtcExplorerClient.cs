@@ -16,11 +16,6 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         private const int c_cacheSeconds_short = 10;
 
         /// <summary>
-        /// cache seconds of new blocks(10 minutes a new block,half is 5 minutes)
-        /// </summary>
-        private const int c_cacheSeconds_halfNewBlockTimes = 300;
-
-        /// <summary>
         /// Blockchain Data API, eg : https://blockchain.info
         /// </summary>
         private const string C_BLOCKCHAIN_INFOS = "https://blockchain.info";
@@ -53,81 +48,120 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// Get Block By Hash
         /// </summary>
         /// <param name="blockHash"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <param name="cacheMode"></param>
         /// <returns></returns>
-        public BtcSingleBlockResponse GetSingleBlock(string blockHash)
+        public BtcSingleBlockResponse GetSingleBlock(string blockHash, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None)
         {
             if (string.IsNullOrEmpty(blockHash))
                 throw new ArgumentNullException(nameof(blockHash));
             if (64 != blockHash.Length)
                 throw new ArgumentException("illegal blockHash parameter format");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetSingleBlock), blockHash);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcSingleBlockResponse cacheData);
-            if (!exists)
+            BtcSingleBlockResponse resultData = null;
+            if (cacheSeconds <= 0 || ExplorerAPICacheMode.None == cacheMode)
             {
                 string url = $"{C_BLOCKCHAIN_INFOS}/rawblock/{blockHash}";
                 string resp = RestGet(url);
 
-                cacheData = ObjectParse<BtcSingleBlockResponse>(resp);
+                resultData = ObjectParse<BtcSingleBlockResponse>(resp);
+            }
+            else
+            {
+                string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetSingleBlock), blockHash);
+                bool exists = ApiMsCacheProvider.Get(cacheKey, out resultData);
+                if (!exists)
+                {
+                    string url = $"{C_BLOCKCHAIN_INFOS}/rawblock/{blockHash}";
+                    string resp = RestGet(url);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_short));
+                    resultData = ObjectParse<BtcSingleBlockResponse>(resp);
+
+                    ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
             }
 
-            return cacheData;
+            return resultData;
         }
 
         /// <summary>
-        /// Unspent Outputs
+        /// UnspentOutputs
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <param name="cacheMode"></param>
         /// <returns></returns>
-        public BtcUnspentOutputResponse UnspentOutputs(string address)
+        public BtcUnspentOutputResponse UnspentOutputs(string address, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
             if (34 != address.Length)
                 throw new ArgumentException("illegal address parameter format");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(UnspentOutputs), address);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcUnspentOutputResponse cacheData);
-            if (!exists)
+            BtcUnspentOutputResponse resultData = null;
+            if (cacheSeconds <= 0 || ExplorerAPICacheMode.None == cacheMode)
             {
                 string url = $"{C_BLOCKCHAIN_INFOS}/unspent?active={address}";
                 string resp = RestGet(url);
 
-                cacheData = ObjectParse<BtcUnspentOutputResponse>(resp);
+                resultData = ObjectParse<BtcUnspentOutputResponse>(resp);
+            }
+            else
+            {
+                string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(UnspentOutputs), address);
+                bool exists = ApiMsCacheProvider.Get(cacheKey, out resultData);
+                if (!exists)
+                {
+                    string url = $"{C_BLOCKCHAIN_INFOS}/unspent?active={address}";
+                    string resp = RestGet(url);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_halfNewBlockTimes));
+                    resultData = ObjectParse<BtcUnspentOutputResponse>(resp);
+
+                    ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
             }
 
-            return cacheData;
+            return resultData;
         }
 
         /// <summary>
         /// Get Address Balance(BTC)
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <param name="cacheMode"></param>
         /// <returns></returns>
-        public BtcAddressBalanceResponse GetAddressBalance(string address)
+        public BtcAddressBalanceResponse GetAddressBalance(string address, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
             if (34 != address.Length)
                 throw new ArgumentException("illegal address parameter format");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressBalance), address);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcAddressBalanceResponse cacheData);
-            if (!exists)
+            BtcAddressBalanceResponse resultData = null;
+            if (cacheSeconds <= 0 || ExplorerAPICacheMode.None == cacheMode)
             {
                 string url = $"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/balance";
                 string resp = RestGet(url);
 
-                cacheData = ObjectParse<BtcAddressBalanceResponse>(resp);
+                resultData = ObjectParse<BtcAddressBalanceResponse>(resp);
+            }
+            else
+            {
+                string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressBalance), address);
+                bool exists = ApiMsCacheProvider.Get(cacheKey, out resultData);
+                if (!exists)
+                {
+                    string url = $"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/balance";
+                    string resp = RestGet(url);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_short));
+                    resultData = ObjectParse<BtcAddressBalanceResponse>(resp);
+
+                    ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
             }
 
-            return cacheData;
+            return resultData;
         }
 
         /// <summary>
@@ -136,17 +170,18 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// <param name="address"></param>
         /// <param name="offset"></param>
         /// <param name="limit"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <param name="cacheMode"></param>
         /// <returns></returns>
-        public BtcAddressTxsResponse GetAddressTxs(string address, int offset = 0, int limit = 0)
+        public BtcAddressTxsResponse GetAddressTxs(string address, int offset = 0, int limit = 0, int cacheSeconds = 0, ExplorerAPICacheMode cacheMode = ExplorerAPICacheMode.None)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
             if (34 != address.Length)
                 throw new ArgumentException("illegal address parameter format");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressTxs), address, offset.ToString(), limit.ToString());
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out BtcAddressTxsResponse cacheData);
-            if (!exists)
+            BtcAddressTxsResponse resultData = null;
+            if (cacheSeconds <= 0 || ExplorerAPICacheMode.None == cacheMode)
             {
                 StringBuilder urlBuilder = new StringBuilder($"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full");
                 if (offset > 0)
@@ -157,12 +192,30 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string url = urlBuilder.ToString();
                 string resp = RestGet(url);
 
-                cacheData = ObjectParse<BtcAddressTxsResponse>(resp);
+                resultData = ObjectParse<BtcAddressTxsResponse>(resp);
+            }
+            else
+            {
+                string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressTxs), address, offset.ToString(), limit.ToString());
+                bool exists = ApiMsCacheProvider.Get(cacheKey, out resultData);
+                if (!exists)
+                {
+                    StringBuilder urlBuilder = new StringBuilder($"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full");
+                    if (offset > 0)
+                        urlBuilder.Append($"offset={offset}");
+                    if (limit > 0)
+                        urlBuilder.Append($"limit={limit}");
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds_short));
+                    string url = urlBuilder.ToString();
+                    string resp = RestGet(url);
+
+                    resultData = ObjectParse<BtcAddressTxsResponse>(resp);
+
+                    ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
             }
 
-            return cacheData;
+            return resultData;
         }
 
         #endregion

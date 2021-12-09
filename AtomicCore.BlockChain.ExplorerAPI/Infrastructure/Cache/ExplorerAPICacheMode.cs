@@ -3,7 +3,7 @@
     /// <summary>
     /// cache expiration mode
     /// </summary>
-    internal enum ApiCacheExpirationMode
+    public enum ExplorerAPICacheMode
     {
         /// <summary>
         /// none

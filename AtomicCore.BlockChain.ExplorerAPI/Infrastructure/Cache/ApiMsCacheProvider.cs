@@ -84,7 +84,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
         /// <param name="value">缓存数据</param>
         /// <param name="mode">缓存模型</param>
         /// <param name="expriedTime">过期时间</param>
-        public static void Set(string key, object value, ApiCacheExpirationMode mode = ApiCacheExpirationMode.None, TimeSpan? expriedTime = null)
+        public static void Set(string key, object value, ExplorerAPICacheMode mode = ExplorerAPICacheMode.None, TimeSpan? expriedTime = null)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -102,14 +102,14 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                         {
                             cacheEntry.Value = value;
 
-                            if (mode == ApiCacheExpirationMode.AbsoluteExpired)
+                            if (mode == ExplorerAPICacheMode.AbsoluteExpired)
                             {
                                 if (null == expriedTime)
                                     throw new ArgumentNullException(nameof(expriedTime));
 
                                 cacheEntry.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.Add(expriedTime.Value));
                             }
-                            else if (mode == ApiCacheExpirationMode.SlideExpired)
+                            else if (mode == ExplorerAPICacheMode.SlideExpired)
                             {
                                 if (null == expriedTime)
                                     throw new ArgumentNullException(nameof(expriedTime));

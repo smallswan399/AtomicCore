@@ -32,6 +32,9 @@ namespace AtomicCore.BlockChain.OMNINet
         /// </summary>
         public string version { get; set; }
 
+        /// <summary>
+        /// 默克尔树哈希根
+        /// </summary>
         public string merkleroot { get; set; }
 
         /// <summary>
@@ -44,8 +47,14 @@ namespace AtomicCore.BlockChain.OMNINet
         /// </summary>
         public ulong time { get; set; }
 
+        /// <summary>
+        /// 随机数
+        /// </summary>
         public string nonce { get; set; }
 
+        /// <summary>
+        /// bits
+        /// </summary>
         public string bits { get; set; }
 
         /// <summary>
@@ -53,22 +62,49 @@ namespace AtomicCore.BlockChain.OMNINet
         /// </summary>
         public double difficulty { get; set; }
 
+        /// <summary>
+        /// 前一个区块哈希
+        /// </summary>
         public string previousblockhash { get; set; }
 
+        /// <summary>
+        /// 后一个区块还行
+        /// </summary>
         public string nextblockhash { get; set; }
 
+        /// <summary>
+        /// 标识
+        /// </summary>
         public string flags { get; set; }
 
+        /// <summary>
+        /// proofhash
+        /// </summary>
         public string proofhash { get; set; }
 
+        /// <summary>
+        /// entropybit
+        /// </summary>
         public int entropybit { get; set; }
 
+        /// <summary>
+        /// modifier
+        /// </summary>
         public string modifier { get; set; }
 
+        /// <summary>
+        /// modifierchecksum
+        /// </summary>
         public string modifierchecksum { get; set; }
 
+        /// <summary>
+        /// tx
+        /// </summary>
         public string[] tx { get; set; }
 
+        /// <summary>
+        /// signature
+        /// </summary>
         public string signature { get; set; }
     }
 }

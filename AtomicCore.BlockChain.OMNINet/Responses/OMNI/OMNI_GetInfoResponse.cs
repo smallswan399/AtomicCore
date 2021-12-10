@@ -28,17 +28,17 @@
         /// <summary>
         /// 最后区块数
         /// </summary>
-        public uint block { get; set; }
+        public ulong block { get; set; }
 
         /// <summary>
         /// 最后处理的块的时间戳
         /// </summary>
-        public uint blocktime { get; set; }
+        public ulong blocktime { get; set; }
 
         /// <summary>
         /// 在最后处理的块中找到的Omni事务
         /// </summary>
-        public uint blocktransactions { get; set; }
+        public ulong blocktransactions { get; set; }
 
         /// <summary>
         /// 全部处理的Omni交易

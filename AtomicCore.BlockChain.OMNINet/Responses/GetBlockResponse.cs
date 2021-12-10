@@ -1,57 +1,62 @@
 ﻿// Copyright (c) 2014 George Kimionis
 // Distributed under the GPLv3 software license, see the accompanying file LICENSE or http://opensource.org/licenses/GPL-3.0
 
-using System;
 using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.OMNINet
 {
     public class GetBlockResponse
     {
-        public GetBlockResponse()
-        {
-            Tx = new List<string>();
-        }
         /// <summary>
         /// 当前区块下的账单集合
         /// </summary>
-        public List<string> Tx { get; set; }
+        public List<string> Tx { get; set; } = new List<string>();
+
         /// <summary>
         /// 当前区块的HASH
         /// </summary>
         public string Hash { get; set; }
+
         /// <summary>
         /// 区块的确认次数
         /// </summary>
-        public int Confirmations { get; set; }
+        public long Confirmations { get; set; }
+
         /// <summary>
         /// 区块的大小
         /// </summary>
         public int Size { get; set; }
+
         /// <summary>
         /// 区块的索引（从1开始）
         /// </summary>
-        public int Height { get; set; }
+        public long Height { get; set; }
+
         /// <summary>
         /// 区块的版本
         /// </summary>
         public int Version { get; set; }
+
         /// <summary>
         /// Guess????挖坑奖励给用户的账单号
         /// </summary>
         public string MerkleRoot { get; set; }
+
         /// <summary>
         /// 挖坑难度
         /// </summary>
         public double Difficulty { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         public string ChainWork { get; set; }
+
         /// <summary>
         /// 前一区块的256位HASH值
         /// </summary>
         public string PreviousBlockHash { get; set; }
+
         /// <summary>
         /// 后一区块的256位HASH值
         /// </summary>

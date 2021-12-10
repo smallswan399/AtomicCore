@@ -9,9 +9,9 @@ namespace AtomicCore.BlockChain.OMNINet
     public class UtcTimeToMillisecondsConvert : JsonConverter
     {
         /// <summary>
-        /// 1970-01-01
+        /// UTC's Time of 1970-01-01 => Local Time
         /// </summary>
-        private static readonly DateTime utc_1970 = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+        private static readonly DateTime utc_1970 = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
 
         /// <summary>
         /// CanConvert

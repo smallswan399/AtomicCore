@@ -19,5 +19,18 @@ namespace AtomicCore.BlockChain.OMNINet.Tests
 
             Assert.IsTrue(!string.IsNullOrEmpty(txid));
         }
+
+        /// <summary>
+        /// 正式网的交易
+        /// </summary>
+        [TestMethod()]
+        public void GetRawTransactionTest()
+        {
+            IOMNICoinService service = new OMNICoinService("http://btc.intoken.club", "adu", "xoNXu1WlPYU6hHTW", "xoNXu1WlPYU6hHTW");
+
+            var result = service.GetRawTransaction("29a0331fa42ae86b17622c987be0222df1c83b94712d885c84ca9106ac349c66", 1);
+
+            Assert.IsTrue(result.VSize > 0);
+        }
     }
 }

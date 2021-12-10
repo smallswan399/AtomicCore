@@ -1,13 +1,11 @@
 ﻿// Copyright (c) 2014 George Kimionis
 // Distributed under the GPLv3 software license, see the accompanying file LICENSE or http://opensource.org/licenses/GPL-3.0
 
-using System;
-
 namespace AtomicCore.BlockChain.OMNINet
 {
     public class GetTxOutSetInfoResponse
     {
-        public int Height { get; set; }
+        public long Height { get; set; }
         public string BestBlock { get; set; }
         public int Transactions { get; set; }
         public int TxOuts { get; set; }

@@ -9,13 +9,13 @@ namespace AtomicCore.BlockChain.OMNINet
     {
         public string hash { get; set; }
 
-        public uint confirmations { get; set; }
+        public long confirmations { get; set; }
 
-        public uint size { get; set; }
+        public int size { get; set; }
 
-        public uint height { get; set; }
+        public long height { get; set; }
 
-        public uint version { get; set; }
+        public int version { get; set; }
 
         public string merkleroot { get; set; }
 
@@ -43,7 +43,7 @@ namespace AtomicCore.BlockChain.OMNINet
 
         public string modifierchecksum { get; set; }
 
-        public List<string> tx { get; set; }
+        public List<string> tx { get; set; } = new List<string>();
 
         public string signature { get; set; }
     }

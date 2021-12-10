@@ -78,16 +78,16 @@
         /// <summary>
         /// 所在区块中的索引位置
         /// </summary>
-        public uint positioninblock { get; set; }
+        public long positioninblock { get; set; }
 
         /// <summary>
         /// 区块高度
         /// </summary>
-        public uint block { get; set; }
+        public long block { get; set; }
 
         /// <summary>
         /// 已确认数
         /// </summary>
-        public uint confirmations { get; set; }
+        public long confirmations { get; set; }
     }
 }

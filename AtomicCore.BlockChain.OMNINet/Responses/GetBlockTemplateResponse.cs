@@ -21,7 +21,7 @@ namespace AtomicCore.BlockChain.OMNINet
         public int SizeLimit { get; set; }
         public uint CurTime { get; set; }
         public string Bits { get; set; }
-        public int Height { get; set; }
+        public long Height { get; set; }
     }
 
     public class GetBlockTemplateCoinbaseAux

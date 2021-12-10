@@ -15,7 +15,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <summary>
         /// 确认次数
         /// </summary>
-        public int confirmations { get; set; }
+        public long confirmations { get; set; }
 
         /// <summary>
         /// 区块的大小
@@ -25,7 +25,7 @@ namespace AtomicCore.BlockChain.OMNINet
         /// <summary>
         /// 区块索引
         /// </summary>
-        public int height { get; set; }
+        public long height { get; set; }
 
         /// <summary>
         /// 版本

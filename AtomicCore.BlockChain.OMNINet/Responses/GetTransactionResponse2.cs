@@ -8,9 +8,9 @@ namespace AtomicCore.BlockChain.OMNINet
 
         public int version { get; set; }
 
-        public int time { get; set; }
+        public ulong time { get; set; }
 
-        public int locktime { get; set; }
+        public ulong locktime { get; set; }
 
         public List<Vin> vin { get; set; }
 
@@ -18,11 +18,11 @@ namespace AtomicCore.BlockChain.OMNINet
 
         public double amount { get; set; }
 
-        public int confirmations { get; set; }
+        public long confirmations { get; set; }
 
         public string blockhash { get; set; }
 
-        public int blockindex { get; set; }
+        public long blockindex { get; set; }
 
         public long blocktime { get; set; }
 

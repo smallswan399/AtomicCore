@@ -29,8 +29,8 @@ namespace AtomicCore.BlockChain.OMNINet
         public string TxId { get; set; }
         public int? Size { get; set; }
         public decimal? Fee { get; set; }
-        public int? Time { get; set; }
-        public int? Height { get; set; }
+        public ulong? Time { get; set; }
+        public long? Height { get; set; }
         public double? StartingPriority { get; set; }
         public double? CurrentPriority { get; set; }
         public IList<string> Depends { get; set; }

@@ -363,9 +363,7 @@ namespace AtomicCore.BlockChain.OMNINet
 
                         case "height":
 
-                            int height;
-
-                            if (int.TryParse(property.Value.ToString(), out height))
+                            if (long.TryParse(property.Value.ToString(), out long height))
                             {
                                 getRawMemPoolVerboseResponse.Height = height;
                             }
@@ -396,9 +394,7 @@ namespace AtomicCore.BlockChain.OMNINet
 
                         case "time":
 
-                            int time;
-
-                            if (int.TryParse(property.Value.ToString(), out time))
+                            if (ulong.TryParse(property.Value.ToString(), out ulong time))
                             {
                                 getRawMemPoolVerboseResponse.Time = time;
                             }

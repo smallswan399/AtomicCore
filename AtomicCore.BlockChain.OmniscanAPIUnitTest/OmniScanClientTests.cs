@@ -161,6 +161,9 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
         [TestMethod()]
         public void GetTxListTest()
         {
+            //3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ
+            //1DeRF2bLsSFRjsFBuyhfjJ9BE5PD9Uy7gL
+
             IOmniScanClient client = new OmniScanClient();
             var result = client.GetTxList("3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ");
 

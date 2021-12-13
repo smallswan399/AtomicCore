@@ -110,6 +110,12 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         public bool Valid { get; set; }
 
         /// <summary>
+        /// invalidreason
+        /// </summary>
+        [JsonProperty("invalidreason")]
+        public string InvalidReason { get; set; }
+
+        /// <summary>
         /// version
         /// </summary>
         [JsonProperty("version")]

@@ -48,14 +48,14 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
         }
 
         /// <summary>
-        /// https://api.blockchain.info/haskoin-store/btc/address/1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu/transactions/full
+        /// https://api.blockchain.info/haskoin-store/btc/address/3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ/transactions/full
         /// </summary>
         [TestMethod()]
         public void GetAddressTxsTest()
         {
             IBtcExplorerClient cli = new BtcExplorerClient();
 
-            var result = cli.GetAddressTxs("1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu");
+            var result = cli.GetAddressTxs("3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ");
 
             Assert.IsTrue(null != result);
         }

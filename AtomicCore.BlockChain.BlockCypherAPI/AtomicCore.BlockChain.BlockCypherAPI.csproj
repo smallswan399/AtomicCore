@@ -11,10 +11,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Response\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
 	</ItemGroup>
 

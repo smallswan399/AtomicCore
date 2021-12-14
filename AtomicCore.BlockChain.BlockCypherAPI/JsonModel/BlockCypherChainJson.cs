@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AtomicCore.BlockChain.BlockCypherAPI
 {
@@ -69,6 +67,40 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         [JsonProperty("high_fee_per_kb")]
         public int HighFeePerKB { get; set; }
 
+        /// <summary>
+        /// A rolling average of the fee (in satoshis) paid per 
+        /// kilobyte for transactions to be confirmed within 3 to 6 blocks.
+        /// </summary>
+        [JsonProperty("medium_fee_per_kb")]
+        public int MediumFeePerKB { get; set; }
 
+        /// <summary>
+        /// A rolling average of the fee (in satoshis) paid per 
+        /// kilobyte for transactions to be confirmed in 7 or more blocks.
+        /// </summary>
+        [JsonProperty("low_fee_per_kb")]
+        public int LowFeePerKB { get; set; }
+
+        /// <summary>
+        /// Number of unconfirmed transactions in memory pool (likely to be included in next block).
+        /// </summary>
+        [JsonProperty("unconfirmed_count")]
+        public int UnconfirmedCount { get; set; }
+
+        /// <summary>
+        /// Optional The current height of the latest fork to the blockchain; 
+        /// when no competing blockchain fork present, 
+        /// not returned with endpoints that return Blockchains.
+        /// </summary>
+        [JsonProperty("last_fork_height")]
+        public int LastForkHeight { get; set; }
+
+        /// <summary>
+        /// Optional The hash of the latest confirmed block in the latest fork of 
+        /// the blockchain; when no competing blockchain fork present,
+        /// not returned with endpoints that return Blockchains.
+        /// </summary>
+        [JsonProperty("last_fork_hash")]
+        public string LastForkHash { get; set; }
     }
 }

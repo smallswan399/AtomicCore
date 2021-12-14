@@ -9,5 +9,10 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
     /// </summary>
     public interface IBlockCypherAPI
     {
+        #region Address API
+
+        void AddressBalanceEndpoint();
+
+        #endregion
     }
 }

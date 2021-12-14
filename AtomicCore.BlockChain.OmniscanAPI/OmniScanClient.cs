@@ -224,7 +224,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<Dictionary<string, OmniBtcBalanceJson>>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -255,7 +255,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniAssetCollectionJson>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -285,7 +285,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -315,7 +315,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniAddressDetailsResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -351,7 +351,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniArmoryUnsignedResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -384,7 +384,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniRawTransactionResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -415,7 +415,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniDecodeResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -451,7 +451,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniDesignatingCurrenciesResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -487,7 +487,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniTxHistoryResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -517,7 +517,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniListByOwnerResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -551,7 +551,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniCrowdSalesResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -585,7 +585,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniListByEcosystemResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -610,7 +610,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniCoinListResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -643,7 +643,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniSearchResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -678,7 +678,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniTransactionListResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -710,7 +710,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniPushTxResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -739,7 +739,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniTxInfoResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.SlideExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;

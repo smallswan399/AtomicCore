@@ -7,7 +7,7 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
     /// <summary>
     /// BlockCypher Service
     /// </summary>
-    public class BlockCypherSrvAPI : IBlockCypherAPI
+    public class BlockCypherSrvAPI //: IBlockCypherAPI
     {
     }
 }

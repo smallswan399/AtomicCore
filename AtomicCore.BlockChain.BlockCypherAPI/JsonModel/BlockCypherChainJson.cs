@@ -68,5 +68,7 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// </summary>
         [JsonProperty("high_fee_per_kb")]
         public int HighFeePerKB { get; set; }
+
+
     }
 }

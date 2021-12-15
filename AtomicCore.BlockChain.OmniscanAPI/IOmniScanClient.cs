@@ -119,14 +119,18 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         2 for test/dev ecosystem
         /// </summary>
         /// <param name="ecosystem"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniListByEcosystemResponse ListByEcosystem(int ecosystem);
+        OmniListByEcosystemResponse ListByEcosystem(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns list of all created properties.
         /// </summary>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniCoinListResponse PropertyList();
+        OmniCoinListResponse PropertyList(OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Search by transaction id, address or property id. 
@@ -135,8 +139,10 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         text string of either Transaction ID, Address, or property id to search for
         /// </summary>
         /// <param name="query"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniSearchResponse Search(string query);
+        OmniSearchResponse Search(string query, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns list of transactions for queried address. 
@@ -147,8 +153,10 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="address"></param>
         /// <param name="page"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniTransactionListResponse GetTxList(string address, int page = 0);
+        OmniTransactionListResponse GetTxList(string address, int page = 0, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Broadcast a signed transaction to the network. 
@@ -156,14 +164,18 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///     signedTransaction : signed hex to broadcast
         /// </summary>
         /// <param name="signedTransaction"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniPushTxResponse PushTx(string signedTransaction);
+        OmniPushTxResponse PushTx(string signedTransaction, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns transaction details of a queried transaction hash.
         /// </summary>
         /// <param name="txHash"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniTxInfoResponse GetTx(string txHash);
+        OmniTxInfoResponse GetTx(string txHash, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
     }
 }

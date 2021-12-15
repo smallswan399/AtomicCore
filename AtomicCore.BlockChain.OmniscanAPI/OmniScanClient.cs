@@ -14,11 +14,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #region Variables
 
         /// <summary>
-        /// cache seconds
-        /// </summary>
-        private const int c_cacheSeconds = 10;
-
-        /// <summary>
         /// api rest base url
         /// </summary>
         private const string C_APIREST_BASEURL = "https://api.omniwallet.org";
@@ -565,55 +560,225 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         2 for test/dev ecosystem
         /// </summary>
         /// <param name="ecosystem"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniListByEcosystemResponse ListByEcosystem(int ecosystem)
+        public OmniListByEcosystemResponse ListByEcosystem(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListByEcosystem), ecosystem.ToString());
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniListByEcosystemResponse cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return ListByEcosystemNoCache(ecosystem);
+            else
             {
-                string data = $"ecosystem={ecosystem}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/listbyecosystem");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListByEcosystem), ecosystem.ToString());
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniListByEcosystemResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = ListByEcosystemNoCache(ecosystem);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniListByEcosystemResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
+        }
 
-            return cacheData;
+        /// <summary>
+        /// Returns list of all created properties.
+        /// </summary>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public OmniCoinListResponse PropertyList(OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == OmniCacheMode.None)
+                return PropertyListNoCache();
+            else
+            {
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(PropertyList));
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniCoinListResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = PropertyListNoCache();
+
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Search by transaction id, address or property id. 
+        /// Data: 
+        ///     query : 
+        ///         text string of either Transaction ID, Address, or property id to search for
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public OmniSearchResponse Search(string query, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException(nameof(query));
+
+            if (cacheMode == OmniCacheMode.None)
+                return SearchNoCache(query);
+            else
+            {
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(Search), query);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniSearchResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = SearchNoCache(query);
+
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns list of transactions for queried address. 
+        /// Data: 
+        ///     addr : 
+        ///         address to query page : 
+        ///             cycle through available response pages (10 txs per page)
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="page"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public OmniTransactionListResponse GetTxList(string address, int page = 0, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            if (cacheMode == OmniCacheMode.None)
+                return GetTxListNoCache(address, page);
+            else
+            {
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetTxList), address);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniTransactionListResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTxListNoCache(address, page);
+
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Broadcast a signed transaction to the network. 
+        /// Data: 
+        ///     signedTransaction : signed hex to broadcast
+        /// </summary>
+        /// <param name="signedTransaction"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public OmniPushTxResponse PushTx(string signedTransaction, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (string.IsNullOrEmpty(signedTransaction))
+                throw new ArgumentNullException(nameof(signedTransaction));
+
+            if (cacheMode == OmniCacheMode.None)
+                return PushTxNoCache(signedTransaction);
+            else
+            {
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(PushTx), signedTransaction);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniPushTxResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = PushTxNoCache(signedTransaction);
+
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns transaction details of a queried transaction hash.
+        /// </summary>
+        /// <param name="txHash"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public OmniTxInfoResponse GetTx(string txHash, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (string.IsNullOrEmpty(txHash))
+                throw new ArgumentNullException(nameof(txHash));
+
+            if (cacheMode == OmniCacheMode.None)
+                return GetTxNoCache(txHash);
+            else
+            {
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetTx), txHash);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniTxInfoResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTxNoCache(txHash);
+
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// returns list of created properties filtered by ecosystem. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for production/main ecosystem. 
+        ///         2 for test/dev ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        public OmniListByEcosystemResponse ListByEcosystemNoCache(int ecosystem)
+        {
+            if (ecosystem != 1 && ecosystem != 2)
+                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
+
+            string data = $"ecosystem={ecosystem}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/listbyecosystem");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniListByEcosystemResponse>(resp);
         }
 
         /// <summary>
         /// Returns list of all created properties.
         /// </summary>
         /// <returns></returns>
-        public OmniCoinListResponse PropertyList()
+        private OmniCoinListResponse PropertyListNoCache()
         {
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(PropertyList));
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniCoinListResponse cacheData);
-            if (!exists)
-            {
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/list");
-                string resp = this.RestGet(url);
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/list");
+            string resp = this.RestGet(url);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
 
-                cacheData = ObjectParse<OmniCoinListResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
+            return ObjectParse<OmniCoinListResponse>(resp);
         }
 
         /// <summary>
@@ -624,29 +789,20 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public OmniSearchResponse Search(string query)
+        private OmniSearchResponse SearchNoCache(string query)
         {
             if (string.IsNullOrEmpty(query))
                 throw new ArgumentNullException(nameof(query));
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(Search), query);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniSearchResponse cacheData);
-            if (!exists)
-            {
-                string data = $"query={query}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "search");
-                string resp = this.RestPost(url, data);
+            string data = $"query={query}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "search");
+            string resp = this.RestPost(url, data);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
 
-                cacheData = ObjectParse<OmniSearchResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
+            return ObjectParse<OmniSearchResponse>(resp);
         }
 
         /// <summary>
@@ -659,29 +815,20 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <param name="address"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public OmniTransactionListResponse GetTxList(string address, int page = 0)
+        private OmniTransactionListResponse GetTxListNoCache(string address, int page = 0)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetTxList), address);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniTransactionListResponse cacheData);
-            if (!exists)
-            {
-                string data = $"addr={address}&page={page}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "transaction/address");
-                string resp = this.RestPost(url, data);
+            string data = $"addr={address}&page={page}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "transaction/address");
+            string resp = this.RestPost(url, data);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
 
-                cacheData = ObjectParse<OmniTransactionListResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
+            return ObjectParse<OmniTransactionListResponse>(resp);
         }
 
         /// <summary>
@@ -691,29 +838,20 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="signedTransaction"></param>
         /// <returns></returns>
-        public OmniPushTxResponse PushTx(string signedTransaction)
+        private OmniPushTxResponse PushTxNoCache(string signedTransaction)
         {
             if (string.IsNullOrEmpty(signedTransaction))
                 throw new ArgumentNullException(nameof(signedTransaction));
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(PushTx), signedTransaction);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniPushTxResponse cacheData);
-            if (!exists)
-            {
-                string data = $"signedTransaction={signedTransaction}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "transaction/pushtx/");
-                string resp = this.RestPost(url, data);
+            string data = $"signedTransaction={signedTransaction}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "transaction/pushtx/");
+            string resp = this.RestPost(url, data);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
 
-                cacheData = ObjectParse<OmniPushTxResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
+            return ObjectParse<OmniPushTxResponse>(resp);
         }
 
         /// <summary>
@@ -721,28 +859,19 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="txHash"></param>
         /// <returns></returns>
-        public OmniTxInfoResponse GetTx(string txHash)
+        private OmniTxInfoResponse GetTxNoCache(string txHash)
         {
             if (string.IsNullOrEmpty(txHash))
                 throw new ArgumentNullException(nameof(txHash));
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetTx), txHash);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniTxInfoResponse cacheData);
-            if (!exists)
-            {
-                string url = this.CreateRestUrl(OmniRestVersion.V1, $"transaction/tx/{txHash}");
-                string resp = this.RestGet(url);
+            string url = this.CreateRestUrl(OmniRestVersion.V1, $"transaction/tx/{txHash}");
+            string resp = this.RestGet(url);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
 
-                cacheData = ObjectParse<OmniTxInfoResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
+            return ObjectParse<OmniTxInfoResponse>(resp);
         }
 
         #endregion

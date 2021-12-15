@@ -13,61 +13,38 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// Returns the balance for a given address
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        Dictionary<string, OmniBtcBalanceJson> GetAddressBTC(string address);
+        Dictionary<string, OmniBtcBalanceJson> GetAddressBTC(string address, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns the balance information for a given address. 
         /// For multiple addresses in a single query use the v2 endpoint
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniAssetCollectionJson GetAddressV1(string address);
+        OmniAssetCollectionJson GetAddressV1(string address, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns the balance information for multiple addresses
         /// </summary>
         /// <param name="addresses"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] addresses);
+        Dictionary<string, OmniAssetCollectionJson> GetAddressV2(string[] addresses, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns the balance information and transaction history list for a given address
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniAddressDetailsResponse GetAddressDetails(string address);
-
-        /// <summary>
-        /// Returns the Armory encoded version of an unsigned transaction for 
-        /// use with Armory offline transactions. 
-        /// Data: 
-        ///     unsigned_hex : raw bitcoin hex formatted tx to be converted 
-        ///     pubkey : pubkey of the sending address
-        /// </summary>
-        /// <param name="unsignedHex"></param>
-        /// <param name="publicKey"></param>
-        /// <returns></returns>
-        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
-        OmniArmoryUnsignedResponse GetUnsigned(string unsignedHex, string publicKey);
-
-        /// <summary>
-        /// Decodes and returns the raw hex and signed status from an armory transaction. 
-        /// Data: 
-        ///     armory_tx : armory transaction in text format
-        /// </summary>
-        /// <param name="armoryTx"></param>
-        /// <returns></returns>
-        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
-        OmniRawTransactionResponse GetRawtransaction(string armoryTx);
-
-        /// <summary>
-        /// Decodes raw hex returning Omni and Bitcoin transaction information
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns></returns>
-        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
-        OmniDecodeResponse Decode(string hex);
+        OmniAddressDetailsResponse GetAddressDetails(string address, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Return a list of currently active/available base currencies the omnidex 
@@ -79,8 +56,10 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         2 for test/development ecosystem
         /// </summary>
         /// <param name="ecosystem"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem);
+        OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns list of transactions (up to 10 per page) relevant to queried Property ID. 
@@ -90,15 +69,19 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="propertyId"></param>
         /// <param name="page"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniTxHistoryResponse GetHistory(int propertyId, int page = 1);
+        OmniTxHistoryResponse GetHistory(int propertyId, int page = 1, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Return list of properties created by a queried address.
         /// </summary>
         /// <param name="addresses"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniListByOwnerResponse ListByOwner(params string[] addresses);
+        OmniListByOwnerResponse ListByOwner(string[] addresses, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// Returns list of currently active crowdsales. 
@@ -108,8 +91,10 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         2 for test/dev ecosystem
         /// </summary>
         /// <param name="ecosystem"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem);
+        OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10);
 
         /// <summary>
         /// returns list of created properties filtered by ecosystem. 

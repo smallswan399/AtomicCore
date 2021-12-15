@@ -105,14 +105,12 @@ namespace AtomicCore.BlockChain.OmniscanAPI
                     remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
                 }
 
-                using (HttpClient cli = new HttpClient())
-                {
-                    HttpResponseMessage respMessage = cli.GetAsync(remoteUrl).Result;
-                    if (!respMessage.IsSuccessStatusCode)
-                        throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
+                using HttpClient cli = new HttpClient();
+                HttpResponseMessage respMessage = cli.GetAsync(remoteUrl).Result;
+                if (!respMessage.IsSuccessStatusCode)
+                    throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
 
-                    resp = respMessage.Content.ReadAsStringAsync().Result;
-                }
+                resp = respMessage.Content.ReadAsStringAsync().Result;
             }
             catch (Exception ex)
             {
@@ -204,25 +202,26 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// Returns the balance for a given address
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public Dictionary<string, OmniBtcBalanceJson> GetAddressBTC(string address)
+        public Dictionary<string, OmniBtcBalanceJson> GetAddressBTC(string address, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (null == address || address.Length <= 0)
-                throw new ArgumentNullException(nameof(address));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressBTC), address);
-            bool exists = OmniCacheProvider.Get(cacheKey, out Dictionary<string, OmniBtcBalanceJson> cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return GetAddressBTCNoCache(address);
+            else
             {
-                string url = $"https://blockchain.info/balance?cors=true&active={address}";
-                string resp = RestGet2(url);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressBTC), address);
+                bool exists = OmniCacheProvider.Get(cacheKey, out Dictionary<string, OmniBtcBalanceJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetAddressBTCNoCache(address);
 
-                cacheData = ObjectParse<Dictionary<string, OmniBtcBalanceJson>>(resp);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
@@ -230,190 +229,78 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// For multiple addresses in a single query use the v2 endpoint
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniAssetCollectionJson GetAddressV1(string address)
+        public OmniAssetCollectionJson GetAddressV1(string address, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (null == address || address.Length <= 0)
-                throw new ArgumentNullException(nameof(address));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressV1), address);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniAssetCollectionJson cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return GetAddressV1NoCache(address);
+            else
             {
-                string data = $"addr={address}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressV1), address);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniAssetCollectionJson cacheData);
+                if (!exists)
+                {
+                    cacheData = GetAddressV1NoCache(address);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniAssetCollectionJson>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
         /// Returns the balance information for multiple addresses
         /// </summary>
         /// <param name="addresses"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public Dictionary<string, OmniAssetCollectionJson> GetAddressV2(params string[] addresses)
+        public Dictionary<string, OmniAssetCollectionJson> GetAddressV2(string[] addresses, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (null == addresses || addresses.Length <= 0)
-                throw new ArgumentNullException(nameof(addresses));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressV2), addresses);
-            bool exists = OmniCacheProvider.Get(cacheKey, out Dictionary<string, OmniAssetCollectionJson> cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return GetAddressV2NoCache(addresses);
+            else
             {
-                string data = string.Join("&", addresses.Select(s => $"addr={s}"));
-                string url = this.CreateRestUrl(OmniRestVersion.V2, "address/addr/");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressV2), addresses);
+                bool exists = OmniCacheProvider.Get(cacheKey, out Dictionary<string, OmniAssetCollectionJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetAddressV2NoCache(addresses);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
         /// Returns the balance information and transaction history list for a given address
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniAddressDetailsResponse GetAddressDetails(string address)
+        public OmniAddressDetailsResponse GetAddressDetails(string address, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (null == address || address.Length <= 0)
-                throw new ArgumentNullException(nameof(address));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressDetails), address);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniAddressDetailsResponse cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return GetAddressDetailsNoCache(address);
+            else
             {
-                string data = $"addr={address}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/details/");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressDetails), address);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniAddressDetailsResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetAddressDetailsNoCache(address);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniAddressDetailsResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
-        }
-
-        /// <summary>
-        /// Returns the Armory encoded version of an unsigned transaction for 
-        /// use with Armory offline transactions. 
-        /// Data: 
-        ///     unsigned_hex : raw bitcoin hex formatted tx to be converted 
-        ///     pubkey : pubkey of the sending address
-        /// </summary>
-        /// <param name="unsignedHex"></param>
-        /// <param name="publicKey"></param>
-        /// <returns></returns>
-        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
-        public OmniArmoryUnsignedResponse GetUnsigned(string unsignedHex, string publicKey)
-        {
-            if (string.IsNullOrEmpty(unsignedHex))
-                throw new ArgumentNullException(nameof(unsignedHex));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetUnsigned), unsignedHex, publicKey);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniArmoryUnsignedResponse cacheData);
-            if (!exists)
-            {
-                string data = $"unsigned_hex={unsignedHex}&pubkey={publicKey}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "armory/getunsigned");
-                string resp = this.RestPost(url, data);
-
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
-
-                cacheData = ObjectParse<OmniArmoryUnsignedResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
-        }
-
-        /// <summary>
-        /// Decodes and returns the raw hex and signed status from an armory transaction. 
-        /// Data: 
-        ///     armory_tx : armory transaction in text format
-        /// </summary>
-        /// <param name="armoryTx"></param>
-        /// <returns></returns>
-        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
-        public OmniRawTransactionResponse GetRawtransaction(string armoryTx)
-        {
-            if (string.IsNullOrEmpty(armoryTx))
-                throw new ArgumentNullException(nameof(armoryTx));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetRawtransaction), armoryTx);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniRawTransactionResponse cacheData);
-            if (!exists)
-            {
-                string data = $"armory_tx={armoryTx}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "armory/getrawtransaction");
-                string resp = this.RestPost(url, data);
-
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
-
-                cacheData = ObjectParse<OmniRawTransactionResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
-        }
-
-        /// <summary>
-        /// Decodes raw hex returning Omni and Bitcoin transaction information
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns></returns>
-        [Obsolete("The remote server returned an error: (502) Bad Gateway.")]
-        public OmniDecodeResponse Decode(string hex)
-        {
-            if (string.IsNullOrEmpty(hex))
-                throw new ArgumentNullException(nameof(hex));
-
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(Decode), hex);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniDecodeResponse cacheData);
-            if (!exists)
-            {
-                string data = $"hex={hex}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "decode/");
-                string resp = this.RestPost(url, data);
-
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
-
-                cacheData = ObjectParse<OmniDecodeResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
-            }
-
-            return cacheData;
         }
 
         /// <summary>
@@ -431,9 +318,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (ecosystem != 1 && ecosystem != 2)
-                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
-
             if (cacheMode == OmniCacheMode.None)
                 return DesignatingCurrenciesNoCache(ecosystem);
             else
@@ -464,11 +348,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniTxHistoryResponse GetHistory(int propertyId, int page = 0, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (propertyId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(propertyId));
-            if (page < 0)
-                page = 0;
-
             if (cacheMode == OmniCacheMode.None)
                 return GetHistoryNoCache(propertyId, page);
             else
@@ -495,9 +374,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniListByOwnerResponse ListByOwner(string[] addresses, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (null == addresses || addresses.Length <= 0)
-                throw new ArgumentNullException(nameof(addresses));
-
             if (cacheMode == OmniCacheMode.None)
                 return ListByOwnerNoCache(addresses);
             else
@@ -528,9 +404,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (ecosystem != 1 && ecosystem != 2)
-                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
-
             if (cacheMode == OmniCacheMode.None)
                 return ListActiveCrowdSalesNoCache(ecosystem);
             else
@@ -561,9 +434,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniListByEcosystemResponse ListByEcosystem(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (ecosystem != 1 && ecosystem != 2)
-                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
-
             if (cacheMode == OmniCacheMode.None)
                 return ListByEcosystemNoCache(ecosystem);
             else
@@ -618,9 +488,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniSearchResponse Search(string query, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (string.IsNullOrEmpty(query))
-                throw new ArgumentNullException(nameof(query));
-
             if (cacheMode == OmniCacheMode.None)
                 return SearchNoCache(query);
             else
@@ -652,9 +519,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniTransactionListResponse GetTxList(string address, int page = 0, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (string.IsNullOrEmpty(address))
-                throw new ArgumentNullException(nameof(address));
-
             if (cacheMode == OmniCacheMode.None)
                 return GetTxListNoCache(address, page);
             else
@@ -683,9 +547,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniPushTxResponse PushTx(string signedTransaction, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (string.IsNullOrEmpty(signedTransaction))
-                throw new ArgumentNullException(nameof(signedTransaction));
-
             if (cacheMode == OmniCacheMode.None)
                 return PushTxNoCache(signedTransaction);
             else
@@ -712,9 +573,6 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniTxInfoResponse GetTx(string txHash, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
-            if (string.IsNullOrEmpty(txHash))
-                throw new ArgumentNullException(nameof(txHash));
-
             if (cacheMode == OmniCacheMode.None)
                 return GetTxNoCache(txHash);
             else
@@ -735,6 +593,86 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Returns the balance for a given address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        private Dictionary<string, OmniBtcBalanceJson> GetAddressBTCNoCache(string address)
+        {
+            if (null == address || address.Length <= 0)
+                throw new ArgumentNullException(nameof(address));
+
+            string url = $"https://blockchain.info/balance?cors=true&active={address}";
+            string resp = RestGet2(url);
+
+            return ObjectParse<Dictionary<string, OmniBtcBalanceJson>>(resp);
+        }
+
+        /// <summary>
+        /// Returns the balance information for a given address. 
+        /// For multiple addresses in a single query use the v2 endpoint
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        private OmniAssetCollectionJson GetAddressV1NoCache(string address)
+        {
+            if (null == address || address.Length <= 0)
+                throw new ArgumentNullException(nameof(address));
+
+            string data = $"addr={address}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniAssetCollectionJson>(resp);
+        }
+
+        /// <summary>
+        /// Returns the balance information for multiple addresses
+        /// </summary>
+        /// <param name="addresses"></param>
+        /// <returns></returns>
+        private Dictionary<string, OmniAssetCollectionJson> GetAddressV2NoCache(string[] addresses)
+        {
+            if (null == addresses || addresses.Length <= 0)
+                throw new ArgumentNullException(nameof(addresses));
+
+            string data = string.Join("&", addresses.Select(s => $"addr={s}"));
+            string url = this.CreateRestUrl(OmniRestVersion.V2, "address/addr/");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
+        }
+
+        /// <summary>
+        /// Returns the balance information and transaction history list for a given address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        private OmniAddressDetailsResponse GetAddressDetailsNoCache(string address)
+        {
+            if (null == address || address.Length <= 0)
+                throw new ArgumentNullException(nameof(address));
+
+            string data = $"addr={address}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "address/addr/details/");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniAddressDetailsResponse>(resp);
+        }
 
         /// <summary>
         /// Return a list of currently active/available base currencies the omnidex 

@@ -215,8 +215,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressBTC), address);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out Dictionary<string, OmniBtcBalanceJson> cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressBTC), address);
+            bool exists = OmniCacheProvider.Get(cacheKey, out Dictionary<string, OmniBtcBalanceJson> cacheData);
             if (!exists)
             {
                 string url = $"https://blockchain.info/balance?cors=true&active={address}";
@@ -224,7 +224,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<Dictionary<string, OmniBtcBalanceJson>>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -241,8 +241,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV1), address);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniAssetCollectionJson cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressV1), address);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniAssetCollectionJson cacheData);
             if (!exists)
             {
                 string data = $"addr={address}";
@@ -255,7 +255,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniAssetCollectionJson>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -271,8 +271,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == addresses || addresses.Length <= 0)
                 throw new ArgumentNullException(nameof(addresses));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressV2), addresses);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out Dictionary<string, OmniAssetCollectionJson> cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressV2), addresses);
+            bool exists = OmniCacheProvider.Get(cacheKey, out Dictionary<string, OmniAssetCollectionJson> cacheData);
             if (!exists)
             {
                 string data = string.Join("&", addresses.Select(s => $"addr={s}"));
@@ -285,7 +285,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<Dictionary<string, OmniAssetCollectionJson>>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -301,8 +301,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == address || address.Length <= 0)
                 throw new ArgumentNullException(nameof(address));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetAddressDetails), address);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniAddressDetailsResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetAddressDetails), address);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniAddressDetailsResponse cacheData);
             if (!exists)
             {
                 string data = $"addr={address}";
@@ -315,7 +315,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniAddressDetailsResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -337,8 +337,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(unsignedHex))
                 throw new ArgumentNullException(nameof(unsignedHex));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetUnsigned), unsignedHex, publicKey);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniArmoryUnsignedResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetUnsigned), unsignedHex, publicKey);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniArmoryUnsignedResponse cacheData);
             if (!exists)
             {
                 string data = $"unsigned_hex={unsignedHex}&pubkey={publicKey}";
@@ -351,7 +351,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniArmoryUnsignedResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -370,8 +370,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(armoryTx))
                 throw new ArgumentNullException(nameof(armoryTx));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetRawtransaction), armoryTx);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniRawTransactionResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetRawtransaction), armoryTx);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniRawTransactionResponse cacheData);
             if (!exists)
             {
                 string data = $"armory_tx={armoryTx}";
@@ -384,7 +384,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniRawTransactionResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -401,8 +401,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(hex))
                 throw new ArgumentNullException(nameof(hex));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(Decode), hex);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniDecodeResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(Decode), hex);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniDecodeResponse cacheData);
             if (!exists)
             {
                 string data = $"hex={hex}";
@@ -415,7 +415,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniDecodeResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -437,8 +437,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(DesignatingCurrencies), ecosystem.ToString());
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniDesignatingCurrenciesResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(DesignatingCurrencies), ecosystem.ToString());
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniDesignatingCurrenciesResponse cacheData);
             if (!exists)
             {
                 string data = $"ecosystem={ecosystem}";
@@ -451,7 +451,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniDesignatingCurrenciesResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -473,8 +473,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (page < 0)
                 page = 0;
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetHistory), propertyId.ToString(), page.ToString());
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniTxHistoryResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetHistory), propertyId.ToString(), page.ToString());
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniTxHistoryResponse cacheData);
             if (!exists)
             {
                 string data = $"page={page}";
@@ -487,7 +487,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniTxHistoryResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -503,8 +503,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (null == addresses || addresses.Length <= 0)
                 throw new ArgumentNullException(nameof(addresses));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListByOwner), addresses);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniListByOwnerResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListByOwner), addresses);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniListByOwnerResponse cacheData);
             if (!exists)
             {
                 string data = string.Join("&", addresses.Select(s => $"addresses={s}"));
@@ -517,7 +517,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniListByOwnerResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -537,8 +537,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniCrowdSalesResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniCrowdSalesResponse cacheData);
             if (!exists)
             {
                 string data = $"ecosystem={ecosystem}";
@@ -551,7 +551,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniCrowdSalesResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -571,8 +571,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(ListByEcosystem), ecosystem.ToString());
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniListByEcosystemResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListByEcosystem), ecosystem.ToString());
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniListByEcosystemResponse cacheData);
             if (!exists)
             {
                 string data = $"ecosystem={ecosystem}";
@@ -585,7 +585,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniListByEcosystemResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -597,8 +597,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// <returns></returns>
         public OmniCoinListResponse PropertyList()
         {
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(PropertyList));
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniCoinListResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(PropertyList));
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniCoinListResponse cacheData);
             if (!exists)
             {
                 string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/list");
@@ -610,7 +610,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniCoinListResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -629,8 +629,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(query))
                 throw new ArgumentNullException(nameof(query));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(Search), query);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniSearchResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(Search), query);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniSearchResponse cacheData);
             if (!exists)
             {
                 string data = $"query={query}";
@@ -643,7 +643,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniSearchResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -664,8 +664,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetTxList), address);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniTransactionListResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetTxList), address);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniTransactionListResponse cacheData);
             if (!exists)
             {
                 string data = $"addr={address}&page={page}";
@@ -678,7 +678,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniTransactionListResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -696,8 +696,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(signedTransaction))
                 throw new ArgumentNullException(nameof(signedTransaction));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(PushTx), signedTransaction);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniPushTxResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(PushTx), signedTransaction);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniPushTxResponse cacheData);
             if (!exists)
             {
                 string data = $"signedTransaction={signedTransaction}";
@@ -710,7 +710,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniPushTxResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;
@@ -726,8 +726,8 @@ namespace AtomicCore.BlockChain.OmniscanAPI
             if (string.IsNullOrEmpty(txHash))
                 throw new ArgumentNullException(nameof(txHash));
 
-            string cacheKey = ApiMsCacheProvider.GenerateCacheKey(nameof(GetTx), txHash);
-            bool exists = ApiMsCacheProvider.Get(cacheKey, out OmniTxInfoResponse cacheData);
+            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetTx), txHash);
+            bool exists = OmniCacheProvider.Get(cacheKey, out OmniTxInfoResponse cacheData);
             if (!exists)
             {
                 string url = this.CreateRestUrl(OmniRestVersion.V1, $"transaction/tx/{txHash}");
@@ -739,7 +739,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
 
                 cacheData = ObjectParse<OmniTxInfoResponse>(resp);
 
-                ApiMsCacheProvider.Set(cacheKey, cacheData, ApiCacheExpirationMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
             }
 
             return cacheData;

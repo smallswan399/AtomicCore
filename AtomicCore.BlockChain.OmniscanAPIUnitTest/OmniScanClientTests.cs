@@ -183,7 +183,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
         public void GetTxTest()
         {
             IOmniScanClient client = new OmniScanClient();
-            var result = client.GetTx("b26ff86c59d1f9d6390de27dbd2e66751c46e9a35b7e6dd357e86d4730be6422");
+            var result = client.GetTx("7483abeff1149a9d4da07fd0e33ff55102e4327db23da3c76ba6877bd2112d51");
 
             Assert.IsTrue(null != result);
         }

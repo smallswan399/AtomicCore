@@ -426,30 +426,29 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         2 for test/development ecosystem
         /// </summary>
         /// <param name="ecosystem"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem)
+        public OmniDesignatingCurrenciesResponse DesignatingCurrencies(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(DesignatingCurrencies), ecosystem.ToString());
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniDesignatingCurrenciesResponse cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return DesignatingCurrenciesNoCache(ecosystem);
+            else
             {
-                string data = $"ecosystem={ecosystem}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "omnidex/designatingcurrencies");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(DesignatingCurrencies), ecosystem.ToString());
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniDesignatingCurrenciesResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = DesignatingCurrenciesNoCache(ecosystem);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniDesignatingCurrenciesResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
@@ -460,62 +459,60 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="propertyId"></param>
         /// <param name="page"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniTxHistoryResponse GetHistory(int propertyId, int page = 0)
+        public OmniTxHistoryResponse GetHistory(int propertyId, int page = 0, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (propertyId <= 0)
                 throw new ArgumentOutOfRangeException(nameof(propertyId));
             if (page < 0)
                 page = 0;
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetHistory), propertyId.ToString(), page.ToString());
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniTxHistoryResponse cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return GetHistoryNoCache(propertyId, page);
+            else
             {
-                string data = $"page={page}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, $"properties/gethistory/{propertyId}");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(GetHistory), propertyId.ToString(), page.ToString());
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniTxHistoryResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetHistoryNoCache(propertyId, page);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniTxHistoryResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
         /// Return list of properties created by a queried address.
         /// </summary>
         /// <param name="addresses"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniListByOwnerResponse ListByOwner(params string[] addresses)
+        public OmniListByOwnerResponse ListByOwner(string[] addresses, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (null == addresses || addresses.Length <= 0)
                 throw new ArgumentNullException(nameof(addresses));
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListByOwner), addresses);
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniListByOwnerResponse cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return ListByOwnerNoCache(addresses);
+            else
             {
-                string data = string.Join("&", addresses.Select(s => $"addresses={s}"));
-                string url = this.CreateRestUrl(OmniRestVersion.V1, $"properties/listbyowner");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListByOwner), addresses);
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniListByOwnerResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = ListByOwnerNoCache(addresses);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniListByOwnerResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
@@ -526,30 +523,29 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         ///         2 for test/dev ecosystem
         /// </summary>
         /// <param name="ecosystem"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem)
+        public OmniCrowdSalesResponse ListActiveCrowdSales(int ecosystem, OmniCacheMode cacheMode = OmniCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
 
-            string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
-            bool exists = OmniCacheProvider.Get(cacheKey, out OmniCrowdSalesResponse cacheData);
-            if (!exists)
+            if (cacheMode == OmniCacheMode.None)
+                return ListActiveCrowdSalesNoCache(ecosystem);
+            else
             {
-                string data = $"ecosystem={ecosystem}";
-                string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/listactivecrowdsales");
-                string resp = this.RestPost(url, data);
+                string cacheKey = OmniCacheProvider.GenerateCacheKey(nameof(ListActiveCrowdSales), ecosystem.ToString());
+                bool exists = OmniCacheProvider.Get(cacheKey, out OmniCrowdSalesResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = ListActiveCrowdSalesNoCache(ecosystem);
 
-                string error = HasResponseError(resp);
-                if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    OmniCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
 
-                cacheData = ObjectParse<OmniCrowdSalesResponse>(resp);
-
-                OmniCacheProvider.Set(cacheKey, cacheData, OmniCacheMode.AbsoluteExpired, TimeSpan.FromSeconds(c_cacheSeconds));
+                return cacheData;
             }
-
-            return cacheData;
         }
 
         /// <summary>
@@ -741,6 +737,106 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         #region Private Methods
 
         /// <summary>
+        /// Return a list of currently active/available base currencies the omnidex 
+        /// has open orders against. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for main / production ecosystem 
+        ///         or 
+        ///         2 for test/development ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        private OmniDesignatingCurrenciesResponse DesignatingCurrenciesNoCache(int ecosystem)
+        {
+            if (ecosystem != 1 && ecosystem != 2)
+                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
+
+            string data = $"ecosystem={ecosystem}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "omnidex/designatingcurrencies");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniDesignatingCurrenciesResponse>(resp);
+        }
+
+        /// <summary>
+        /// Returns list of transactions (up to 10 per page) relevant to queried Property ID. 
+        /// Returned transaction types include: 
+        /// Creation Tx, Change issuer txs, Grant Txs, Revoke Txs, Crowdsale Participation Txs, 
+        /// Close Crowdsale earlier tx
+        /// </summary>
+        /// <param name="propertyId"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        private OmniTxHistoryResponse GetHistoryNoCache(int propertyId, int page = 0)
+        {
+            if (propertyId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(propertyId));
+            if (page < 0)
+                page = 0;
+
+            string data = $"page={page}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, $"properties/gethistory/{propertyId}");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniTxHistoryResponse>(resp);
+        }
+
+        /// <summary>
+        /// Return list of properties created by a queried address.
+        /// </summary>
+        /// <param name="addresses"></param>
+        /// <returns></returns>
+        private OmniListByOwnerResponse ListByOwnerNoCache(params string[] addresses)
+        {
+            if (null == addresses || addresses.Length <= 0)
+                throw new ArgumentNullException(nameof(addresses));
+
+            string data = string.Join("&", addresses.Select(s => $"addresses={s}"));
+            string url = this.CreateRestUrl(OmniRestVersion.V1, $"properties/listbyowner");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniListByOwnerResponse>(resp);
+        }
+
+        /// <summary>
+        /// Returns list of currently active crowdsales. 
+        /// Data: 
+        ///     ecosystem : 
+        ///         1 for production/main ecosystem. 
+        ///         2 for test/dev ecosystem
+        /// </summary>
+        /// <param name="ecosystem"></param>
+        /// <returns></returns>
+        private OmniCrowdSalesResponse ListActiveCrowdSalesNoCache(int ecosystem)
+        {
+            if (ecosystem != 1 && ecosystem != 2)
+                throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");
+
+            string data = $"ecosystem={ecosystem}";
+            string url = this.CreateRestUrl(OmniRestVersion.V1, "properties/listactivecrowdsales");
+            string resp = this.RestPost(url, data);
+
+            string error = HasResponseError(resp);
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+
+            return ObjectParse<OmniCrowdSalesResponse>(resp);
+        }
+
+        /// <summary>
         /// returns list of created properties filtered by ecosystem. 
         /// Data: 
         ///     ecosystem : 
@@ -749,7 +845,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI
         /// </summary>
         /// <param name="ecosystem"></param>
         /// <returns></returns>
-        public OmniListByEcosystemResponse ListByEcosystemNoCache(int ecosystem)
+        private OmniListByEcosystemResponse ListByEcosystemNoCache(int ecosystem)
         {
             if (ecosystem != 1 && ecosystem != 2)
                 throw new ArgumentOutOfRangeException("1 for main / production ecosystem or 2 for test/development ecosystem");

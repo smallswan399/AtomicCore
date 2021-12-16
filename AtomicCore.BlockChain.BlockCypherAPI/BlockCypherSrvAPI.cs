@@ -9,7 +9,7 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
     /// <summary>
     /// BlockCypher Service
     /// </summary>
-    public class BlockCypherSrvAPI //: IBlockCypherAPI
+    public class BlockCypherSrvAPI : IBlockCypherAPI
     {
         #region Variables
 
@@ -83,7 +83,7 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// <param name="network">version</param>
         /// <param name="actionUrl">action url</param>
         /// <returns></returns>
-        private string CreateRestUrl(BlockCypherNetwork network, string actionUrl)
+        private string GetRestUrl(BlockCypherNetwork network, string actionUrl)
         {
             string baseUrl = GetBaseUrl(network);
             return $"{baseUrl}/{actionUrl}".ToLower();
@@ -186,6 +186,23 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
             return ObjectParse<ChainEndpointResponse>(resp);
         }
 
+        /// <summary>
+        /// If you want more data on a particular block, you can use the Block Hash endpoint.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#block-hash-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="blockHash"></param>
+        private BlockCypherBlockResponse BlockHashEndpointNoCache(BlockCypherNetwork network, string blockHash)
+        {
+            if (string.IsNullOrEmpty(blockHash))
+                throw new ArgumentNullException(nameof(blockHash));
+
+            string url = GetRestUrl(network, $"blocks/{blockHash}");
+            string resp = RestGet(url);
+
+            return ObjectParse<BlockCypherBlockResponse>(resp);
+        }
+
         #endregion
 
         #region IBlockCypherAPI Methods
@@ -209,6 +226,34 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
                 if (!exists)
                 {
                     cacheData = ChainEndpointNoCache(network);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// If you want more data on a particular block, you can use the Block Hash endpoint.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#block-hash-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="blockHash"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public BlockCypherBlockResponse BlockHashEndpoint(BlockCypherNetwork network, string blockHash, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return BlockHashEndpointNoCache(network, blockHash);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(BlockHashEndpoint), blockHash);
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out BlockCypherBlockResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = BlockHashEndpointNoCache(network, blockHash);
 
                     BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }

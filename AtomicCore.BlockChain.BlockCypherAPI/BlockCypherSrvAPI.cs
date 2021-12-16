@@ -151,9 +151,11 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
                 }
 
                 using HttpClient cli = new HttpClient();
-                HttpResponseMessage response = cli.PostAsync(remoteUrl, new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(data))).Result;
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                response.EnsureSuccessStatusCode();
+                HttpResponseMessage response = cli.PostAsync(remoteUrl, new StringContent(
+                    Newtonsoft.Json.JsonConvert.SerializeObject(data),
+                    Encoding.UTF8,
+                    APPLICATIONJSON
+                )).Result;
 
                 if (!response.IsSuccessStatusCode)
                     throw new HttpRequestException($"StatusCode -> {response.StatusCode}, ");

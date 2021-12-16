@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace AtomicCore.BlockChain.BlockCypherAPI
@@ -12,6 +13,11 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
     public class BlockCypherSrvAPI : IBlockCypherAPI
     {
         #region Variables
+
+        /// <summary>
+        /// application/json
+        /// </summary>
+        private const string APPLICATIONJSON = "application/json";
 
         /// <summary>
         /// agent url tmp
@@ -109,11 +115,50 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
                 }
 
                 using HttpClient cli = new HttpClient();
-                HttpResponseMessage respMessage = cli.GetAsync(remoteUrl).Result;
-                if (!respMessage.IsSuccessStatusCode)
-                    throw new HttpRequestException($"StatusCode -> {respMessage.StatusCode}, ");
+                HttpResponseMessage response = cli.GetAsync(remoteUrl).Result;
+                if (!response.IsSuccessStatusCode)
+                    throw new HttpRequestException($"StatusCode -> {response.StatusCode}, ");
 
-                resp = respMessage.Content.ReadAsStringAsync().Result;
+                resp = response.Content.ReadAsStringAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return resp;
+        }
+
+        /// <summary>
+        /// rest post request(Using HttpClient)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="url"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private string RestPost<T>(string url, T data)
+        {
+            string resp;
+            try
+            {
+                string remoteUrl;
+                if (string.IsNullOrEmpty(this._agentGetTmp))
+                    remoteUrl = url;
+                else
+                {
+                    string encodeUrl = UrlEncoder.UrlEncode(url);
+                    remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
+                }
+
+                using HttpClient cli = new HttpClient();
+                HttpResponseMessage response = cli.PostAsync(remoteUrl, new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(data))).Result;
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                    throw new HttpRequestException($"StatusCode -> {response.StatusCode}, ");
+
+                resp = response.Content.ReadAsStringAsync().Result;
             }
             catch (Exception ex)
             {

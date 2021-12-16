@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using System;
 
-namespace AtomicCore.BlockChain.ExplorerAPI
+namespace AtomicCore.BlockChain.BlockCypherAPI
 {
     /// <summary>
     /// Memory Cache Provider

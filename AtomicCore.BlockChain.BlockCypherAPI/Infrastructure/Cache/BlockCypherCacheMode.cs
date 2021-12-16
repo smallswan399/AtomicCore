@@ -1,4 +1,4 @@
-﻿namespace AtomicCore.BlockChain.ExplorerAPI
+﻿namespace AtomicCore.BlockChain.BlockCypherAPI
 {
     /// <summary>
     /// cache expiration mode

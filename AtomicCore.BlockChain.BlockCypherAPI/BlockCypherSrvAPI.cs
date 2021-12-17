@@ -250,6 +250,40 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
             return ObjectParse<BlockCypherBlockResponse>(resp);
         }
 
+        /// <summary>
+        /// You can also query for information on a block using its height, using the same resource but with a different variable type.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#block-height-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="blockHeight"></param>
+        private BlockCypherBlockResponse BlockHeightEndpointNoCache(BlockCypherNetwork network, string blockHeight)
+        {
+            if (string.IsNullOrEmpty(blockHeight))
+                throw new ArgumentNullException(nameof(blockHeight));
+
+            string url = GetRestUrl(network, $"blocks/{blockHeight}");
+            string resp = RestGet(url);
+
+            return ObjectParse<BlockCypherBlockResponse>(resp);
+        }
+
+
+        /// <summary>
+        /// The Address Balance Endpoint is the simplest---and fastest---method to get a subset of information on a public address.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#address-balance-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="addressBalance"></param>
+        private AddressEndpointResponse AddressBalanceEndpointNoCache(BlockCypherNetwork network, string addressBalance)
+        {
+            if (string.IsNullOrEmpty(addressBalance))
+                throw new ArgumentNullException(nameof(addressBalance));
+
+            string url = GetRestUrl(network, $"addrs/{addressBalance}/balance");
+            string resp = RestGet(url);
+
+            return ObjectParse<AddressEndpointResponse>(resp);
+        }
         #endregion
 
         #region IBlockCypherAPI Methods
@@ -309,6 +343,62 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
             }
         }
 
+
+        /// <summary>
+        /// You can also query for information on a block using its height, using the same resource but with a different variable type.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#block-height-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="blockHash"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public BlockCypherBlockResponse BlockHeightEndpoint(BlockCypherNetwork network, string blockHeight, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return BlockHeightEndpointNoCache(network, blockHeight);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(BlockHeightEndpoint), blockHeight);
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out BlockCypherBlockResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = BlockHeightEndpointNoCache(network, blockHeight);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// The Address Balance Endpoint is the simplest---and fastest---method to get a subset of information on a public address.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#address-balance-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="blockHash"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public AddressEndpointResponse AddressBalanceEndpoint(BlockCypherNetwork network, string addressBalance, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return AddressBalanceEndpointNoCache(network, addressBalance);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(BlockHeightEndpoint), addressBalance);
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out AddressEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = AddressBalanceEndpointNoCache(network, addressBalance);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
         #endregion
     }
 }

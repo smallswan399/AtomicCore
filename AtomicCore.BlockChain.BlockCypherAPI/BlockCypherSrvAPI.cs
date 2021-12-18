@@ -284,6 +284,132 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
 
             return ObjectParse<AddressEndpointResponse>(resp);
         }
+
+        /// <summary>
+        ///The default Address Endpoint strikes a balance between speed of response and data on Addresses. It returns more information about an address' transactions than the Address Balance Endpoint but doesn't return full transaction information (like the Address Full Endpoint).
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#address-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="address"></param>
+        private AddressEndpointResponse AddressEndpointNoCache(BlockCypherNetwork network, string address)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            string url = GetRestUrl(network, $"addrs/{address}");
+            string resp = RestGet(url);
+
+            return ObjectParse<AddressEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        ///The Address Full Endpoint returns all information available about a particular address, including an array of complete transactions instead of just transaction inputs and outputs. Unfortunately, because of the amount of data returned, it is the slowest of the address endpoints, but it returns the most detailed data record.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#address-full-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="addressFull"></param>
+        private AddressEndpointResponse AddressFullEndpointNoCache(BlockCypherNetwork network, string addressFull)
+        {
+            if (string.IsNullOrEmpty(addressFull))
+                throw new ArgumentNullException(nameof(addressFull));
+
+            string url = GetRestUrl(network, $"addrs/{addressFull}/full");
+            string resp = RestGet(url);
+
+            return ObjectParse<AddressEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        ///The Generate Address endpoint allows you to generate private-public key-pairs along with an associated public address. No information is required with this POST request.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#generate-address-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        private AddressKeychainEndpointResponse GenerateAddressEndpointNoCache(BlockCypherNetwork network)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestGet(url);
+
+            return ObjectParse<AddressKeychainEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        ///The Generate Multisig Address Endpoint is a convenience method to help you generate multisig addresses from multiple public keys. After supplying a partially filled-out AddressKeychain object (including only an array of hex-encoded public keys and the script type), the returned object includes the computed public address.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#generate-multisig-address-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data">BlockCypherAddressKeychainJson</param>
+        private AddressKeychainEndpointResponse GenerateMultisigAddressEndpointNoCache(BlockCypherNetwork network, BlockCypherAddressKeychainJson data)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestPost(url, data);
+
+            return ObjectParse<AddressKeychainEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#create-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data">BlockCypherWalletJson</param>
+        private WalletEndpointResponse CreateWalletEndpointNoCache(BlockCypherNetwork network, BlockCypherWalletJson data)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestPost(url, data);
+
+            return ObjectParse<WalletEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#create-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data">BlockCypherHDWalletJson</param>
+        private HDWalletEndpointResponse CreateHDWalletEndpointNoCache(BlockCypherNetwork network, BlockCypherHDWalletJson data)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestPost(url, data);
+
+            return ObjectParse<HDWalletEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        ///This endpoint returns a string array ($NAMEARRAY) of active wallet names (both normal and HD) under the token you queried. You can then query detailed information on individual wallets (via their names) by leveraging the Get Wallet Endpoint.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#list-wallets-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        private ListWalletsEndpointResponse ListWalletsEndpointNoCache(BlockCypherNetwork network)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestGet(url);
+
+            return ObjectParse<ListWalletsEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data">BlockCypherWalletJson</param>
+        private WalletEndpointResponse GetWalletEndpointNoCache(BlockCypherNetwork network, BlockCypherWalletJson data)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestPost(url, data);
+
+            return ObjectParse<WalletEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data">BlockCypherHDWalletJson</param>
+        private HDWalletEndpointResponse GetHDWalletEndpointNoCache(BlockCypherNetwork network, BlockCypherHDWalletJson data)
+        {
+            string url = GetBaseUrl(network);
+            string resp = RestPost(url, data);
+
+            return ObjectParse<HDWalletEndpointResponse>(resp);
+        }
         #endregion
 
         #region IBlockCypherAPI Methods
@@ -343,13 +469,12 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
             }
         }
 
-
         /// <summary>
         /// You can also query for information on a block using its height, using the same resource but with a different variable type.
         /// https://www.blockcypher.com/dev/bitcoin/?shell#block-height-endpoint
         /// </summary>
         /// <param name="network"></param>
-        /// <param name="blockHash"></param>
+        /// <param name="blockHeight"></param>
         /// <param name="cacheMode"></param>
         /// <param name="cacheSeconds"></param>
         /// <returns></returns>
@@ -377,7 +502,7 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// https://www.blockcypher.com/dev/bitcoin/?shell#address-balance-endpoint
         /// </summary>
         /// <param name="network"></param>
-        /// <param name="blockHash"></param>
+        /// <param name="addressBalance"></param>
         /// <param name="cacheMode"></param>
         /// <param name="cacheSeconds"></param>
         /// <returns></returns>
@@ -387,11 +512,257 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
                 return AddressBalanceEndpointNoCache(network, addressBalance);
             else
             {
-                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(BlockHeightEndpoint), addressBalance);
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(AddressBalanceEndpoint), addressBalance);
                 bool exists = BlockCypherCacheProvider.Get(cacheKey, out AddressEndpointResponse cacheData);
                 if (!exists)
                 {
                     cacheData = AddressBalanceEndpointNoCache(network, addressBalance);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        ///The default Address Endpoint strikes a balance between speed of response and data on Addresses. It returns more information about an address' transactions than the Address Balance Endpoint but doesn't return full transaction information (like the Address Full Endpoint).
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#address-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="address"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public AddressEndpointResponse AddressEndpoint(BlockCypherNetwork network, string address, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return AddressEndpointNoCache(network, address);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(AddressEndpoint), address);
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out AddressEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = AddressEndpointNoCache(network, address);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        ///The Address Full Endpoint returns all information available about a particular address, including an array of complete transactions instead of just transaction inputs and outputs. Unfortunately, because of the amount of data returned, it is the slowest of the address endpoints, but it returns the most detailed data record.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#address-full-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="addressFull"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public AddressEndpointResponse AddressFullEndpoint(BlockCypherNetwork network, string addressFull, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return AddressFullEndpointNoCache(network, addressFull);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(AddressFullEndpoint), addressFull);
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out AddressEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = AddressFullEndpointNoCache(network, addressFull);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        ///The Generate Address endpoint allows you to generate private-public key-pairs along with an associated public address. No information is required with this POST request.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#generate-address-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public AddressKeychainEndpointResponse GenerateAddressEndpoint(BlockCypherNetwork network, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GenerateAddressEndpointNoCache(network);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GenerateAddressEndpoint), network.ToString());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out AddressKeychainEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GenerateAddressEndpointNoCache(network);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        ///The Generate Multisig Address Endpoint is a convenience method to help you generate multisig addresses from multiple public keys. After supplying a partially filled-out AddressKeychain object (including only an array of hex-encoded public keys and the script type), the returned object includes the computed public address.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#generate-multisig-address-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public AddressKeychainEndpointResponse GenerateMultisigAddressEndpoint(BlockCypherNetwork network, BlockCypherAddressKeychainJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GenerateMultisigAddressEndpointNoCache(network, data);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GenerateMultisigAddressEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out AddressKeychainEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GenerateMultisigAddressEndpointNoCache(network, data);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#create-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public WalletEndpointResponse CreateWalletEndpoint(BlockCypherNetwork network, BlockCypherWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return CreateWalletEndpointNoCache(network, data);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(CreateWalletEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out WalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = CreateWalletEndpointNoCache(network, data);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#create-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public HDWalletEndpointResponse CreateHDWalletEndpoint(BlockCypherNetwork network, BlockCypherHDWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return CreateHDWalletEndpointNoCache(network, data);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(CreateHDWalletEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out HDWalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = CreateHDWalletEndpointNoCache(network, data);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        ///This endpoint returns a string array ($NAMEARRAY) of active wallet names (both normal and HD) under the token you queried. You can then query detailed information on individual wallets (via their names) by leveraging the Get Wallet Endpoint.
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#list-wallets-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public ListWalletsEndpointResponse ListWalletsEndpoint(BlockCypherNetwork network, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return ListWalletsEndpointNoCache(network);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(ListWalletsEndpoint), network.ToString());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out ListWalletsEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = ListWalletsEndpointNoCache(network);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public WalletEndpointResponse GetWalletEndpoint(BlockCypherNetwork network, BlockCypherWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GetWalletEndpointNoCache(network, data);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetWalletEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out WalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetWalletEndpointNoCache(network, data);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public HDWalletEndpointResponse GetHDWalletEndpoint(BlockCypherNetwork network, BlockCypherHDWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GetHDWalletEndpointNoCache(network, data);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetHDWalletEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out HDWalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetHDWalletEndpointNoCache(network, data);
 
                     BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }

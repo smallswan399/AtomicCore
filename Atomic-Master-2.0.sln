@@ -67,6 +67,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.Block
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.BscscanAPI", "AtomicCore.BlockChain.BscscanAPI\AtomicCore.BlockChain.BscscanAPI.csproj", "{C26081AD-C830-4951-AA0B-093B17F81C97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.BscscanAPIUnitTest", "AtomicCore.BlockChain.BscscanAPIUnitTest\AtomicCore.BlockChain.BscscanAPIUnitTest.csproj", "{EF51876E-D82B-4900-B449-A4737520F9EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,10 @@ Global
 		{C26081AD-C830-4951-AA0B-093B17F81C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C26081AD-C830-4951-AA0B-093B17F81C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C26081AD-C830-4951-AA0B-093B17F81C97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF51876E-D82B-4900-B449-A4737520F9EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF51876E-D82B-4900-B449-A4737520F9EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF51876E-D82B-4900-B449-A4737520F9EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF51876E-D82B-4900-B449-A4737520F9EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -208,6 +214,7 @@ Global
 		{8800923B-2A16-4D92-809A-9B37C759321B} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
 		{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 		{C26081AD-C830-4951-AA0B-093B17F81C97} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
+		{EF51876E-D82B-4900-B449-A4737520F9EF} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {942DB662-B41D-4454-8FF9-2F118FA2B541}

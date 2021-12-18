@@ -63,7 +63,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.Explo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.BlockCypherAPI", "AtomicCore.BlockChain.BlockCypherAPI\AtomicCore.BlockChain.BlockCypherAPI.csproj", "{8800923B-2A16-4D92-809A-9B37C759321B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.BlockCypherAPIUnitTest", "AtomicCore.BlockChain.BlockCypherAPIUnitTest\AtomicCore.BlockChain.BlockCypherAPIUnitTest.csproj", "{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.BlockCypherAPIUnitTest", "AtomicCore.BlockChain.BlockCypherAPIUnitTest\AtomicCore.BlockChain.BlockCypherAPIUnitTest.csproj", "{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.BscscanAPI", "AtomicCore.BlockChain.BscscanAPI\AtomicCore.BlockChain.BscscanAPI.csproj", "{C26081AD-C830-4951-AA0B-093B17F81C97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +173,10 @@ Global
 		{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C26081AD-C830-4951-AA0B-093B17F81C97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C26081AD-C830-4951-AA0B-093B17F81C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C26081AD-C830-4951-AA0B-093B17F81C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C26081AD-C830-4951-AA0B-093B17F81C97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -201,6 +207,7 @@ Global
 		{2902D0F1-1897-401C-BAD3-AC04DCEFD905} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 		{8800923B-2A16-4D92-809A-9B37C759321B} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
 		{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
+		{C26081AD-C830-4951-AA0B-093B17F81C97} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {942DB662-B41D-4454-8FF9-2F118FA2B541}

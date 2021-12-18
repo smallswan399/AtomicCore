@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-namespace AtomicCore.BlockChain.EtherscanAPI
+namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
-    /// Etherscan的统一返回单个实体对象结果集
+    /// bsc返回对象结果集
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class EtherscanSingleResult<T> : EtherscanBaseResult
+    public sealed class BscscanSingleResult<T> : BscscanBaseResult
     {
         /// <summary>
         /// 数据结果

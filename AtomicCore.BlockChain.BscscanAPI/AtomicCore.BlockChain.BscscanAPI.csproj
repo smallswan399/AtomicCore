@@ -14,8 +14,4 @@
 		<ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="JsonModel\" />
-	</ItemGroup>
-
 </Project>

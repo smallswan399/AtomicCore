@@ -1,17 +1,17 @@
 ﻿using Newtonsoft.Json;
 
-namespace AtomicCore.BlockChain.EtherscanAPI
+namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
-    /// Etherscan Result Base
+    /// bsc api response
     /// </summary>
-    public abstract class EtherscanResultBase
+    public abstract class BscscanBaseResult
     {
         /// <summary>
         /// 消息状态(1 true)
         /// </summary>
         [JsonProperty("status")]
-        public EtherscanJsonStatus Status { get; set; }
+        public BscscanJsonStatus Status { get; set; }
 
         /// <summary>
         /// 消息信息

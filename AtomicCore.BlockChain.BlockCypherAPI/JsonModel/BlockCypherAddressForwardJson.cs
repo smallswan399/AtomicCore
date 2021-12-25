@@ -11,7 +11,7 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
     public class BlockCypherAddressForwardJson
     {
         /// <summary>
-        /// Identifier of the orwarding request; generated when a new request is created.
+        /// Identifier of the orwarding request; generated when a new request is created..
         /// </summary>
         [JsonProperty("id")]
         public string ID { get; set; }

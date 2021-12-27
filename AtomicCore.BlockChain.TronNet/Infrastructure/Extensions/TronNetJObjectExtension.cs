@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Google.Protobuf;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace AtomicCore.BlockChain.TronNet

@@ -274,7 +274,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             TronNetSignedTransactionRestJson signTransaction = _restAPI.GetTransactionSign(from_priv, createTransaction);
 
             //broadcast transaction
-            TronNetResultJson result = testRestAPI.BroadcastTransaction(createTransaction, signTransaction.Signature);
+            TronNetResultJson result = testRestAPI.BroadcastTransaction(signTransaction, signTransaction.Signature);
             Assert.IsTrue(result.Result);
         }
 

@@ -41,9 +41,10 @@ namespace AtomicCore.BlockChain.TronNet
         ByteString ParseAddress(string address);
 
         /// <summary>
-        /// Get Metadata Header
+        /// Get Metadata Headers
         /// </summary>
+        /// <param name="apiKey"></param>
         /// <returns></returns>
-        Metadata GetHeaders();
+        Metadata GetHeaders(string apiKey = null);
     }
 }

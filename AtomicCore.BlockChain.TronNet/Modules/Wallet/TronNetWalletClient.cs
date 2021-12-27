@@ -113,13 +113,21 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// Get Metadata Headers
         /// </summary>
+        /// <param name="apiKey"></param>
         /// <returns></returns>
-        public Metadata GetHeaders()
+        public Metadata GetHeaders(string apiKey = null)
         {
-            var headers = new Metadata
-            {
-                { "TRON-PRO-API-KEY", _options.Value.ApiKey }
-            };
+            Metadata headers;
+            if (string.IsNullOrEmpty(apiKey))
+                headers = new Metadata
+                {
+                    { "TRON-PRO-API-KEY", _options.Value.ApiKey }
+                };
+            else
+                headers = new Metadata
+                {
+                    { "TRON-PRO-API-KEY", apiKey }
+                };
 
             return headers;
         }

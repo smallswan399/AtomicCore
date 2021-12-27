@@ -389,11 +389,14 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
         /// </summary>
         /// <param name="network"></param>
-        /// <param name="data">BlockCypherWalletJson</param>
-        private WalletEndpointResponse GetWalletEndpointNoCache(BlockCypherNetwork network, BlockCypherWalletJson data)
+        /// <param name="name"></param>
+        private WalletEndpointResponse GetWalletEndpointNoCache(BlockCypherNetwork network, string name)
         {
-            string url = GetBaseUrl(network);
-            string resp = RestPost(url, data);
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            string url = GetRestUrl(network, $"wallets/{name}");
+            string resp = RestGet(url);
 
             return ObjectParse<WalletEndpointResponse>(resp);
         }
@@ -402,11 +405,63 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
         /// </summary>
         /// <param name="network"></param>
-        /// <param name="data">BlockCypherHDWalletJson</param>
-        private HDWalletEndpointResponse GetHDWalletEndpointNoCache(BlockCypherNetwork network, BlockCypherHDWalletJson data)
+        /// <param name="name"></param>
+        private HDWalletEndpointResponse GetHDWalletEndpointNoCache(BlockCypherNetwork network, string name)
         {
-            string url = GetBaseUrl(network);
-            string resp = RestPost(url, data);
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            string url = GetRestUrl(network, $"wallets/{name}");
+            string resp = RestGet(url);
+
+            return ObjectParse<HDWalletEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#add-addresses-to-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
+        /// <param name="data"></param>
+        private WalletEndpointResponse AddAddressesToWalletEndpointNoCache(BlockCypherNetwork network, string name, BlockCypherWalletJson data)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            string url = GetRestUrl(network, $"wallets/{name}/addresses");
+            string resp = RestPost(url,data);
+
+            return ObjectParse<WalletEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-addresses-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
+        private WalletEndpointResponse GetWalletAddressesEndpointNoCache(BlockCypherNetwork network, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            string url = GetRestUrl(network, $"wallets/{name}/addresses");
+            string resp = RestGet(url);
+
+            return ObjectParse<WalletEndpointResponse>(resp);
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-addresses-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
+        private HDWalletEndpointResponse GetHDWalletAddressesEndpointNoCache(BlockCypherNetwork network, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            string url = GetRestUrl(network, $"wallets/hd/{name}/addresses");
+            string resp = RestGet(url);
 
             return ObjectParse<HDWalletEndpointResponse>(resp);
         }
@@ -721,21 +776,21 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
         /// </summary>
         /// <param name="network"></param>
-        /// <param name="data"></param>
+        /// <param name="name"></param>
         /// <param name="cacheMode"></param>
         /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public WalletEndpointResponse GetWalletEndpoint(BlockCypherNetwork network, BlockCypherWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        public WalletEndpointResponse GetWalletEndpoint(BlockCypherNetwork network, string name, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (cacheMode == BlockCypherCacheMode.None)
-                return GetWalletEndpointNoCache(network, data);
+                return GetWalletEndpointNoCache(network, name);
             else
             {
-                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetWalletEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetWalletEndpoint), name.ToString());
                 bool exists = BlockCypherCacheProvider.Get(cacheKey, out WalletEndpointResponse cacheData);
                 if (!exists)
                 {
-                    cacheData = GetWalletEndpointNoCache(network, data);
+                    cacheData = GetWalletEndpointNoCache(network, name);
 
                     BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }
@@ -748,21 +803,103 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
         /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-endpoint
         /// </summary>
         /// <param name="network"></param>
+        /// <param name="name"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public HDWalletEndpointResponse GetHDWalletEndpoint(BlockCypherNetwork network, string name, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GetHDWalletEndpointNoCache(network, name);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetHDWalletEndpoint), name.ToString());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out HDWalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetHDWalletEndpointNoCache(network, name);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#add-addresses-to-wallet-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
         /// <param name="data"></param>
         /// <param name="cacheMode"></param>
         /// <param name="cacheSeconds"></param>
         /// <returns></returns>
-        public HDWalletEndpointResponse GetHDWalletEndpoint(BlockCypherNetwork network, BlockCypherHDWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        public WalletEndpointResponse AddAddressesToWalletEndpoint(BlockCypherNetwork network, string name, BlockCypherWalletJson data, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
         {
             if (cacheMode == BlockCypherCacheMode.None)
-                return GetHDWalletEndpointNoCache(network, data);
+                return AddAddressesToWalletEndpointNoCache(network, name, data);
             else
             {
-                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetHDWalletEndpoint), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetHDWalletEndpoint), name.ToString(), Newtonsoft.Json.JsonConvert.SerializeObject(data).ToLower());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out WalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = AddAddressesToWalletEndpointNoCache(network, name, data);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-addresses-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public WalletEndpointResponse GetWalletAddressesEndpoint(BlockCypherNetwork network, string name, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GetWalletAddressesEndpointNoCache(network, name);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetWalletAddressesEndpoint), name.ToString());
+                bool exists = BlockCypherCacheProvider.Get(cacheKey, out WalletEndpointResponse cacheData);
+                if (!exists)
+                {
+                    cacheData = GetWalletAddressesEndpointNoCache(network, name);
+
+                    BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// https://www.blockcypher.com/dev/bitcoin/?shell#get-wallet-addresses-endpoint
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="cacheSeconds"></param>
+        /// <returns></returns>
+        public HDWalletEndpointResponse GetHDWalletAddressesEndpoint(BlockCypherNetwork network, string name, BlockCypherCacheMode cacheMode = BlockCypherCacheMode.AbsoluteExpired, int cacheSeconds = 10)
+        {
+            if (cacheMode == BlockCypherCacheMode.None)
+                return GetHDWalletAddressesEndpointNoCache(network, name);
+            else
+            {
+                string cacheKey = BlockCypherCacheProvider.GenerateCacheKey(nameof(GetHDWalletAddressesEndpoint), name.ToString());
                 bool exists = BlockCypherCacheProvider.Get(cacheKey, out HDWalletEndpointResponse cacheData);
                 if (!exists)
                 {
-                    cacheData = GetHDWalletEndpointNoCache(network, data);
+                    cacheData = GetHDWalletAddressesEndpointNoCache(network, name);
 
                     BlockCypherCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }

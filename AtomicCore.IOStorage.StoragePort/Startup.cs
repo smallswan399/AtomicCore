@@ -179,8 +179,11 @@ namespace AtomicCore.IOStorage.StoragePort
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             /* 调试DEBUG模式 */
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
+            //if (env.IsDevelopment())
+            //    app.UseDeveloperExceptionPage();
+
+            /* 始终输出调试日志 */
+            app.UseDeveloperExceptionPage();
 
             /* 读取Mime拓展配置 */
             IDictionary<string, string> mimeDic = BizMIMETypeConfig.ResolveTypes(this.Configuration);

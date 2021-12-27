@@ -40,6 +40,8 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             //原始交易报文（未签名）
             var transaction = transactionExtension.Transaction;
 
+            string json_txt_1 = transactionExtension.Transaction.ToString();
+
             //交易GRPC签名（远程调用）
             var transactionSignExtention = await _wallet.GetTransactionSign2Async(new TransactionSign
             {
@@ -48,6 +50,8 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             });
             Assert.IsNotNull(transactionSignExtention);
             Assert.IsTrue(transactionSignExtention.Result.Result);
+
+            string json_txt_2 = transactionSignExtention.Transaction.ToString();
 
             //已经签名交易报文（GRPC签名的结果）
             var transactionSigned = transactionSignExtention.Transaction;

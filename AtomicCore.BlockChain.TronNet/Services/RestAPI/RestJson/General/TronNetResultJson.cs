@@ -8,16 +8,22 @@ namespace AtomicCore.BlockChain.TronNet
     public class TronNetResultJson : TronNetValidRestJson
     {
         /// <summary>
-        /// ContractRet
+        /// code
         /// </summary>
-        [JsonProperty("result")]
-        public bool Result { get; set; } = false;
+        [JsonProperty("code")]
+        public string Code { get; set; }
 
         /// <summary>
         /// message
         /// </summary>
         [JsonProperty("message")]
         public string Message { get; set; }
+
+        /// <summary>
+        /// ContractRet
+        /// </summary>
+        [JsonProperty("result")]
+        public bool Result { get; set; } = false;
 
         /// <summary>
         /// txid

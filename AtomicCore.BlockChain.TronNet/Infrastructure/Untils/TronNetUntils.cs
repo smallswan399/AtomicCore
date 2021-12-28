@@ -15,6 +15,11 @@ namespace AtomicCore.BlockChain.TronNet
         #region Variables
 
         /// <summary>
+        /// tron sun value
+        /// </summary>
+        private static long _sun_unit = 1_000_000L;
+
+        /// <summary>
         /// utc time at 1970-01-01
         /// </summary>
         public static readonly DateTime s_utcTimeAt1970 = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Utc);
@@ -23,6 +28,52 @@ namespace AtomicCore.BlockChain.TronNet
         /// local time at 1970-01-01
         /// </summary>
         public static readonly DateTime s_localAt1970 = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
+
+        #endregion
+
+        #region Amount Calc
+
+        /// <summary>
+        /// Trx to Sun
+        /// </summary>
+        /// <param name="trx"></param>
+        /// <returns></returns>
+        public static long TRXToSun(decimal trx)
+        {
+            return Convert.ToInt64(trx * _sun_unit);
+        }
+
+        /// <summary>
+        /// Sun to Trx
+        /// </summary>
+        /// <param name="sun"></param>
+        /// <returns></returns>
+        public static decimal SunToTRX(long sun)
+        {
+            return Convert.ToDecimal(sun) / _sun_unit;
+        }
+
+        /// <summary>
+        /// amount to value
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="decimals"></param>
+        /// <returns></returns>
+        public static long AmountToValue(decimal amount, int decimals)
+        {
+            return (long)(amount * (decimal)Math.Pow(10, decimals));
+        }
+
+        /// <summary>
+        /// value to amount
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="decimals"></param>
+        /// <returns></returns>
+        public static decimal ValueToAmount(long value, int decimals)
+        {
+            return value / (decimal)Math.Pow(10, decimals);
+        }
 
         #endregion
 

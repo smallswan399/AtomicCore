@@ -114,7 +114,7 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         public void GetNormalTransactionsTest()
         {
             ITronScanClient client = new TronScanClient();
-            var result = client.GetNormalTransactions("TMuA6YqfCeX8EhbfYEg5y7S4DqzSJireY9");
+            var result = client.GetNormalTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm");
 
             Assert.IsTrue(null != result);
         }

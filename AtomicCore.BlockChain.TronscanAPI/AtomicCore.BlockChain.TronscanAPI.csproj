@@ -9,9 +9,7 @@
     <Authors>171331668@qq.com</Authors>
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore,BlockChain,Tronscan,TronscanAPI</PackageTags>
-    <Version>1.1.6</Version>
-    <AssemblyVersion>1.1.6</AssemblyVersion>
-    <FileVersion>1.1.6</FileVersion>
+    <Version>1.1.7</Version>
   </PropertyGroup>
 
   <ItemGroup>

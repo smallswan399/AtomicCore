@@ -41,7 +41,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// resource
         /// </summary>
         [JsonProperty("resource")]
-        public string Resource { get; set; }
+        public TronResourceType Resource { get; set; }
 
         /// <summary>
         /// frozen balance

@@ -210,5 +210,16 @@
         /// <param name="end_timestamp">query date range</param>
         /// <returns>TRC20 token transfers list</returns>
         TronTRC20TransactionListJson GetTRC20Transactions(string contractAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null);
+
+        /// <summary>
+        /// Get Resource Transaction List
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="type"></param>
+        /// <param name="resourceType"></param>
+        /// <param name="start"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        TronResourceTransactionListJson GetResourceTransaction(string address, TronResourceTarget type = TronResourceTarget.None, TronResourceType resourceType = TronResourceType.None, int start = 0, int limit = 500);
     }
 }

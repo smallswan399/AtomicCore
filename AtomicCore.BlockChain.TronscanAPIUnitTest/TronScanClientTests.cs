@@ -248,5 +248,15 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             Assert.IsTrue(null != result);
         }
 
+        [TestMethod()]
+        public void GetResourceTransactionTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetResourceTransaction(
+                "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm"
+            );
+
+            Assert.IsTrue(null != result);
+        }
     }
 }

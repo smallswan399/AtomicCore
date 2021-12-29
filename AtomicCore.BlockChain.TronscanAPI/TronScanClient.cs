@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.TronscanAPI
 {
@@ -682,6 +680,47 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
             //json parse
             TronTRC20TransactionListJson jsonResult = ObjectParse<TronTRC20TransactionListJson>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// Get Resource Transaction List
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="type"></param>
+        /// <param name="resourceType"></param>
+        /// <param name="start"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public TronResourceTransactionListJson GetResourceTransaction(string address, TronResourceTarget type = TronResourceTarget.None, TronResourceType resourceType = TronResourceType.None, int start = 0, int limit = 500)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException("address");
+
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder($"address={address}");
+            if (type != TronResourceTarget.None)
+                paramBuilder.Append($"&type={(int)type}");
+            if (resourceType != TronResourceType.None)
+                paramBuilder.Append($"&resourceType={(int)resourceType}");
+            if (start > 0)
+                paramBuilder.Append($"&start={start}");
+            else
+                paramBuilder.Append("&start=0");
+            if (limit > 0)
+                paramBuilder.Append($"&limit={limit}");
+            else
+                paramBuilder.Append("&limit=500");
+
+            //create url
+            string url = this.CreateRestUrl(string.Format("account/resource?{0}", paramBuilder.ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronResourceTransactionListJson jsonResult = ObjectParse<TronResourceTransactionListJson>(resp);
 
             return jsonResult;
         }

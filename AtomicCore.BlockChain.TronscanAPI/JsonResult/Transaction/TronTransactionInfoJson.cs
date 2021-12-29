@@ -78,7 +78,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// contractData
         /// </summary>
         [JsonProperty("contractData")]
-        public TronContractDataDetailsJson ContractData { get; set; }
+        public TronContractDataJson ContractData { get; set; }
 
         /// <summary>
         /// data

@@ -43,6 +43,78 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         [TestMethod()]
+        public void GetLastBlockTest()
+        {
+            Block block = _cli.GetNowBlock(new EmptyMessage(), headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(block.BlockHeader.RawData.Number > 0);
+        }
+
+        [TestMethod()]
+        public void GetBlockByNumberTest()
+        {
+            Block block = _cli.GetBlockByNum(new NumberMessage()
+            {
+                Num = 1
+            }, headers: _wallet.GetHeaders());
+
+            string blockHash = block.GetBlockHash();
+
+            Assert.IsTrue(!string.IsNullOrEmpty(blockHash));
+            Assert.IsTrue(block.BlockHeader.RawData.Number > 0);
+        }
+
+        [TestMethod()]
+        public void GetAccountBalanceTest1()
+        {
+            string ownerAddress = "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm";
+
+            Block block = _cli.GetNowBlock(new EmptyMessage(), headers: _wallet.GetHeaders());
+            string blockHash = block.GetBlockHash();
+            byte[] blockHashBytes = blockHash.HexToByteArray();
+
+            //create tx
+            AccountBalanceResponse balance = _cli.GetAccountBalance(new AccountBalanceRequest()
+            {
+                AccountIdentifier = new AccountIdentifier()
+                {
+                    Address = ByteString.CopyFrom(Base58Encoder.DecodeFromBase58Check(ownerAddress))
+                },
+                BlockIdentifier = new BlockBalanceTrace.Types.BlockIdentifier()
+                {
+                    Hash = ByteString.CopyFrom(blockHashBytes),
+                    Number = block.BlockHeader.RawData.Number
+                }
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(balance.Balance >= 0);
+        }
+
+        [TestMethod()]
+        public void GetAccountBalanceTest2()
+        {
+            string ownerAddress = "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm";
+
+            BlockExtention block = _cli.GetNowBlock2(new EmptyMessage(), headers: _wallet.GetHeaders());
+
+            //create tx
+            AccountBalanceResponse balance = _cli.GetAccountBalance(new AccountBalanceRequest()
+            {
+                AccountIdentifier = new AccountIdentifier()
+                {
+                    Address = ByteString.CopyFrom(Base58Encoder.DecodeFromBase58Check(ownerAddress))
+                },
+                BlockIdentifier = new BlockBalanceTrace.Types.BlockIdentifier()
+                {
+                    Hash = block.Blockid,
+                    Number = block.BlockHeader.RawData.Number
+                }
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(balance.Balance >= 0);
+        }
+
+        [TestMethod()]
         public void GetTransactionByIdTest()
         {
             string txid = "31125a86fc2a1934a0fd9b1e9b238df23e29173745c11bb65741269dfb02690f";

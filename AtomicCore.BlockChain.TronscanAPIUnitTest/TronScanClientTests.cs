@@ -253,7 +253,9 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         {
             ITronScanClient client = new TronScanClient();
             var result = client.GetResourceTransaction(
-                "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm"
+                "TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm",
+                TronResourceTarget.None,
+                TronResourceType.None
             );
 
             Assert.IsTrue(null != result);

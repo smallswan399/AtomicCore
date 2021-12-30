@@ -124,7 +124,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronChainOverviewJson BlockOverview()
         {
-            string url = this.CreateRestUrl("system/status");
+            string url = this.CreateRestUrl($"system/status?rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
             string resp = this.RestGet(url);
             TronChainOverviewJson jsonResult = ObjectParse<TronChainOverviewJson>(resp);
 
@@ -137,7 +137,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronBlockBasicJson GetLastBlock()
         {
-            string url = this.CreateRestUrl("block/latest");
+            string url = this.CreateRestUrl($"block/latest?rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
             string resp = this.RestGet(url);
             TronBlockBasicJson jsonResult = ObjectParse<TronBlockBasicJson>(resp);
 
@@ -167,8 +167,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (!string.IsNullOrEmpty(sort))
                 paramBuilder.AppendFormat("sort={0}&", sort);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("account/list?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("account/list?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -189,7 +192,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
 
-            string url = this.CreateRestUrl(string.Format("account?address={0}", address));
+            string url = this.CreateRestUrl($"account?address={address}&rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
             string resp = this.RestGet(url);
             TronAccountAssetJson jsonResult = ObjectParse<TronAccountAssetJson>(resp);
 
@@ -224,8 +227,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (!string.IsNullOrEmpty(sort))
                 paramBuilder.AppendFormat("sort={0}&", sort);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("block?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("block?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -268,8 +274,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (!string.IsNullOrEmpty(sort))
                 paramBuilder.AppendFormat("sort={0}&", sort);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("block?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("block?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -287,7 +296,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronBlockDetailsJson GetBlockByNumber(ulong number)
         {
-            string url = this.CreateRestUrl(string.Format("block?number={0}", number));
+            string url = this.CreateRestUrl($"block?number={number}&rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
             string resp = this.RestGet(url);
 
             TronBlockInfoByNumberJson jsonResult = ObjectParse<TronBlockInfoByNumberJson>(resp);
@@ -349,8 +358,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (!string.IsNullOrEmpty(sort))
                 paramBuilder.AppendFormat("sort={0}&", sort);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("transaction?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -395,8 +407,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (!string.IsNullOrEmpty(sort))
                 paramBuilder.AppendFormat("sort={0}&", sort);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("contracts/transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("contracts/transaction?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -418,7 +433,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
                 throw new ArgumentNullException(nameof(txHash));
 
             //create url
-            string url = this.CreateRestUrl(string.Format("transaction-info?hash={0}", txHash));
+            string url = this.CreateRestUrl($"transaction-info?hash={txHash}&rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
 
             //http get
             string resp = this.RestGet(url);
@@ -486,8 +501,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (!string.IsNullOrEmpty(sort))
                 paramBuilder.AppendFormat("sort={0}&", sort);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("transfer?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("transfer?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -504,7 +522,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <returns></returns>
         public TronChainNodeListJson GetChainNodes()
         {
-            string url = this.CreateRestUrl("nodemap");
+            string url = this.CreateRestUrl($"nodemap?rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
             string resp = this.RestGet(url);
             TronChainNodeListJson jsonResult = ObjectParse<TronChainNodeListJson>(resp);
 
@@ -522,7 +540,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (string.IsNullOrEmpty(contract))
                 throw new ArgumentNullException(nameof(contract));
 
-            string url = this.CreateRestUrl(string.Format("contracts/code?contract={0}", contract));
+            string url = this.CreateRestUrl($"contracts/code?contract={contract}&rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
             string resp = this.RestGet(url);
 
             TronContractABICodeJson jsonResult = ObjectParse<TronContractABICodeJson>(resp);
@@ -584,8 +602,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (null != end_timestamp && end_timestamp > 0UL)
                 paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("internal-transaction?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("internal-transaction?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -631,8 +652,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (null != end_timestamp && end_timestamp > 0UL)
                 paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("asset/transfer?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("asset/transfer?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -672,8 +696,11 @@ namespace AtomicCore.BlockChain.TronscanAPI
             if (null != end_timestamp && end_timestamp > 0UL)
                 paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
 
+            //add dynamic parameters
+            paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");
+
             //create url
-            string url = this.CreateRestUrl(string.Format("token_trc20/transfers?{0}", paramBuilder.Remove(paramBuilder.Length - 1, 1).ToString()));
+            string url = this.CreateRestUrl(string.Format("token_trc20/transfers?{0}", paramBuilder.ToString()));
 
             //http get
             string resp = this.RestGet(url);
@@ -712,6 +739,9 @@ namespace AtomicCore.BlockChain.TronscanAPI
                 paramBuilder.Append($"&limit={limit}");
             else
                 paramBuilder.Append("&limit=500");
+
+            //add dynamic parameters
+            paramBuilder.Append($"&rd={DateTime.UtcNow.ToString("yyyyMMddHHmmssffff")}");
 
             //create url
             string url = this.CreateRestUrl(string.Format("account/resource?{0}", paramBuilder.ToString()));

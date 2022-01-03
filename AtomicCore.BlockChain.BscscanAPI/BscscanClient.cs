@@ -246,7 +246,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
-        #region Gas Tracker
+        #region IBscGasTracker
 
         /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 

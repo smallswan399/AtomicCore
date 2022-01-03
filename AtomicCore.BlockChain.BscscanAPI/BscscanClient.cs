@@ -29,6 +29,11 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         private readonly string _agentPostTmp;
 
+        /// <summary>
+        /// api key token 
+        /// </summary>
+        private string _apiKeyToken = string.Empty;
+
         #endregion
 
         #region Constructor
@@ -71,17 +76,16 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="network">version</param>
         /// <param name="module">module</param>
         /// <param name="action">action</param>
-        /// <param name="apikey">apikey</param>
         /// <param name="data">query data</param>
         /// <returns></returns>
-        private string GetRestUrl(BscNetwork network, BscModule module, string action, string apikey, Dictionary<string, string> data = null)
+        private string GetRestUrl(BscNetwork network, BscModule module, string action, Dictionary<string, string> data = null)
         {
             string baseUrl = GetBaseUrl(network);
 
             if (null == data || data.Count <= 0)
-                return $"{baseUrl}/api?module={module}&action={action}&apikey={apikey}".ToLower();
+                return $"{baseUrl}/api?module={module}&action={action}&apikey={_apiKeyToken}".ToLower();
             else
-                return $"{baseUrl}/api?module={module}&action={action}&apikey={apikey}&{string.Join("&", data.Select(s => $"{s.Key}={s.Value}"))}".ToLower();
+                return $"{baseUrl}/api?module={module}&action={action}&apikey={_apiKeyToken}&{string.Join("&", data.Select(s => $"{s.Key}={s.Value}"))}".ToLower();
         }
 
         /// <summary>
@@ -206,18 +210,17 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
-        #region Gas Tracker
+        #region No Cache Methods
 
         /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 
         /// </summary>
-        /// <param name="apikey">apikey</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(string apikey, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet)
         {
             //拼接URL
-            string url = this.GetRestUrl(network, BscModule.GasTracker, "gasoracle", apikey);
+            string url = this.GetRestUrl(network, BscModule.GasTracker, "gasoracle");
 
             //请求API
             string resp = this.RestGet(url);
@@ -226,6 +229,49 @@ namespace AtomicCore.BlockChain.BscscanAPI
             BscscanSingleResult<BscGasOracleJson> jsonResult = ObjectParse<BscscanSingleResult<BscGasOracleJson>>(resp);
 
             return jsonResult;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// set api key token
+        /// </summary>
+        /// <param name="apiKeyToken"></param>
+        public void SetApiKeyToken(string apiKeyToken)
+        {
+            _apiKeyToken = apiKeyToken;
+        }
+
+        #endregion
+
+        #region Gas Tracker
+
+        /// <summary>
+        /// Returns the current Safe, Proposed and Fast gas prices. 
+        /// </summary>
+        /// <param name="apikey">apikey</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetGasOracle(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetGasOracle), network.ToString());
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscGasOracleJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetGasOracle(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         #endregion

@@ -14,8 +14,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 
         /// </summary>
+        /// <param name="apikey">apikey</param>
+        /// <param name="network">network</param>
         /// <returns></returns>
-        BscscanSingleResult<BscGasOracleJson> GetGasOracle();
+        BscscanSingleResult<BscGasOracleJson> GetGasOracle(string apikey, BscNetwork network = BscNetwork.BscMainnet);
 
         #endregion
     }

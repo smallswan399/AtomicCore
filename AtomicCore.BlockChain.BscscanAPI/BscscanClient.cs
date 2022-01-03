@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -68,14 +69,19 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// create rest url
         /// </summary>
         /// <param name="network">version</param>
-        /// <param name="module"></param>
+        /// <param name="module">module</param>
         /// <param name="action">action</param>
-        /// <param name="data"></param>
+        /// <param name="apikey">apikey</param>
+        /// <param name="data">query data</param>
         /// <returns></returns>
-        private string GetRestUrl(BscNetwork network, BscModule module, string action, string data)
+        private string GetRestUrl(BscNetwork network, BscModule module, string action, string apikey, Dictionary<string, string> data = null)
         {
             string baseUrl = GetBaseUrl(network);
-            return $"{baseUrl}/api?module={module}&action={action}".ToLower();
+
+            if (null == data || data.Count <= 0)
+                return $"{baseUrl}/api?module={module}&action={action}&apikey={apikey}".ToLower();
+            else
+                return $"{baseUrl}/api?module={module}&action={action}&apikey={apikey}&{string.Join("&", data.Select(s => $"{s.Key}={s.Value}"))}".ToLower();
         }
 
         /// <summary>
@@ -205,10 +211,21 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 
         /// </summary>
+        /// <param name="apikey">apikey</param>
+        /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<BscGasOracleJson> GetGasOracle()
+        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(string apikey, BscNetwork network = BscNetwork.BscMainnet)
         {
-            return null;
+            //拼接URL
+            string url = this.GetRestUrl(network, BscModule.GasTracker, "gasoracle", apikey);
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            BscscanSingleResult<BscGasOracleJson> jsonResult = ObjectParse<BscscanSingleResult<BscGasOracleJson>>(resp);
+
+            return jsonResult;
         }
 
         #endregion

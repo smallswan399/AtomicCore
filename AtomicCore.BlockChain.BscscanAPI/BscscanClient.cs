@@ -368,6 +368,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
+        #region IBscGasTracker
+
+        /// <summary>
+        /// Returns the current Safe, Proposed and Fast gas prices. 
+        /// </summary>
+        /// <param name="apikey">apikey</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetGasOracle(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetGasOracle), network.ToString());
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscGasOracleJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetGasOracle(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        #endregion
+
         #region IBscAccounts
 
         /// <summary>
@@ -490,37 +520,11 @@ namespace AtomicCore.BlockChain.BscscanAPI
             }
         }
 
-        #endregion
-
-        #region IBscGasTracker
-
-        /// <summary>
-        /// Returns the current Safe, Proposed and Fast gas prices. 
-        /// </summary>
-        /// <param name="apikey">apikey</param>
-        /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
-        /// <returns></returns>
-        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            if (cacheMode == BscscanCacheMode.None)
-                return GetGasOracle(network);
-            else
-            {
-                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetGasOracle), network.ToString());
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscGasOracleJson> cacheData);
-                if (!exists)
-                {
-                    cacheData = GetGasOracle(network);
-                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
-                }
-
-                return cacheData;
-            }
+            throw new NotImplementedException();
         }
 
         #endregion
-
     }
 }

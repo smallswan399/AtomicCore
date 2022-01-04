@@ -60,5 +60,16 @@
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+
+        /// <summary>
+        /// Returns the list of internal transactions performed within a transaction.
+        ///     Note : This API endpoint returns a maximum of 10000 records only.
+        /// </summary>
+        /// <param name="txhash">the string representing the transaction hash to check for internal transactions</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

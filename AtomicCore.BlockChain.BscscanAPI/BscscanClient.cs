@@ -212,6 +212,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #region No Cache Methods
 
+        #region Accounts
+
         /// <summary>
         /// Get Balance
         /// </summary>
@@ -335,6 +337,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
         }
 
         /// <summary>
+        /// Returns the list of internal transactions performed within a transaction.
+        ///     Note : This API endpoint returns a maximum of 10000 records only.
+        /// </summary>
+        /// <param name="txhash">the string representing the transaction hash to check for internal transactions</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        private BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            //拼接URL
+            string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
+            {
+                { "txhash",txhash }
+            });
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            BscscanListResult<BscInternalEventJson> jsonResult = ObjectParse<BscscanListResult<BscInternalEventJson>>(resp);
+
+            return jsonResult;
+        }
+
+        #endregion
+
+        #region Gas Tracker
+
+        /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 
         /// </summary>
         /// <param name="network">network</param>
@@ -352,6 +384,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             return jsonResult;
         }
+
+        #endregion
 
         #endregion
 
@@ -415,7 +449,12 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 return GetBalance(address, tag, network);
             else
             {
-                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetBalance), network.ToString());
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBalance),
+                    address,
+                    tag.ToString(),
+                    network.ToString()
+                );
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
                 if (!exists)
                 {
@@ -442,7 +481,12 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 return GetBalanceList(address, tag, network);
             else
             {
-                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetBalanceList), network.ToString());
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBalanceList),
+                    string.Join(",", address.OrderBy(d => d)),
+                    tag.ToString(),
+                    network.ToString()
+                );
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscAccountBalanceJson> cacheData);
                 if (!exists)
                 {
@@ -475,7 +519,16 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 return GetNormalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
             else
             {
-                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetNormalTransactionByAddress), network.ToString());
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetNormalTransactionByAddress),
+                    address,
+                    startblock.ToString(),
+                    endblock.ToString(),
+                    page.ToString(),
+                    offset.ToString(),
+                    sort.ToString(),
+                    network.ToString()
+                );
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscNormalTransactionJson> cacheData);
                 if (!exists)
                 {
@@ -508,7 +561,16 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 return GetInternalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
             else
             {
-                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetInternalTransactionByAddress), network.ToString());
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetInternalTransactionByAddress),
+                    address,
+                    startblock.ToString(),
+                    endblock.ToString(),
+                    page.ToString(),
+                    offset.ToString(),
+                    sort.ToString(),
+                    network.ToString()
+                );
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscInternalTransactionJson> cacheData);
                 if (!exists)
                 {
@@ -520,9 +582,35 @@ namespace AtomicCore.BlockChain.BscscanAPI
             }
         }
 
-        public BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        /// <summary>
+        /// Returns the list of internal transactions performed within a transaction.
+        ///     Note : This API endpoint returns a maximum of 10000 records only.
+        /// </summary>
+        /// <param name="txhash">the string representing the transaction hash to check for internal transactions</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetInternalTransactionByHash(txhash, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetInternalTransactionByHash),
+                    txhash.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscInternalEventJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetInternalTransactionByHash(txhash, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         #endregion

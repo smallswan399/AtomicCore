@@ -213,6 +213,52 @@ namespace AtomicCore.BlockChain.BscscanAPI
         #region No Cache Methods
 
         /// <summary>
+        /// Get Balance
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        public BscscanSingleResult<decimal> GetBalance(string address, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            //拼接URL
+            string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
+            {
+                { "address",address }
+            });
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            BscscanSingleResult<decimal> jsonResult = ObjectParse<BscscanSingleResult<decimal>>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// Get Balance
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            //拼接URL
+            string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
+            {
+                { "address",string.Join(",",address) }
+            });
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            BscscanListResult<BscAccountBalanceJson> jsonResult = ObjectParse<BscscanListResult<BscAccountBalanceJson>>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 
         /// </summary>
         /// <param name="network">network</param>
@@ -252,22 +298,52 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// Get Balance
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="expiredSeconds"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public BscscanSingleResult<decimal> GetBalance(string address)
+        public BscscanSingleResult<decimal> GetBalance(string address, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBalance(address,network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetBalance), network.ToString());
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBalance(address,network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>
-        /// Get Balance List
+        /// Get Balance
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="expiredSeconds"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(params string[] address)
+        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBalanceList(address,network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetBalanceList), network.ToString());
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscAccountBalanceJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBalanceList(address,network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         #endregion
@@ -299,8 +375,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 return cacheData;
             }
         }
-
-
 
         #endregion
 

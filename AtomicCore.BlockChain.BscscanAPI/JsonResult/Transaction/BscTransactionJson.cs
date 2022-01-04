@@ -9,6 +9,12 @@ namespace AtomicCore.BlockChain.BscscanAPI
     public class BscTransactionJson
     {
         /// <summary>
+        /// isError
+        /// </summary>
+        [JsonProperty("isError")]
+        public int IsError { get; set; }
+
+        /// <summary>
         /// hash
         /// </summary>
         [JsonProperty("hash")]
@@ -18,19 +24,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// timeStamp
         /// </summary>
         [JsonProperty("timeStamp")]
-        public long TxTimeStamp { get; set; }
-
-        /// <summary>
-        /// nonce
-        /// </summary>
-        [JsonProperty("nonce")]
-        public int TxNonce { get; set; }
-
-        /// <summary>
-        /// transactionIndex
-        /// </summary>
-        [JsonProperty("transactionIndex")]
-        public int TransactionIndex { get; set; }
+        public long TimeStamp { get; set; }
 
         /// <summary>
         /// contractAddress
@@ -69,46 +63,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
         public long TxGas { get; set; }
 
         /// <summary>
-        /// gasPrice
-        /// </summary>
-        [JsonProperty("gasPrice")]
-        public long TxGasPrice { get; set; }
-
-        /// <summary>
-        /// cumulativeGasUsed
-        /// </summary>
-        [JsonProperty("cumulativeGasUsed")]
-        public long CumulativeGasUsed { get; set; }
-
-        /// <summary>
         /// gasUsed
         /// </summary>
         [JsonProperty("gasUsed")]
         public long GasUsed { get; set; }
-
-        /// <summary>
-        /// confirmations
-        /// </summary>
-        [JsonProperty("confirmations")]
-        public long Confirmations { get; set; }
-
-        /// <summary>
-        /// isError
-        /// </summary>
-        [JsonProperty("isError")]
-        public int IsError { get; set; }
-
-        /// <summary>
-        /// txreceipt_status
-        /// </summary>
-        [JsonProperty("txreceipt_status")]
-        public int TxReceiptStatus { get; set; }
-
-        /// <summary>
-        /// blockHash
-        /// </summary>
-        [JsonProperty("blockHash")]
-        public string BlockHash { get; set; }
 
         /// <summary>
         /// blockNumber

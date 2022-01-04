@@ -275,7 +275,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanListResult<BscTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanListResult<BscNormalTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlist", new Dictionary<string, string>()
@@ -292,7 +292,44 @@ namespace AtomicCore.BlockChain.BscscanAPI
             string resp = this.RestGet(url);
 
             //解析JSON
-            BscscanListResult<BscTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscTransactionJson>>(resp);
+            BscscanListResult<BscNormalTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscNormalTransactionJson>>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// Returns the list of internal transactions performed by an address, with optional pagination.
+        ///     Note : This API endpoint returns a maximum of 10000 records only.
+        ///     Tip: Specify a smaller startblock and endblock range for faster search results
+        /// </summary>
+        /// <param name="address">the string representing the addresses to check for balance</param>
+        /// <param name="startblock">the integer block number to start searching for transactions</param>
+        /// <param name="endblock">the integer block number to stop searching for transactions</param>
+        /// <param name="page">the integer page number, if pagination is enabled</param>
+        /// <param name="offset">the number of transactions displayed per page</param>
+        /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        private BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            //拼接URL
+            string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
+            {
+                { "address",address },
+                { "startblock",startblock.ToString() },
+                { "endblock",endblock.ToString() },
+                { "page",page.ToString() },
+                { "offset",offset.ToString() },
+                { "sort",sort.ToString().ToLower() }
+            });
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            BscscanListResult<BscInternalTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscInternalTransactionJson>>(resp);
 
             return jsonResult;
         }
@@ -402,17 +439,50 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanListResult<BscNormalTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetNormalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
             else
             {
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetNormalTransactionByAddress), network.ToString());
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscTransactionJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscNormalTransactionJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetNormalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns the list of internal transactions performed by an address, with optional pagination.
+        ///     Note : This API endpoint returns a maximum of 10000 records only.
+        ///     Tip: Specify a smaller startblock and endblock range for faster search results
+        /// </summary>
+        /// <param name="address">the string representing the addresses to check for balance</param>
+        /// <param name="startblock">the integer block number to start searching for transactions</param>
+        /// <param name="endblock">the integer block number to stop searching for transactions</param>
+        /// <param name="page">the integer page number, if pagination is enabled</param>
+        /// <param name="offset">the number of transactions displayed per page</param>
+        /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetInternalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetInternalTransactionByAddress), network.ToString());
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscInternalTransactionJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetInternalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

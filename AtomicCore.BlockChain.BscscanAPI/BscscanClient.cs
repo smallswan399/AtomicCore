@@ -216,14 +216,16 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// Get Balance
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="tag"></param>
         /// <param name="network"></param>
         /// <returns></returns>
-        public BscscanSingleResult<decimal> GetBalance(string address, BscNetwork network = BscNetwork.BscMainnet)
+        public BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
         {
             //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
             {
-                { "address",address }
+                { "address",address },
+                { "tag",tag.ToString().ToLower() }
             });
 
             //请求API
@@ -239,14 +241,16 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// Get Balance
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="tag"></param>
         /// <param name="network"></param>
         /// <returns></returns>
-        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscNetwork network = BscNetwork.BscMainnet)
+        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
         {
             //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
             {
-                { "address",string.Join(",",address) }
+                { "address",string.Join(",",address) },
+                { "tag",tag.ToString().ToLower() }
             });
 
             //请求API
@@ -297,22 +301,23 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// Get Balance
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="network"></param>
-        /// <param name="cacheMode"></param>
-        /// <param name="expiredSeconds"></param>
+        /// <param name="address">the string representing the address to check for balance</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<decimal> GetBalance(string address, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
-                return GetBalance(address,network);
+                return GetBalance(address, tag, network);
             else
             {
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetBalance), network.ToString());
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
                 if (!exists)
                 {
-                    cacheData = GetBalance(address,network);
+                    cacheData = GetBalance(address, tag, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 
@@ -321,24 +326,25 @@ namespace AtomicCore.BlockChain.BscscanAPI
         }
 
         /// <summary>
-        /// Get Balance
+        /// Get Balance List
         /// </summary>
         /// <param name="address"></param>
-        /// <param name="network"></param>
-        /// <param name="cacheMode"></param>
-        /// <param name="expiredSeconds"></param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
-                return GetBalanceList(address,network);
+                return GetBalanceList(address, tag, network);
             else
             {
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetBalanceList), network.ToString());
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscAccountBalanceJson> cacheData);
                 if (!exists)
                 {
-                    cacheData = GetBalanceList(address,network);
+                    cacheData = GetBalanceList(address, tag, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

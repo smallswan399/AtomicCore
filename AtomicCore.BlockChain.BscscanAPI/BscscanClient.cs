@@ -246,6 +246,32 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
+        #region IBscAccounts
+
+        /// <summary>
+        /// Get Balance
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public BscscanSingleResult<decimal> GetBalance(string address)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get Balance List
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(params string[] address)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region IBscGasTracker
 
         /// <summary>
@@ -273,6 +299,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 return cacheData;
             }
         }
+
+
 
         #endregion
 

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AtomicCore.BlockChain.BscscanAPI
+﻿namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
     /// bscscan client interface
     /// </summary>
-    public interface IBscscanClient : IBscGasTracker
+    public interface IBscscanClient : IBscAccounts, IBscGasTracker
     {
         #region Public Methods
 

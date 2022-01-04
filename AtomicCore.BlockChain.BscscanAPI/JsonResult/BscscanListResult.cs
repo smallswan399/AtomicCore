@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace AtomicCore.BlockChain.BscscanAPI.JsonResult
+namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
     /// bsc返回列表结果集

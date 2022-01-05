@@ -223,17 +223,14 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "tag",tag.ToString().ToLower() }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanSingleResult<decimal> jsonResult = ObjectParse<BscscanSingleResult<decimal>>(resp);
 
             return jsonResult;
@@ -248,17 +245,14 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
             {
                 { "address",string.Join(",",address) },
                 { "tag",tag.ToString().ToLower() }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanListResult<BscAccountBalanceJson> jsonResult = ObjectParse<BscscanListResult<BscAccountBalanceJson>>(resp);
 
             return jsonResult;
@@ -279,7 +273,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscNormalTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlist", new Dictionary<string, string>()
             {
                 { "address",address },
@@ -290,10 +283,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 { "sort",sort.ToString().ToLower() }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanListResult<BscNormalTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscNormalTransactionJson>>(resp);
 
             return jsonResult;
@@ -316,7 +307,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
             {
                 { "address",address },
@@ -327,10 +317,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 { "sort",sort.ToString().ToLower() }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanListResult<BscInternalTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscInternalTransactionJson>>(resp);
 
             return jsonResult;
@@ -347,16 +335,13 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
             {
                 { "txhash",txhash }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanListResult<BscInternalEventJson> jsonResult = ObjectParse<BscscanListResult<BscInternalEventJson>>(resp);
 
             return jsonResult;
@@ -380,7 +365,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscBEP20TransactionJson> GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "tokentx", new Dictionary<string, string>()
             {
                 { "address",address },
@@ -392,10 +376,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 { "sort",sort.ToString().ToLower() }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanListResult<BscBEP20TransactionJson> jsonResult = ObjectParse<BscscanListResult<BscBEP20TransactionJson>>(resp);
 
             return jsonResult;
@@ -421,7 +403,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscBEP721TransactionJson> GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
             {
                 { "address",address },
@@ -433,10 +414,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 { "sort",sort.ToString().ToLower() }
             });
 
-            //请求API
             string resp = this.RestGet(url);
 
-            //解析JSON
             BscscanListResult<BscBEP721TransactionJson> jsonResult = ObjectParse<BscscanListResult<BscBEP721TransactionJson>>(resp);
 
             return jsonResult;
@@ -469,6 +448,12 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             return jsonResult;
         }
+
+        #endregion
+
+        #region Contracts
+
+
 
         #endregion
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// bscscan client interface
     /// </summary>
-    public interface IBscscanClient : IBscAccounts, IBscContracts, IBscTransactions, IBscGasTracker
+    public interface IBscscanClient : IBscAccounts, IBscContracts, IBscTransactions, IBscBlocks, IBscGasTracker
     {
         #region Public Methods
 

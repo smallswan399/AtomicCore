@@ -499,6 +499,30 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
+        #region Blocks
+
+        /// <summary>
+        /// Returns the block reward awarded for validating a certain block. 
+        /// </summary>
+        /// <param name="blockNo">the integer block number to check block rewards for eg. 12697906</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscBlockRewardJson> GetBlockRewardByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Accounts, "getblockreward", new Dictionary<string, string>()
+            {
+                { "blockno",blockNo.ToString() }
+            });
+
+            string resp = this.RestGet(url);
+
+            BscscanSingleResult<BscBlockRewardJson> jsonResult = ObjectParse<BscscanSingleResult<BscBlockRewardJson>>(resp);
+
+            return jsonResult;
+        }
+
+        #endregion
+
         #region Gas Tracker
 
         /// <summary>
@@ -937,6 +961,40 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 if (!exists)
                 {
                     cacheData = GetTransactionReceiptStatus(txhash, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        #endregion
+
+        #region IBscBlocks
+
+        /// <summary>
+        /// Returns the block reward awarded for validating a certain block. 
+        /// </summary>
+        /// <param name="blockNo">the integer block number to check block rewards for eg. 12697906</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscBlockRewardJson> GetBlockRewardByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockRewardByNumber(blockNo, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockRewardByNumber),
+                    blockNo.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscBlockRewardJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockRewardByNumber(blockNo, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

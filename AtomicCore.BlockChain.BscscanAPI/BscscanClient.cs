@@ -475,6 +475,30 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
+        #region Transactions
+
+        /// <summary>
+        /// Returns the status code of a transaction execution.
+        /// </summary>
+        /// <param name="txhash">the string representing the transaction hash to check the execution status</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanSingleResult<bool> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Accounts, "gettxreceiptstatus", new Dictionary<string, string>()
+            {
+                { "txhash",txhash }
+            });
+
+            string resp = this.RestGet(url);
+
+            BscscanSingleResult<bool> jsonResult = ObjectParse<BscscanSingleResult<bool>>(resp);
+
+            return jsonResult;
+        }
+
+        #endregion
+
         #region Gas Tracker
 
         /// <summary>
@@ -879,6 +903,40 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 if (!exists)
                 {
                     cacheData = GetContractABI(contractAddress, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        #endregion
+
+        #region IBscTransactions
+
+        /// <summary>
+        /// Returns the status code of a transaction execution.
+        /// </summary>
+        /// <param name="txhash">the string representing the transaction hash to check the execution status</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<bool> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetTransactionReceiptStatus(txhash, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetTransactionReceiptStatus),
+                    txhash,
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<bool> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTransactionReceiptStatus(txhash, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

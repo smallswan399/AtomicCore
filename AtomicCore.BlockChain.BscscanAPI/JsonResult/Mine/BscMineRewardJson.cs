@@ -22,7 +22,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// blockReward
         /// </summary>
-        [JsonProperty("blockReward")]
+        [JsonProperty("blockReward"),JsonConverter(typeof(BscBNBUnitConverter))]
         public decimal BlockReward { get; set; }
     }
 }

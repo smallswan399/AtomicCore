@@ -453,7 +453,25 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #region Contracts
 
+        /// <summary>
+        /// Returns the contract Application Binary Interface ( ABI ) of a verified smart contract.
+        /// </summary>
+        /// <param name="contractAddress">the contract address that has a verified source code</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
+            {
+                { "address",contractAddress }
+            });
 
+            string resp = this.RestGet(url);
+
+            BscscanSingleResult<string> jsonResult = ObjectParse<BscscanSingleResult<string>>(resp);
+
+            return jsonResult;
+        }
 
         #endregion
 
@@ -827,6 +845,40 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 if (!exists)
                 {
                     cacheData = GetMinedBlockListByAddress(address, blocktype, page, offset, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        #endregion
+
+        #region IBscContracts
+
+        /// <summary>
+        /// Returns the contract Application Binary Interface ( ABI ) of a verified smart contract.
+        /// </summary>
+        /// <param name="contractAddress">the contract address that has a verified source code</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetContractABI(contractAddress, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetContractABI),
+                    contractAddress,
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<string> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetContractABI(contractAddress, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

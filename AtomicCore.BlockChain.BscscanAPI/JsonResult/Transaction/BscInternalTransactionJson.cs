@@ -42,7 +42,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// value
         /// </summary>
         [JsonProperty("value"), JsonConverter(typeof(BscBNBConverter))]
-        public BigInteger TxValue { get; set; }
+        public decimal TxValue { get; set; }
 
         /// <summary>
         /// contractAddress

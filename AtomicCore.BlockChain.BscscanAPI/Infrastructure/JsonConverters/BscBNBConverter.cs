@@ -30,7 +30,9 @@ namespace AtomicCore.BlockChain.BscscanAPI
             if (reader.Value == null)
                 return null;
 
-            return UnitConversion.Convert.FromWei(BigInteger.Parse(reader.Value.ToString()), UnitConversion.EthUnit.Ether);
+            BigInteger bi = BigInteger.Parse(reader.Value.ToString());
+
+            return UnitConversion.Convert.FromWei(bi, UnitConversion.EthUnit.Ether);
         }
 
         /// <summary>

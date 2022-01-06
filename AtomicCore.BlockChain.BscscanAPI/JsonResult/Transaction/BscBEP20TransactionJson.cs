@@ -60,7 +60,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// value
         /// </summary>
         [JsonProperty("value")]
-        public BigInteger TxValue { get; set; }
+        public decimal TxValue { get; set; }
 
         /// <summary>
         /// tokenName

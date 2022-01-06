@@ -557,7 +557,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
             string url = this.GetRestUrl(network, BscModule.Blocks, "getblocknobytime", new Dictionary<string, string>()
             {
                 { "timestamp",timestamp.ToString() },
-                { "closest",closest.ToString() }
+                { "closest",closest.ToString().ToLower() }
             });
 
             string resp = this.RestGet(url);
@@ -566,6 +566,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             return jsonResult;
         }
+
+        /// <summary>
+        /// Returns the daily average block size within a date range.
+        /// </summary>
+        /// <param name="startdate">the starting date in yyyy-MM-dd format, eg. 2021-08-01</param>
+        /// <param name="enddate">the ending date in yyyy-MM-dd format, eg. 2021-08-31</param>
+        /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanListResult<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Blocks, "dailyavgblocksize", new Dictionary<string, string>()
+            {
+                { "startdate",startdate.ToString("yyyy-MM-dd") },
+                { "enddate",enddate.ToString("yyyy-MM-dd") },
+                { "sort",sort.ToString().ToLower() }
+            });
+
+            string resp = this.RestGet(url);
+
+            BscscanListResult<BscBlockAvgSizeJson> jsonResult = ObjectParse<BscscanListResult<BscBlockAvgSizeJson>>(resp);
+
+            return jsonResult;
+        }
+
+        #endregion
+
+        #region Logs
+
+
 
         #endregion
 
@@ -1098,13 +1128,47 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(
                     nameof(GetBlockNumberByTimestamp),
                     timestamp.ToString(),
-                    closest.ToString(),
+                    closest.ToString().ToLower(),
                     network.ToString()
                 );
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<long> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockNumberByTimestamp(timestamp, closest, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns the daily average block size within a date range.
+        /// </summary>
+        /// <param name="startdate">the starting date in yyyy-MM-dd format, eg. 2021-08-01</param>
+        /// <param name="enddate">the ending date in yyyy-MM-dd format, eg. 2021-08-31</param>
+        /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanListResult<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetDailyAverageBlockSize(startdate, enddate, sort, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetDailyAverageBlockSize),
+                    startdate.ToString("yyyy-MM-dd"),
+                    enddate.ToString("yyyy-MM-dd"),
+                    sort.ToString().ToLower(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscBlockAvgSizeJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetDailyAverageBlockSize(startdate, enddate, sort, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

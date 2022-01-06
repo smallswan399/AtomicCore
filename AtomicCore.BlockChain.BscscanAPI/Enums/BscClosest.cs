@@ -8,11 +8,11 @@
         /// <summary>
         /// before
         /// </summary>
-        before = 0,
+        Before = 0,
 
         /// <summary>
         /// after
         /// </summary>
-        after = 1
+        After = 1
     }
 }

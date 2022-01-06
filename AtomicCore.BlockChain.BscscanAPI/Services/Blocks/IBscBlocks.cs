@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.BscscanAPI
+﻿using System;
+
+namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
     /// IBscBlocks Interface
@@ -37,5 +39,17 @@
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         BscscanSingleResult<long> GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+
+        /// <summary>
+        /// Returns the daily average block size within a date range.
+        /// </summary>
+        /// <param name="startdate">the starting date in yyyy-MM-dd format, eg. 2021-08-01</param>
+        /// <param name="enddate">the ending date in yyyy-MM-dd format, eg. 2021-08-31</param>
+        /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        BscscanListResult<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

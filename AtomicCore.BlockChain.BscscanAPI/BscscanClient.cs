@@ -618,7 +618,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        public BscRpcBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
             throw new NotImplementedException();
         }
@@ -629,7 +629,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        public BscRpcBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
             throw new NotImplementedException();
         }
@@ -1253,10 +1253,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscRpcBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
-                return GetBlockSimpleByNumber(blockNumber,network);
+                return GetBlockSimpleByNumber(blockNumber, network);
             else
             {
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(
@@ -1264,10 +1264,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     blockNumber.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscBlockSimpleJson cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscRpcBlockSimpleJson cacheData);
                 if (!exists)
                 {
-                    cacheData = GetBlockSimpleByNumber(blockNumber,network);
+                    cacheData = GetBlockSimpleByNumber(blockNumber, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 
@@ -1283,7 +1283,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscRpcBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBlockFullByNumber(blockNumber, network);
@@ -1294,7 +1294,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     blockNumber.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscBlockFullJson cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscRpcBlockFullJson cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockFullByNumber(blockNumber, network);
@@ -1303,6 +1303,156 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
                 return cacheData;
             }
+        }
+
+        /// <summary>
+        /// Returns the number of transactions in a block.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public int GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns information about a transaction requested by transaction hash.
+        /// </summary>
+        /// <param name="txhash">the string representing the hash of the transaction</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscRpcTransactionJson GetTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns information about a transaction by block number and transaction index position.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="index">the position of the uncle's index in the block, in hex eg. 0x1</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscRpcTransactionJson GetTransactionByBlockNumberAndIndex(long blockNumber, int index, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the number of transactions performed by an address.
+        /// </summary>
+        /// <param name="address">the string representing the address to get transaction count</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public int GetTransactionCount(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Submits a pre-signed transaction for broadcast to the Binance Smart Chain network.
+        /// </summary>
+        /// <param name="hex">the string representing the signed raw transaction data to broadcast.</param>
+        /// <returns></returns>
+        public string SendRawTransaction(string hex)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the receipt of a transaction that has been validated.
+        /// </summary>
+        /// <param name="txhash">the string representing the hash of the transaction</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscRpcTransactionReceiptJson GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Executes a new message call immediately without creating a transaction on the block chain.
+        /// </summary>
+        /// <param name="to">the string representing the address to interact with</param>
+        /// <param name="data">the hash of the method signature and encoded parameters</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public string Call(string to, string data, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns code at a given address.
+        /// </summary>
+        /// <param name="address">the string representing the address to get code</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public string GetCode(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the value from a storage position at a given address.
+        /// </summary>
+        /// <param name="address">the string representing the address to get code</param>
+        /// <param name="position">the hex code of the position in storage, eg 0x0</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public string GetStorageAt(string address, string position, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the current price per gas in wei.
+        /// </summary>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public long GasPrice(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Makes a call or transaction, which won't be added to the blockchain and returns the gas used. 
+        /// </summary>
+        /// <param name="data">the hash of the method signature and encoded parameters</param>
+        /// <param name="to">the string representing the address to interact with</param>
+        /// <param name="value">the value sent in this transaction, in hex eg. 0xff22</param>
+        /// <param name="gas">the amount of gas provided for the transaction, in hex eg. 0x5f5e0ff</param>
+        /// <param name="gasPrice">the gas price paid for each unit of gas, in wei</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public long EstimateGas(string data, string to, string value, string gas, string gasPrice, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

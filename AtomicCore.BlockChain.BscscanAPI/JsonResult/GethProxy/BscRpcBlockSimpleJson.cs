@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// <summary>
     /// bsc block simple json
     /// </summary>
-    public class BscBlockSimpleJson
+    public class BscRpcBlockSimpleJson
     {
         /// <summary>
         /// baseFeePerGas

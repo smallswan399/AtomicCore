@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// <summary>
     /// bsc api response
     /// </summary>
-    public abstract class BscscanBaseResult
+    internal abstract class BscscanBaseResult
     {
         /// <summary>
         /// 消息状态(1 true)

@@ -6,7 +6,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// bsc返回对象结果集
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class BscscanSingleResult<T> : BscscanBaseResult
+    internal sealed class BscscanSingleResult<T> : BscscanBaseResult
     {
         /// <summary>
         /// 数据结果

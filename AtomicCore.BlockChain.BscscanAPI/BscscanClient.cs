@@ -593,9 +593,23 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
-        #region Logs
+        #region Geth Proxy
 
+        /// <summary>
+        /// Returns the number of most recent block
+        /// </summary>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanSingleResult<string> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.GethProxy, "eth_blockNumber");
 
+            string resp = this.RestGet(url);
+
+            BscscanSingleResult<string> jsonResult = ObjectParse<BscscanSingleResult<string>>(resp);
+
+            return jsonResult;
+        }
 
         #endregion
 
@@ -1169,6 +1183,38 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 if (!exists)
                 {
                     cacheData = GetDailyAverageBlockSize(startdate, enddate, sort, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        #endregion
+
+        #region IBscGethProxy
+
+        /// <summary>
+        /// Returns the number of most recent block
+        /// </summary>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<string> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockNumber(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockNumber),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<string> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockNumber(network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

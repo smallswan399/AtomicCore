@@ -13,6 +13,6 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        string GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

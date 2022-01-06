@@ -13,6 +13,6 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscscanSingleResult<bool> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        bool GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

@@ -460,7 +460,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="contractAddress">the contract address that has a verified source code</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
+        private string GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Contracts, "tokennfttx", new Dictionary<string, string>()
             {
@@ -471,7 +471,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanSingleResult<string> jsonResult = ObjectParse<BscscanSingleResult<string>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         #endregion
@@ -484,7 +484,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="txhash">the string representing the transaction hash to check the execution status</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<bool> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        public bool GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Transactions, "gettxreceiptstatus", new Dictionary<string, string>()
             {
@@ -495,7 +495,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanSingleResult<bool> jsonResult = ObjectParse<BscscanSingleResult<bool>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         #endregion
@@ -995,7 +995,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public string GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetContractABI(contractAddress, network);
@@ -1006,7 +1006,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     contractAddress,
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<string> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out string cacheData);
                 if (!exists)
                 {
                     cacheData = GetContractABI(contractAddress, network);
@@ -1029,7 +1029,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<bool> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public bool GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetTransactionReceiptStatus(txhash, network);
@@ -1040,7 +1040,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     txhash,
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<bool> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out bool cacheData);
                 if (!exists)
                 {
                     cacheData = GetTransactionReceiptStatus(txhash, network);

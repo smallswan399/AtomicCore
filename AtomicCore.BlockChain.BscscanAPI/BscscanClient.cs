@@ -541,6 +541,32 @@ namespace AtomicCore.BlockChain.BscscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// Returns the block number that was validated at a certain timestamp.
+        /// Tip : 
+        ///         Convert a regular date-time to a Unix timestamp.
+        /// </summary>
+        /// <param name="timestamp">the integer representing the Unix timestamp in seconds.</param>
+        /// <param name="closest">the closest available block to the provided timestamp, either before or after</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<long> GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Blocks, "getblocknobytime", new Dictionary<string, string>()
+            {
+                { "timestamp",timestamp.ToString() },
+                { "closest",closest.ToString() }
+            });
+
+            string resp = this.RestGet(url);
+
+            BscscanSingleResult<long> jsonResult = ObjectParse<BscscanSingleResult<long>>(resp);
+
+            return jsonResult;
+        }
+
         #endregion
 
         #region Gas Tracker
@@ -1045,6 +1071,40 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 if (!exists)
                 {
                     cacheData = GetBlockEstimatedByNumber(blockNo, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns the block number that was validated at a certain timestamp.
+        /// Tip : 
+        ///         Convert a regular date-time to a Unix timestamp.
+        /// </summary>
+        /// <param name="timestamp">the integer representing the Unix timestamp in seconds.</param>
+        /// <param name="closest">the closest available block to the provided timestamp, either before or after</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<long> GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockNumberByTimestamp(timestamp, closest, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockNumberByTimestamp),
+                    timestamp.ToString(),
+                    closest.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<long> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockNumberByTimestamp(timestamp, closest, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

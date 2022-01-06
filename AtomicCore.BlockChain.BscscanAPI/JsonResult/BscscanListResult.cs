@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.BscscanAPI
 {
@@ -13,6 +12,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// 数据结果
         /// </summary>
         [JsonProperty("result")]
-        public List<T> Result { get; set; }
+        public T[] Result { get; set; }
     }
 }

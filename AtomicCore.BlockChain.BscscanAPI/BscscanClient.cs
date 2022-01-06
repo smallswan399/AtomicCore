@@ -222,7 +222,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
+        private decimal GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
             {
@@ -234,7 +234,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanSingleResult<decimal> jsonResult = ObjectParse<BscscanSingleResult<decimal>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
+        private BscAccountBalanceJson[] GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
             {
@@ -256,7 +256,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscAccountBalanceJson> jsonResult = ObjectParse<BscscanListResult<BscAccountBalanceJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanListResult<BscNormalTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private BscNormalTransactionJson[] GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlist", new Dictionary<string, string>()
             {
@@ -288,7 +288,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscNormalTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscNormalTransactionJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        private BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private BscInternalTransactionJson[] GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
             {
@@ -322,7 +322,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscInternalTransactionJson> jsonResult = ObjectParse<BscscanListResult<BscInternalTransactionJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        private BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        private BscInternalEventJson[] GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
             {
@@ -345,7 +345,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscInternalEventJson> jsonResult = ObjectParse<BscscanListResult<BscInternalEventJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanListResult<BscBEP20TransactionJson> GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private BscBEP20TransactionJson[] GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "tokentx", new Dictionary<string, string>()
             {
@@ -381,7 +381,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscBEP20TransactionJson> jsonResult = ObjectParse<BscscanListResult<BscBEP20TransactionJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        private BscscanListResult<BscBEP721TransactionJson> GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private BscBEP721TransactionJson[] GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
             {
@@ -419,7 +419,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscBEP721TransactionJson> jsonResult = ObjectParse<BscscanListResult<BscBEP721TransactionJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        private BscscanListResult<BscMineRewardJson> GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet)
+        private BscMineRewardJson[] GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
             {
@@ -447,7 +447,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanListResult<BscMineRewardJson> jsonResult = ObjectParse<BscscanListResult<BscMineRewardJson>>(resp);
 
-            return jsonResult;
+            return jsonResult.Result;
         }
 
         #endregion
@@ -674,36 +674,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
-        #region IBscGasTracker
-
-        /// <summary>
-        /// Returns the current Safe, Proposed and Fast gas prices. 
-        /// </summary>
-        /// <param name="apikey">apikey</param>
-        /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
-        /// <returns></returns>
-        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
-        {
-            if (cacheMode == BscscanCacheMode.None)
-                return GetGasOracle(network);
-            else
-            {
-                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetGasOracle), network.ToString());
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscGasOracleJson> cacheData);
-                if (!exists)
-                {
-                    cacheData = GetGasOracle(network);
-                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
-                }
-
-                return cacheData;
-            }
-        }
-
-        #endregion
-
         #region IBscAccounts
 
         /// <summary>
@@ -715,7 +685,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public decimal GetBalance(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBalance(address, tag, network);
@@ -727,7 +697,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     tag.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out decimal cacheData);
                 if (!exists)
                 {
                     cacheData = GetBalance(address, tag, network);
@@ -747,7 +717,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscAccountBalanceJson> GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscAccountBalanceJson[] GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBalanceList(address, tag, network);
@@ -759,7 +729,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     tag.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscAccountBalanceJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscAccountBalanceJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetBalanceList(address, tag, network);
@@ -785,7 +755,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscNormalTransactionJson> GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscNormalTransactionJson[] GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetNormalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
@@ -801,7 +771,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     sort.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscNormalTransactionJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscNormalTransactionJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetNormalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
@@ -827,7 +797,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscInternalTransactionJson[] GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetInternalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
@@ -843,7 +813,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     sort.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscInternalTransactionJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscInternalTransactionJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetInternalTransactionByAddress(address, startblock, endblock, page, offset, sort, network);
@@ -863,7 +833,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscInternalEventJson[] GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetInternalTransactionByHash(txhash, network);
@@ -874,7 +844,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     txhash.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscInternalEventJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscInternalEventJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetInternalTransactionByHash(txhash, network);
@@ -903,7 +873,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscBEP20TransactionJson> GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscBEP20TransactionJson[] GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBEP20TransactionByAddress(address, contractaddress, startblock, endblock, page, offset, sort, network);
@@ -920,7 +890,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     sort.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscBEP20TransactionJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscBEP20TransactionJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetBEP20TransactionByAddress(address, contractaddress, startblock, endblock, page, offset, sort, network);
@@ -949,7 +919,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscBEP721TransactionJson> GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscBEP721TransactionJson[] GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBEP721TransactionByAddress(address, contractaddress, startblock, endblock, page, offset, sort, network);
@@ -966,7 +936,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     sort.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscBEP721TransactionJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscBEP721TransactionJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetBEP721TransactionByAddress(address, contractaddress, startblock, endblock, page, offset, sort, network);
@@ -988,7 +958,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanListResult<BscMineRewardJson> GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscMineRewardJson[] GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetMinedBlockListByAddress(address, blocktype, page, offset, network);
@@ -1002,7 +972,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     offset.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscMineRewardJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscMineRewardJson[] cacheData);
                 if (!exists)
                 {
                     cacheData = GetMinedBlockListByAddress(address, blocktype, page, offset, network);
@@ -1497,6 +1467,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
         public BscscanSingleResult<string> GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IBscGasTracker
+
+        /// <summary>
+        /// Returns the current Safe, Proposed and Fast gas prices. 
+        /// </summary>
+        /// <param name="apikey">apikey</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetGasOracle(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetGasOracle), network.ToString());
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscGasOracleJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetGasOracle(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         #endregion

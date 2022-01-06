@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Nethereum.Hex.HexTypes;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -600,15 +601,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<string> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
+        public long GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.GethProxy, "eth_blockNumber");
 
             string resp = this.RestGet(url);
 
-            BscscanSingleResult<string> jsonResult = ObjectParse<BscscanSingleResult<string>>(resp);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
 
-            return jsonResult;
+            return (long)new HexBigInteger(jsonResult.Result).Value;
+        }
+
+        /// <summary>
+        /// Returns information about a block by block number.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscBlockSimpleJson GetBlockSimple(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -1201,7 +1213,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<string> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public long GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBlockNumber(network);
@@ -1211,10 +1223,40 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     nameof(GetBlockNumber),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<string> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out long cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockNumber(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns information about a block by block number.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscBlockSimpleJson GetBlockSimple(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockSimple(blockNumber,network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockSimple),
+                    blockNumber.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscBlockSimpleJson cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockSimple(blockNumber,network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

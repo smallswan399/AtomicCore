@@ -41,7 +41,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// value
         /// </summary>
-        [JsonProperty("value")]
+        [JsonProperty("value"), JsonConverter(typeof(BscBNBConverter))]
         public BigInteger TxValue { get; set; }
 
         /// <summary>

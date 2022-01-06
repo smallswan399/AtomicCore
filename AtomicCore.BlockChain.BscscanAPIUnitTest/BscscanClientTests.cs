@@ -38,5 +38,13 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
 
             Assert.IsTrue(result.Sum(d => d.Balance) > decimal.Zero);
         }
+
+        [TestMethod()]
+        public void GetNormalTransactionByAddressTest()
+        {
+            var result = client.GetNormalTransactionByAddress("0x0702383c8dd23081d1962c72EeDB72902c731940");
+
+            Assert.IsTrue(result.Length >= 0);
+        }
     }
 }

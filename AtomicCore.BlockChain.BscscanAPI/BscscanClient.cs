@@ -1500,5 +1500,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
         }
 
         #endregion
+
+        #region IBscStats
+
+        /// <summary>
+        /// Returns the current amount of BNB in circulation.
+        /// </summary>
+        /// <returns></returns>
+        public decimal GetBNBTotalSupply()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the top 21 validators for the Binance Smart Chain.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetBscValidatorList()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the latest price of 1 BNB.
+        /// </summary>
+        /// <returns></returns>
+        public decimal GetBNBLastPrice()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

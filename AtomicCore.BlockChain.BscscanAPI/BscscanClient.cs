@@ -461,7 +461,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Contracts, "tokennfttx", new Dictionary<string, string>()
             {
                 { "address",contractAddress }
             });
@@ -485,7 +485,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscscanSingleResult<bool> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "gettxreceiptstatus", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Transactions, "gettxreceiptstatus", new Dictionary<string, string>()
             {
                 { "txhash",txhash }
             });
@@ -509,7 +509,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscscanSingleResult<BscBlockRewardJson> GetBlockRewardByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "getblockreward", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Blocks, "getblockreward", new Dictionary<string, string>()
             {
                 { "blockno",blockNo.ToString() }
             });
@@ -517,6 +517,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
             string resp = this.RestGet(url);
 
             BscscanSingleResult<BscBlockRewardJson> jsonResult = ObjectParse<BscscanSingleResult<BscBlockRewardJson>>(resp);
+
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// Returns the estimated time remaining, in seconds, until a certain block is validated.
+        /// </summary>
+        /// <param name="blockNo">the integer block number to check block rewards for eg. 12697906</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscBlockEstimatedJson> GetBlockEstimatedByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Blocks, "getblockcountdown", new Dictionary<string, string>()
+            {
+                { "blockno",blockNo.ToString() }
+            });
+
+            string resp = this.RestGet(url);
+
+            BscscanSingleResult<BscBlockEstimatedJson> jsonResult = ObjectParse<BscscanSingleResult<BscBlockEstimatedJson>>(resp);
 
             return jsonResult;
         }
@@ -995,6 +1015,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 if (!exists)
                 {
                     cacheData = GetBlockRewardByNumber(blockNo, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns the estimated time remaining, in seconds, until a certain block is validated.
+        /// </summary>
+        /// <param name="blockNo">the integer block number to check block rewards for eg. 12697906</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscBlockEstimatedJson> GetBlockEstimatedByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockEstimatedByNumber(blockNo, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockEstimatedByNumber),
+                    blockNo.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscBlockEstimatedJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockEstimatedByNumber(blockNo, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

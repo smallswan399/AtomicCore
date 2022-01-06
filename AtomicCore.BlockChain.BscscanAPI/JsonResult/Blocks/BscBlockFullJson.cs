@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
-    /// bsc block simple json
+    /// bsc block full json
     /// </summary>
-    public class BscBlockSimpleJson
+    public class BscBlockFullJson
     {
         /// <summary>
         /// baseFeePerGas
@@ -28,7 +29,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// gasLimit
         /// </summary>
-        [JsonProperty("gasLimit"),JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("gasLimit"), JsonConverter(typeof(BscHexLongJsonConverter))]
         public long GasLimit { get; set; }
 
         /// <summary>
@@ -119,7 +120,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// transactions
         /// </summary>
         [JsonProperty("transactions")]
-        public string[] Transactions { get; set; }
+        public JArray[] Transactions { get; set; }
 
         /// <summary>
         /// transactionsRoot

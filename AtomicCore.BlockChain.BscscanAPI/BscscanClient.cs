@@ -618,7 +618,18 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscBlockSimpleJson GetBlockSimple(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        public BscBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns information about a block by block number.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
             throw new NotImplementedException();
         }
@@ -1242,21 +1253,51 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscBlockSimpleJson GetBlockSimple(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
-                return GetBlockSimple(blockNumber,network);
+                return GetBlockSimpleByNumber(blockNumber,network);
             else
             {
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(
-                    nameof(GetBlockSimple),
+                    nameof(GetBlockSimpleByNumber),
                     blockNumber.ToString(),
                     network.ToString()
                 );
                 bool exists = BscscanCacheProvider.Get(cacheKey, out BscBlockSimpleJson cacheData);
                 if (!exists)
                 {
-                    cacheData = GetBlockSimple(blockNumber,network);
+                    cacheData = GetBlockSimpleByNumber(blockNumber,network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
+        }
+
+        /// <summary>
+        /// Returns information about a block by block number.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        {
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockFullByNumber(blockNumber, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockFullByNumber),
+                    blockNumber.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscBlockFullJson cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockFullByNumber(blockNumber, network);
                     BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
                 }
 

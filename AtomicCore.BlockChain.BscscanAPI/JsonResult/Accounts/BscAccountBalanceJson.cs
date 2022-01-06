@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// balance
         /// </summary>
-        [JsonProperty("balance")]
+        [JsonProperty("balance"),JsonConverter(typeof(BscBNBConverter))]
         public decimal Balance { get; set; }
     }
 }

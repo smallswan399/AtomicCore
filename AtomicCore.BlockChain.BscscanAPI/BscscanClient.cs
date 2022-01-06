@@ -1,4 +1,5 @@
 ﻿using Nethereum.Hex.HexTypes;
+using Nethereum.Util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -224,7 +225,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private decimal GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "balance", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "tag",tag.ToString().ToLower() }
@@ -232,9 +233,11 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             string resp = this.RestGet(url);
 
-            BscscanSingleResult<decimal> jsonResult = ObjectParse<BscscanSingleResult<decimal>>(resp);
+            BscscanSingleResult<long> jsonResult = ObjectParse<BscscanSingleResult<long>>(resp);
 
-            return jsonResult.Result;
+            decimal bnb = UnitConversion.Convert.FromWei(jsonResult.Result, UnitConversion.EthUnit.Ether);
+
+            return bnb;
         }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscAccountBalanceJson[] GetBalanceList(string[] address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "balance", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "balancemulti", new Dictionary<string, string>()
             {
                 { "address",string.Join(",",address) },
                 { "tag",tag.ToString().ToLower() }
@@ -274,7 +277,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscNormalTransactionJson[] GetNormalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "txlist", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "txlist", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "startblock",startblock.ToString() },
@@ -308,7 +311,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscInternalTransactionJson[] GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "txlistinternal", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "startblock",startblock.ToString() },
@@ -336,7 +339,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscInternalEventJson[] GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "txlistinternal", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "txlistinternal", new Dictionary<string, string>()
             {
                 { "txhash",txhash }
             });
@@ -366,7 +369,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscBEP20TransactionJson[] GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "tokentx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "tokentx", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "contractaddress",contractaddress },
@@ -404,7 +407,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscBEP721TransactionJson[] GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "tokennfttx", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "contractaddress",contractaddress },
@@ -435,7 +438,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscMineRewardJson[] GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Accounts, "tokennfttx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "tokennfttx", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "blocktype",blocktype },
@@ -462,7 +465,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private string GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Contracts, "tokennfttx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Contract, "tokennfttx", new Dictionary<string, string>()
             {
                 { "address",contractAddress }
             });
@@ -486,7 +489,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public bool GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Transactions, "gettxreceiptstatus", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Transaction, "gettxreceiptstatus", new Dictionary<string, string>()
             {
                 { "txhash",txhash }
             });
@@ -510,7 +513,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscBlockRewardJson GetBlockRewardByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Blocks, "getblockreward", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Block, "getblockreward", new Dictionary<string, string>()
             {
                 { "blockno",blockNo.ToString() }
             });
@@ -530,7 +533,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscBlockEstimatedJson GetBlockEstimatedByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Blocks, "getblockcountdown", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Block, "getblockcountdown", new Dictionary<string, string>()
             {
                 { "blockno",blockNo.ToString() }
             });
@@ -555,7 +558,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public long GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Blocks, "getblocknobytime", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Block, "getblocknobytime", new Dictionary<string, string>()
             {
                 { "timestamp",timestamp.ToString() },
                 { "closest",closest.ToString().ToLower() }
@@ -578,7 +581,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscBlockAvgSizeJson[] GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Blocks, "dailyavgblocksize", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Block, "dailyavgblocksize", new Dictionary<string, string>()
             {
                 { "startdate",startdate.ToString("yyyy-MM-dd") },
                 { "enddate",enddate.ToString("yyyy-MM-dd") },
@@ -603,7 +606,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public long GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.GethProxy, "eth_blockNumber");
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_blockNumber");
 
             string resp = this.RestGet(url);
 

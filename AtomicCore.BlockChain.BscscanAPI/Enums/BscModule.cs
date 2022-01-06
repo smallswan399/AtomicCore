@@ -8,37 +8,37 @@
         /// <summary>
         /// 账户模块
         /// </summary>
-        Accounts = 1,
+        Account = 1,
 
         /// <summary>
         /// 合约模块
         /// </summary>
-        Contracts = 2,
+        Contract = 2,
 
         /// <summary>
         /// 交易模块
         /// </summary>
-        Transactions = 3,
+        Transaction = 3,
 
         /// <summary>
         /// 区块模块
         /// </summary>
-        Blocks = 4,
+        Block = 4,
 
         /// <summary>
         /// 日志模块
         /// </summary>
-        Logs = 5,
+        Log = 5,
 
         /// <summary>
         /// GETH代理模块
         /// </summary>
-        GethProxy = 6,
+        Proxy = 6,
 
         /// <summary>
         /// 代币模块
         /// </summary>
-        Tokens = 7,
+        Token = 7,
 
         /// <summary>
         /// 手续费模块

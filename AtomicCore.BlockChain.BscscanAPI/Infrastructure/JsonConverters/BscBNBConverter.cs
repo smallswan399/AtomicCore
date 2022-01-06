@@ -8,7 +8,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// <summary>
     /// BNB Deciamls Converter
     /// </summary>
-    public class BscBNBUnitConverter : JsonConverter
+    public class BscBNBConverter : JsonConverter
     {
         /// <summary>
         /// CanConvert

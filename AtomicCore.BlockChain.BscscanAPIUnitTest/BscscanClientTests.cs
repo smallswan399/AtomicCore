@@ -70,7 +70,7 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         {
             var result = client.GetInternalTransactionByHash("0xe03b3199a41733cf167201f3b31cf77076689944d42f7a4a37f8b4d377ed1336");
 
-            Assert.IsTrue(result.Length >= 0);
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
         [TestMethod()]

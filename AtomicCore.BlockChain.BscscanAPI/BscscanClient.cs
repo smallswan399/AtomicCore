@@ -341,7 +341,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        private BscInternalEventJson[] GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Account, "txlistinternal", new Dictionary<string, string>()
             {
@@ -349,10 +349,9 @@ namespace AtomicCore.BlockChain.BscscanAPI
             });
 
             string resp = this.RestGet(url);
-
             BscscanListResult<BscInternalEventJson> jsonResult = ObjectParse<BscscanListResult<BscInternalEventJson>>(resp);
 
-            return jsonResult.Result;
+            return jsonResult;
         }
 
         /// <summary>
@@ -840,7 +839,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscInternalEventJson[] GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetInternalTransactionByHash(txhash, network);
@@ -851,7 +850,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     txhash.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscInternalEventJson[] cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscInternalEventJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetInternalTransactionByHash(txhash, network);

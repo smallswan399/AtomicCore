@@ -123,6 +123,26 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
 
         #endregion
 
+        #region IBscBlocks
+
+        [TestMethod()]
+        public void GetBlockRewardByNumberTest()
+        {
+            var result = client.GetBlockRewardByNumber(13467768);
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
+        public void GetBlockEstimatedByNumberTest()
+        {
+            var result = client.GetBlockEstimatedByNumber(13467768);
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        #endregion
+
 
     }
 }

@@ -5,8 +5,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// <summary>
     /// bsc api response
     /// </summary>
-    public abstract class BscscanBaseResult
+    public class BscscanMsgResult
     {
+        #region Propertys
+
         /// <summary>
         /// status
         /// </summary>
@@ -18,5 +20,13 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         [JsonProperty("message")]
         public string Message { get; set; }
+
+        /// <summary>
+        /// data
+        /// </summary>
+        [JsonProperty("result")]
+        public virtual string Result { get; set; }
+
+        #endregion
     }
 }

@@ -6,8 +6,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// bsc single result
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class BscscanSingleResult<T> : BscscanBaseResult
+    public sealed class BscscanSingleResult<T> : BscscanMsgResult
     {
+        #region Constructor
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -28,9 +30,28 @@ namespace AtomicCore.BlockChain.BscscanAPI
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="msg"></param>
+        public BscscanSingleResult(BscscanMsgResult msg)
+        {
+            this.Status = msg.Status;
+            this.Message = msg.Message;
+
+            if (!string.IsNullOrEmpty(msg.Result))
+                this.Message = $"{this.Message} --> {msg.Result}";
+        }
+
+        #endregion
+
+        #region Propertys
+
+        /// <summary>
         /// data
         /// </summary>
         [JsonProperty("result")]
-        public T Result { get; set; }
+        public new T Result { get; set; }
+
+        #endregion
     }
 }

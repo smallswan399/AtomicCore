@@ -78,7 +78,7 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         {
             var result = client.GetBEP20TransactionByAddress("0x0702383c8dd23081d1962c72EeDB72902c731940", "0xe9e7cea3dedca5984780bafc599bd69add087d56");
 
-            Assert.IsTrue(result.Length >= 0);
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
         #endregion

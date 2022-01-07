@@ -77,7 +77,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// tokenDecimal
         /// </summary>
         [JsonProperty("tokenDecimal")]
-        public string TokenDecimal { get; set; }
+        public int TokenDecimal { get; set; }
 
         /// <summary>
         /// transactionIndex

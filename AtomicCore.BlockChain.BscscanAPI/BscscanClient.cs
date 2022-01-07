@@ -223,7 +223,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private decimal GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Account, "balance", new Dictionary<string, string>()
             {
@@ -232,12 +232,19 @@ namespace AtomicCore.BlockChain.BscscanAPI
             });
 
             string resp = this.RestGet(url);
-
             BscscanSingleResult<long> jsonResult = ObjectParse<BscscanSingleResult<long>>(resp);
 
-            decimal bnb = UnitConversion.Convert.FromWei(jsonResult.Result, UnitConversion.EthUnit.Ether);
-
-            return bnb;
+            if (jsonResult.Status == BscscanJsonStatus.Success)
+            {
+                return new BscscanSingleResult<decimal>()
+                {
+                    Status = BscscanJsonStatus.Success,
+                    Message = jsonResult.Message,
+                    Result = UnitConversion.Convert.FromWei(jsonResult.Result, UnitConversion.EthUnit.Ether)
+                };
+            }
+            else
+                return new BscscanSingleResult<decimal>(BscscanJsonStatus.Failure, jsonResult.Message);
         }
 
         /// <summary>
@@ -688,7 +695,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public decimal GetBalance(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBalance(address, tag, network);
@@ -700,7 +707,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     tag.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out decimal cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBalance(address, tag, network);

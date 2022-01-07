@@ -3,13 +3,32 @@
 namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
-    /// bsc返回对象结果集
+    /// bsc single result
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal sealed class BscscanSingleResult<T> : BscscanBaseResult
+    public sealed class BscscanSingleResult<T> : BscscanBaseResult
     {
         /// <summary>
-        /// 数据结果
+        /// Constructor
+        /// </summary>
+        public BscscanSingleResult()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
+        public BscscanSingleResult(BscscanJsonStatus status, string message)
+        {
+            this.Status = status;
+            this.Message = message;
+        }
+
+        /// <summary>
+        /// data
         /// </summary>
         [JsonProperty("result")]
         public T Result { get; set; }

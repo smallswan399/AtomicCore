@@ -6,7 +6,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// bsc rpc json
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class BscRpcJson<T>
+    public class BscRpcJson<T>
     {
         /// <summary>
         /// id

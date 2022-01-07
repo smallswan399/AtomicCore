@@ -5,16 +5,16 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// <summary>
     /// bsc api response
     /// </summary>
-    internal abstract class BscscanBaseResult
+    public abstract class BscscanBaseResult
     {
         /// <summary>
-        /// 消息状态(1 true)
+        /// status
         /// </summary>
         [JsonProperty("status")]
         public BscscanJsonStatus Status { get; set; }
 
         /// <summary>
-        /// 消息信息
+        /// message
         /// </summary>
         [JsonProperty("message")]
         public string Message { get; set; }

@@ -469,18 +469,17 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="contractAddress">the contract address that has a verified source code</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private string GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Contract, "tokennfttx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Contract, "getabi", new Dictionary<string, string>()
             {
                 { "address",contractAddress }
             });
 
             string resp = this.RestGet(url);
-
             BscscanSingleResult<string> jsonResult = ObjectParse<BscscanSingleResult<string>>(resp);
 
-            return jsonResult.Result;
+            return jsonResult;
         }
 
         #endregion
@@ -493,7 +492,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="txhash">the string representing the transaction hash to check the execution status</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public bool GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        public BscscanSingleResult<BscTransactionReceiptStatusJson> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Transaction, "gettxreceiptstatus", new Dictionary<string, string>()
             {
@@ -501,10 +500,9 @@ namespace AtomicCore.BlockChain.BscscanAPI
             });
 
             string resp = this.RestGet(url);
+            BscscanSingleResult<BscTransactionReceiptStatusJson> jsonResult = ObjectParse<BscscanSingleResult<BscTransactionReceiptStatusJson>>(resp);
 
-            BscscanSingleResult<bool> jsonResult = ObjectParse<BscscanSingleResult<bool>>(resp);
-
-            return jsonResult.Result;
+            return jsonResult;
         }
 
         #endregion
@@ -670,7 +668,9 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
-        #region Public Methods
+        #region IBscscanClient
+
+        #region SetApiKeyToken
 
         /// <summary>
         /// set api key token
@@ -1004,7 +1004,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public string GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<string> GetContractABI(string contractAddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetContractABI(contractAddress, network);
@@ -1015,7 +1015,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     contractAddress,
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out string cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<string> cacheData);
                 if (!exists)
                 {
                     cacheData = GetContractABI(contractAddress, network);
@@ -1038,7 +1038,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public bool GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscTransactionReceiptStatusJson> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetTransactionReceiptStatus(txhash, network);
@@ -1049,7 +1049,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     txhash,
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out bool cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscTransactionReceiptStatusJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetTransactionReceiptStatus(txhash, network);
@@ -1538,6 +1538,8 @@ namespace AtomicCore.BlockChain.BscscanAPI
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
         #endregion
     }

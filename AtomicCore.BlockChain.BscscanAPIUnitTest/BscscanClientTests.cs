@@ -99,6 +99,30 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
 
         #endregion
 
+        #region IBscBlocks
+
+        [TestMethod()]
+        public void GetContractABITest()
+        {
+            var result = client.GetContractABI("0xe9e7cea3dedca5984780bafc599bd69add087d56");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        #endregion
+
+        #region IBscTransactions
+
+        [TestMethod()]
+        public void GetTransactionReceiptStatusTest()
+        {
+            var result = client.GetTransactionReceiptStatus("0xd0d1d4b745a221527ef38a5fbf22509ed5a5fb104efbab28d924b2fb9c19e93b");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        #endregion
+
 
     }
 }

@@ -81,6 +81,14 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetBEP721TransactionByAddressTest()
+        {
+            var result = client.GetBEP721TransactionByAddress("0x785D43bd5Bd506ca3B28b017394f14Ec04F9CCC9", "0xf51fb8de65f85cb18a2558c1d3769835f526f36c");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         #endregion
 
 

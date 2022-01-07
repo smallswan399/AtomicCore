@@ -1,6 +1,5 @@
 ﻿using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -619,15 +618,19 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public long GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
+        public BscscanSingleResult<long> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Proxy, "eth_blockNumber");
 
             string resp = this.RestGet(url);
-
             BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
 
-            return (long)new HexBigInteger(jsonResult.Result).Value;
+            return new BscscanSingleResult<long>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = String.Empty,
+                Result = (long)new HexBigInteger(jsonResult.Result).Value
+            };
         }
 
         /// <summary>
@@ -661,18 +664,14 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscGasOracleJson GetGasOracle(BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet)
         {
-            //拼接URL
             string url = this.GetRestUrl(network, BscModule.GasTracker, "gasoracle");
 
-            //请求API
             string resp = this.RestGet(url);
-
-            //解析JSON
             BscscanSingleResult<BscGasOracleJson> jsonResult = ObjectParse<BscscanSingleResult<BscGasOracleJson>>(resp);
 
-            return jsonResult.Result;
+            return jsonResult;
         }
 
         #endregion
@@ -1214,7 +1213,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public long GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<long> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBlockNumber(network);
@@ -1224,7 +1223,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     nameof(GetBlockNumber),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out long cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<long> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockNumber(network);
@@ -1501,14 +1500,14 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscGasOracleJson GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscGasOracleJson> GetGasOracle(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetGasOracle(network);
             else
             {
                 string cacheKey = BscscanCacheProvider.GenerateCacheKey(nameof(GetGasOracle), network.ToString());
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscGasOracleJson cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscGasOracleJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetGasOracle(network);

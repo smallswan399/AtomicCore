@@ -151,6 +151,31 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
 
 
 
+
+        #endregion
+
+        #region IBscGasTracker
+
+        [TestMethod()]
+        public void GetGasOracleTest()
+        {
+            var result = client.GetGasOracle();
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        #endregion
+
+        #region IBscGethProxy
+
+        [TestMethod()]
+        public void GetBlockNumberTest()
+        {
+            var result = client.GetBlockNumber();
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         #endregion
 
 

@@ -445,7 +445,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscMineRewardJson> GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Account, "tokennfttx", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Account, "getminedblocks", new Dictionary<string, string>()
             {
                 { "address",address },
                 { "blocktype",blocktype },

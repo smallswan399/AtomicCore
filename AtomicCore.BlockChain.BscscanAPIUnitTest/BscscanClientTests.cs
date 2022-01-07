@@ -89,6 +89,14 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetMinedBlockListByAddressTest()
+        {
+            var result = client.GetMinedBlockListByAddress("0x78f3adfc719c99674c072166708589033e2d9afe", "blocks");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         #endregion
 
 

@@ -582,7 +582,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
             });
 
             string resp = this.RestGet(url);
-
             BscscanSingleResult<long> jsonResult = ObjectParse<BscscanSingleResult<long>>(resp);
 
             return jsonResult;
@@ -596,7 +595,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private List<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanListResult<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Block, "dailyavgblocksize", new Dictionary<string, string>()
             {
@@ -606,10 +605,9 @@ namespace AtomicCore.BlockChain.BscscanAPI
             });
 
             string resp = this.RestGet(url);
-
             BscscanListResult<BscBlockAvgSizeJson> jsonResult = ObjectParse<BscscanListResult<BscBlockAvgSizeJson>>(resp);
 
-            return jsonResult.Result;
+            return jsonResult;
         }
 
         #endregion
@@ -1181,7 +1179,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public List<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanListResult<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetDailyAverageBlockSize(startdate, enddate, sort, network);
@@ -1194,7 +1192,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     sort.ToString().ToLower(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out List<BscBlockAvgSizeJson> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscBlockAvgSizeJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetDailyAverageBlockSize(startdate, enddate, sort, network);

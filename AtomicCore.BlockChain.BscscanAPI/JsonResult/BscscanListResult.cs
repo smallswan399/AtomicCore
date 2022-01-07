@@ -3,13 +3,13 @@
 namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
-    /// bsc返回列表结果集
+    /// bsc list result
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public sealed class BscscanListResult<T> : BscscanBaseResult
     {
         /// <summary>
-        /// 数据结果
+        /// data
         /// </summary>
         [JsonProperty("result")]
         public T[] Result { get; set; }

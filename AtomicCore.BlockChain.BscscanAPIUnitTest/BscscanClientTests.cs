@@ -46,7 +46,7 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
                 "0x0702383c8dd23081d1962c72EeDB72902c731940"
             });
 
-            Assert.IsTrue(result.Sum(d => d.Balance) > decimal.Zero);
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
         [TestMethod()]
@@ -54,7 +54,7 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         {
             var result = client.GetNormalTransactionByAddress("0x0702383c8dd23081d1962c72EeDB72902c731940");
 
-            Assert.IsTrue(result.Length >= 0);
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
         [TestMethod()]
@@ -62,7 +62,7 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         {
             var result = client.GetInternalTransactionByAddress("0x33350dd80773DEB379D79ceb035b49E5E79E3615");
 
-            Assert.IsTrue(result.Length >= 0);
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
         [TestMethod()]

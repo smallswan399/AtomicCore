@@ -141,6 +141,16 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetBlockNumberByTimestampTest()
+        {
+            var result = client.GetBlockNumberByTimestamp(1601510400, BscClosest.Before);
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+
+
         #endregion
 
 

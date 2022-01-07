@@ -501,7 +501,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="txhash">the string representing the transaction hash to check the execution status</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<BscTransactionReceiptStatusJson> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscTransactionReceiptStatusJson> GetTransactionReceiptStatus(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Transaction, "gettxreceiptstatus", new Dictionary<string, string>()
             {
@@ -524,7 +524,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNo">the integer block number to check block rewards for eg. 12697906</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<BscBlockRewardJson> GetBlockRewardByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscBlockRewardJson> GetBlockRewardByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Block, "getblockreward", new Dictionary<string, string>()
             {
@@ -543,7 +543,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNo">the integer block number to check block rewards for eg. 12697906</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<BscBlockEstimatedJson> GetBlockEstimatedByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscBlockEstimatedJson> GetBlockEstimatedByNumber(long blockNo, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Block, "getblockcountdown", new Dictionary<string, string>()
             {
@@ -573,7 +573,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public long GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<long> GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Block, "getblocknobytime", new Dictionary<string, string>()
             {
@@ -585,7 +585,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             BscscanSingleResult<long> jsonResult = ObjectParse<BscscanSingleResult<long>>(resp);
 
-            return jsonResult.Result;
+            return jsonResult;
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public List<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
+        private List<BscBlockAvgSizeJson> GetDailyAverageBlockSize(DateTime startdate, DateTime enddate, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Block, "dailyavgblocksize", new Dictionary<string, string>()
             {
@@ -1148,7 +1148,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public long GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<long> GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBlockNumberByTimestamp(timestamp, closest, network);
@@ -1160,7 +1160,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     closest.ToString().ToLower(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out long cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<long> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockNumberByTimestamp(timestamp, closest, network);

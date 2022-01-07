@@ -176,6 +176,15 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetBlockSimpleByNumberTest()
+        {
+            var result = client.GetBlockSimpleByNumber(10556486);
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+
         #endregion
 
 

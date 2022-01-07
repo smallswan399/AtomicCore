@@ -618,7 +618,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<long> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<long> GetBlockNumber(BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Proxy, "eth_blockNumber");
 
@@ -628,7 +628,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
             return new BscscanSingleResult<long>()
             {
                 Status = BscscanJsonStatus.Success,
-                Message = String.Empty,
+                Message = string.Empty,
                 Result = (long)new HexBigInteger(jsonResult.Result).Value
             };
         }
@@ -639,9 +639,23 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscRpcBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscRpcBlockSimpleJson> GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
-            throw new NotImplementedException();
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getBlockByNumber", new Dictionary<string, string>()
+            {
+                { "tag",new HexBigInteger(blockNumber).HexValue },
+                { "boolean","false" },
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<BscRpcBlockSimpleJson> jsonResult = ObjectParse<BscRpcJson<BscRpcBlockSimpleJson>>(resp);
+
+            return new BscscanSingleResult<BscRpcBlockSimpleJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
         }
 
         /// <summary>
@@ -650,7 +664,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscRpcBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        private BscRpcBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
             throw new NotImplementedException();
         }
@@ -1242,7 +1256,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscRpcBlockSimpleJson GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscRpcBlockSimpleJson> GetBlockSimpleByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBlockSimpleByNumber(blockNumber, network);
@@ -1253,7 +1267,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     blockNumber.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscRpcBlockSimpleJson cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscRpcBlockSimpleJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockSimpleByNumber(blockNumber, network);

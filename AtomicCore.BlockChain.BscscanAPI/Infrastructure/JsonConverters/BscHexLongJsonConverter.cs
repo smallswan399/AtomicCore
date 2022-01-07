@@ -30,7 +30,9 @@ namespace AtomicCore.BlockChain.BscscanAPI
             if (reader.Value == null)
                 return null;
 
-            return (long)new HexBigInteger(reader.ToString()).Value;
+            HexBigInteger bi = new HexBigInteger(reader.ToString());
+
+            return (long)bi.Value;
         }
 
         /// <summary>

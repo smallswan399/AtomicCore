@@ -171,7 +171,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="resp"></param>
         /// <returns></returns>
-        private BscscanMsgResult MsgParse(string resp)
+        private string GetErrorMsg(string resp)
         {
             BscscanMsgResult jsonResult;
             try
@@ -182,8 +182,20 @@ namespace AtomicCore.BlockChain.BscscanAPI
             {
                 throw ex;
             }
+            if (jsonResult.Status == BscscanJsonStatus.Success)
+                return null;
 
-            return jsonResult;
+            BscscanSingleResult<string> errorJson;
+            try
+            {
+                errorJson = Newtonsoft.Json.JsonConvert.DeserializeObject<BscscanSingleResult<string>>(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return $"{jsonResult.Message} --> {errorJson.Result}";
         }
 
         /// <summary>
@@ -539,15 +551,15 @@ namespace AtomicCore.BlockChain.BscscanAPI
             });
 
             string resp = this.RestGet(url);
-            BscscanMsgResult msgResult = MsgParse(resp);
-            if (msgResult.Status == BscscanJsonStatus.Success)
+            string errorMsg = GetErrorMsg(resp);
+            if (string.IsNullOrEmpty(errorMsg))
             {
                 BscscanSingleResult<BscBlockEstimatedJson> jsonResult = ObjectParse<BscscanSingleResult<BscBlockEstimatedJson>>(resp);
 
                 return jsonResult;
             }
             else
-                return new BscscanSingleResult<BscBlockEstimatedJson>(msgResult);
+                return new BscscanSingleResult<BscBlockEstimatedJson>(BscscanJsonStatus.Failure, errorMsg);
         }
 
         /// <summary>

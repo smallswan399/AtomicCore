@@ -29,19 +29,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
             this.Message = message;
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="msg"></param>
-        public BscscanSingleResult(BscscanMsgResult msg)
-        {
-            this.Status = msg.Status;
-            this.Message = msg.Message;
-
-            if (!string.IsNullOrEmpty(msg.Result))
-                this.Message = $"{this.Message} --> {msg.Result}";
-        }
-
         #endregion
 
         #region Propertys
@@ -50,7 +37,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// data
         /// </summary>
         [JsonProperty("result")]
-        public new T Result { get; set; }
+        public T Result { get; set; }
 
         #endregion
     }

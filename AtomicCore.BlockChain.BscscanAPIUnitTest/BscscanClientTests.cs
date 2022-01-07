@@ -136,7 +136,7 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         [TestMethod()]
         public void GetBlockEstimatedByNumberTest()
         {
-            var result = client.GetBlockEstimatedByNumber(13467768);
+            var result = client.GetBlockEstimatedByNumber(14154145);
 
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }

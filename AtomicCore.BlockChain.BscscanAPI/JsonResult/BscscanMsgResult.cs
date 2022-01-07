@@ -21,12 +21,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         [JsonProperty("message")]
         public string Message { get; set; }
 
-        /// <summary>
-        /// data
-        /// </summary>
-        [JsonProperty("result")]
-        public virtual string Result { get; set; }
-
         #endregion
     }
 }

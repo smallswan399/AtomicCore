@@ -16,7 +16,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// number
         /// </summary>
-        [JsonProperty("blockNumber"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("blockNumber"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long BlockNumber { get; set; }
 
         /// <summary>
@@ -28,19 +28,19 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// gas
         /// </summary>
-        [JsonProperty("gas"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("gas"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long TxGas { get; set; }
 
         /// <summary>
         /// gasPrice
         /// </summary>
-        [JsonProperty("gasPrice"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("gasPrice"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long TxGasPrice { get; set; }
 
         /// <summary>
         /// hash
         /// </summary>
-        [JsonProperty("hash"),JsonConverter(typeof(BscBNBConverter))]
+        [JsonProperty("hash")]
         public string TxHash { get; set; }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// nonce
         /// </summary>
-        [JsonProperty("nonce")]
+        [JsonProperty("nonce"), JsonConverter(typeof(BscHexInt32JsonConverter))]
         public int TxNonce { get; set; }
 
         /// <summary>
@@ -64,19 +64,19 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// transactionIndex
         /// </summary>
-        [JsonProperty("transactionIndex")]
+        [JsonProperty("transactionIndex"), JsonConverter(typeof(BscHexInt32JsonConverter))]
         public int TransactionIndex { get; set; }
 
         /// <summary>
         /// value
         /// </summary>
-        [JsonProperty("value")]
+        [JsonProperty("value"), JsonConverter(typeof(BscBNBConverter))]
         public decimal TxValue { get; set; }
 
         /// <summary>
         /// type
         /// </summary>
-        [JsonProperty("type")]
+        [JsonProperty("type"), JsonConverter(typeof(BscHexInt32JsonConverter))]
         public int Type { get; set; }
 
         /// <summary>

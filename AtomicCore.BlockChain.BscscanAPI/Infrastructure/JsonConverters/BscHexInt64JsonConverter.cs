@@ -1,14 +1,14 @@
 ﻿using Nethereum.Hex.HexTypes;
-using Nethereum.Util;
 using Newtonsoft.Json;
 using System;
+using System.Numerics;
 
 namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
-    /// BNB Deciamls Converter
+    /// Hex Long Json Converter
     /// </summary>
-    public class BscBNBConverter : JsonConverter
+    public sealed class BscHexInt64JsonConverter : JsonConverter
     {
         /// <summary>
         /// CanConvert
@@ -30,9 +30,21 @@ namespace AtomicCore.BlockChain.BscscanAPI
             if (reader.Value == null)
                 return null;
 
-            HexBigInteger hbi = new HexBigInteger(reader.Value.ToString());
+            string hex = (string)reader.Value;
+            if (hex.StartsWith("0x", StringComparison.Ordinal))
+                hex = hex.Substring(2);
 
-            return UnitConversion.Convert.FromWei(hbi.Value, UnitConversion.EthUnit.Ether);
+            long val;
+            try
+            {
+                val = Convert.ToInt64(hex, 16);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{nameof(BscHexInt64JsonConverter)} --> '{hex}' can not convert to long! error msg --> {ex.Message}");
+            }
+
+            return val;
         }
 
         /// <summary>
@@ -44,10 +56,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <exception cref="TypeAccessException"></exception>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value is decimal balance)
-                writer.WriteValue(UnitConversion.Convert.ToWei(balance, UnitConversion.EthUnit.Ether));
+            if (value is long long_val)
+                writer.WriteValue(new HexBigInteger(new BigInteger(long_val)).HexValue);
 
-            throw new TypeAccessException(nameof(value));
+            throw new Exception($"{nameof(BscHexInt64JsonConverter)} --> '{value}' can not write to json");
         }
     }
 }

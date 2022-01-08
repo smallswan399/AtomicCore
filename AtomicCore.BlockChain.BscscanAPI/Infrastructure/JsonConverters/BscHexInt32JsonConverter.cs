@@ -8,7 +8,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// <summary>
     /// Hex Long Json Converter
     /// </summary>
-    public class BscHexLongJsonConverter : JsonConverter
+    public sealed class BscHexInt32JsonConverter : JsonConverter
     {
         /// <summary>
         /// CanConvert
@@ -34,18 +34,15 @@ namespace AtomicCore.BlockChain.BscscanAPI
             if (hex.StartsWith("0x", StringComparison.Ordinal))
                 hex = hex.Substring(2);
 
-            long val;
+            int val;
             try
             {
-                val = Convert.ToInt64(hex, 16);
+                val = Convert.ToInt32(hex, 16);
             }
             catch (Exception ex)
             {
-                throw new Exception($"BscHexLongJsonConverter --> {hex} can not convert to long! error msg --> {ex.Message}");
+                throw new Exception($"{nameof(BscHexInt32JsonConverter)} --> '{hex}' can not convert to long! error msg --> {ex.Message}");
             }
-
-            if (long.TryParse((string)reader.Value, System.Globalization.NumberStyles.HexNumber, null, out long value))
-                return value;
 
             return val;
         }
@@ -59,10 +56,10 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <exception cref="TypeAccessException"></exception>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value is long long_val)
-                writer.WriteValue(new HexBigInteger(new BigInteger(long_val)).HexValue);
+            if (value is int int_val)
+                writer.WriteValue(new HexBigInteger(new BigInteger(int_val)).HexValue);
 
-            throw new TypeAccessException(nameof(value));
+            throw new Exception($"{nameof(BscHexInt32JsonConverter)} --> '{value}' can not write to json");
         }
     }
 }

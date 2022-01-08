@@ -22,13 +22,13 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// gasLimit
         /// </summary>
-        [JsonProperty("gasLimit"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("gasLimit"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long GasLimit { get; set; }
 
         /// <summary>
         /// gasUsed
         /// </summary>
-        [JsonProperty("gasUsed"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("gasUsed"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long GasUsed { get; set; }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// number
         /// </summary>
-        [JsonProperty("number"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("number"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long BlockNumber { get; set; }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// size
         /// </summary>
-        [JsonProperty("size"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("size"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long BlockSize { get; set; }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// timestamp
         /// </summary>
-        [JsonProperty("timestamp"), JsonConverter(typeof(BscHexLongJsonConverter))]
+        [JsonProperty("timestamp"), JsonConverter(typeof(BscHexInt64JsonConverter))]
         public long Timestamp { get; set; }
 
         /// <summary>

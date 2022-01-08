@@ -781,7 +781,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
             {
                 Status = BscscanJsonStatus.Success,
                 Message = string.Empty,
-                Result = Convert.ToInt32(jsonResult.Result,16)
+                Result = Convert.ToInt32(jsonResult.Result, 16)
             };
         }
 
@@ -819,22 +819,22 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscscanSingleResult<string> Call(string to, string data, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
         {
-            //string url = this.GetRestUrl(network, BscModule.Proxy, "eth_call", new Dictionary<string, string>()
-            //{
-            //    { "txhash",txhash }
-            //});
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_call", new Dictionary<string, string>()
+            {
+                { "to",to },
+                { "data",data },
+                { "tag",tag.ToString().ToLower() }
+            });
 
-            //string resp = this.RestGet(url);
-            //BscRpcJson<BscRpcTransactionReceiptJson> jsonResult = ObjectParse<BscRpcJson<BscRpcTransactionReceiptJson>>(resp);
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
 
-            //return new BscscanSingleResult<BscRpcTransactionReceiptJson>()
-            //{
-            //    Status = BscscanJsonStatus.Success,
-            //    Message = string.Empty,
-            //    Result = jsonResult.Result
-            //};
-
-            throw new NotImplementedException();
+            return new BscscanSingleResult<string>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
         }
 
         #endregion
@@ -1666,7 +1666,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         public BscscanSingleResult<string> Call(string to, string data, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return Call(to, data, tag, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(Call),
+                    to,
+                    data,
+                    tag.ToString().ToLower(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<string> cacheData);
+                if (!exists)
+                {
+                    cacheData = Call(to, data, tag, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>

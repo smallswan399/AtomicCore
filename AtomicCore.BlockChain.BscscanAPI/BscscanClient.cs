@@ -664,9 +664,23 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscRpcBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscRpcBlockFullJson> GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
-            throw new NotImplementedException();
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getBlockByNumber", new Dictionary<string, string>()
+            {
+                { "tag",new HexBigInteger(blockNumber).HexValue },
+                { "boolean","true" },
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<BscRpcBlockFullJson> jsonResult = ObjectParse<BscRpcJson<BscRpcBlockFullJson>>(resp);
+
+            return new BscscanSingleResult<BscRpcBlockFullJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
         }
 
         #endregion
@@ -1286,7 +1300,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscRpcBlockFullJson GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscRpcBlockFullJson> GetBlockFullByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBlockFullByNumber(blockNumber, network);
@@ -1297,7 +1311,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     blockNumber.ToString(),
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscRpcBlockFullJson cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscRpcBlockFullJson> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBlockFullByNumber(blockNumber, network);

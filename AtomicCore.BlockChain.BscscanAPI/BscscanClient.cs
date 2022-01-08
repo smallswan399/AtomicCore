@@ -793,7 +793,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanSingleResult<BscRpcTransactionReceiptJson> GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionCount", new Dictionary<string, string>()
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionReceipt", new Dictionary<string, string>()
             {
                 { "txhash",txhash }
             });
@@ -807,6 +807,34 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 Message = string.Empty,
                 Result = jsonResult.Result
             };
+        }
+
+        /// <summary>
+        /// Executes a new message call immediately without creating a transaction on the block chain.
+        /// </summary>
+        /// <param name="to">the string representing the address to interact with</param>
+        /// <param name="data">the hash of the method signature and encoded parameters</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanSingleResult<string> Call(string to, string data, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            //string url = this.GetRestUrl(network, BscModule.Proxy, "eth_call", new Dictionary<string, string>()
+            //{
+            //    { "txhash",txhash }
+            //});
+
+            //string resp = this.RestGet(url);
+            //BscRpcJson<BscRpcTransactionReceiptJson> jsonResult = ObjectParse<BscRpcJson<BscRpcTransactionReceiptJson>>(resp);
+
+            //return new BscscanSingleResult<BscRpcTransactionReceiptJson>()
+            //{
+            //    Status = BscscanJsonStatus.Success,
+            //    Message = string.Empty,
+            //    Result = jsonResult.Result
+            //};
+
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -1636,7 +1664,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public string Call(string to, string data, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<string> Call(string to, string data, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             throw new NotImplementedException();
         }

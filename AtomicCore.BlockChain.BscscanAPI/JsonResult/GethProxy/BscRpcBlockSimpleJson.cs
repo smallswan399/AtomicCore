@@ -8,12 +8,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
     public class BscRpcBlockSimpleJson
     {
         /// <summary>
-        /// baseFeePerGas
-        /// </summary>
-        [JsonProperty("baseFeePerGas")]
-        public string BaseFeePerGas { get; set; }
-
-        /// <summary>
         /// difficulty
         /// </summary>
         [JsonProperty("difficulty")]
@@ -70,7 +64,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// number
         /// </summary>
-        [JsonProperty("number")]
+        [JsonProperty("number"), JsonConverter(typeof(BscHexLongJsonConverter))]
         public long BlockNumber { get; set; }
 
         /// <summary>

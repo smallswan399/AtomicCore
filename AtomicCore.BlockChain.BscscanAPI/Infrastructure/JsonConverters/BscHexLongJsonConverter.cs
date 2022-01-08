@@ -30,9 +30,24 @@ namespace AtomicCore.BlockChain.BscscanAPI
             if (reader.Value == null)
                 return null;
 
-            HexBigInteger bi = new HexBigInteger(reader.ToString());
+            string hex = (string)reader.Value;
+            if (hex.StartsWith("0x", StringComparison.Ordinal))
+                hex = hex.Substring(2);
 
-            return (long)bi.Value;
+            long val;
+            try
+            {
+                val = Convert.ToInt64(hex, 16);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"BscHexLongJsonConverter --> {hex} can not convert to long! error msg --> {ex.Message}");
+            }
+
+            if (long.TryParse((string)reader.Value, System.Globalization.NumberStyles.HexNumber, null, out long value))
+                return value;
+
+            return val;
         }
 
         /// <summary>

@@ -785,6 +785,30 @@ namespace AtomicCore.BlockChain.BscscanAPI
             };
         }
 
+        /// <summary>
+        /// Returns the receipt of a transaction that has been validated.
+        /// </summary>
+        /// <param name="txhash">the string representing the hash of the transaction</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<BscRpcTransactionReceiptJson> GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionCount", new Dictionary<string, string>()
+            {
+                { "txhash",txhash }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<BscRpcTransactionReceiptJson> jsonResult = ObjectParse<BscRpcJson<BscRpcTransactionReceiptJson>>(resp);
+
+            return new BscscanSingleResult<BscRpcTransactionReceiptJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
+        }
+
         #endregion
 
         #region Gas Tracker
@@ -1552,10 +1576,24 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// Submits a pre-signed transaction for broadcast to the Binance Smart Chain network.
         /// </summary>
         /// <param name="hex">the string representing the signed raw transaction data to broadcast.</param>
+        /// <param name="network">network</param>
         /// <returns></returns>
-        public string SendRawTransaction(string hex)
+        public BscscanSingleResult<string> SendRawTransaction(string hex, BscNetwork network = BscNetwork.BscMainnet)
         {
-            throw new NotImplementedException();
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_sendRawTransaction", new Dictionary<string, string>()
+            {
+                { "hex",hex }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<string>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
         }
 
         /// <summary>
@@ -1566,9 +1604,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscRpcTransactionReceiptJson GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscRpcTransactionReceiptJson> GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetTransactionReceipt(txhash, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetTransactionReceipt),
+                    txhash.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscRpcTransactionReceiptJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTransactionReceipt(txhash, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>

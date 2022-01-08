@@ -224,6 +224,22 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void SendRawTransactionTest()
+        {
+            var result = client.SendRawTransaction("");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
+        public void GetTransactionReceiptTest()
+        {
+            var result = client.GetTransactionReceipt("0x2122b2317d6cf409846f80e829c1e45ecb30306907ba0a00a02730c78890739f");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         #endregion
 
 

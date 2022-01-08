@@ -80,8 +80,9 @@
         /// Submits a pre-signed transaction for broadcast to the Binance Smart Chain network.
         /// </summary>
         /// <param name="hex">the string representing the signed raw transaction data to broadcast.</param>
+        /// <param name="network">network</param>
         /// <returns></returns>
-        string SendRawTransaction(string hex);
+        BscscanSingleResult<string> SendRawTransaction(string hex, BscNetwork network = BscNetwork.BscMainnet);
 
         /// <summary>
         /// Returns the receipt of a transaction that has been validated.
@@ -91,7 +92,7 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscRpcTransactionReceiptJson GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        BscscanSingleResult<BscRpcTransactionReceiptJson> GetTransactionReceipt(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
 
         /// <summary>
         /// Executes a new message call immediately without creating a transaction on the block chain.

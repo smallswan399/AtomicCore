@@ -200,6 +200,13 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetTransactionByHashTest()
+        {
+            var result = client.GetTransactionByHash("0x9983332a52df5ad1dabf8fa81b1642e9383f302a399c532fc47ecb6a7a967166");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
 
         #endregion
 

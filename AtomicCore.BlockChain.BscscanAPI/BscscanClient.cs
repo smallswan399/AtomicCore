@@ -688,8 +688,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         public BscscanSingleResult<int> GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -706,6 +704,30 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 Status = BscscanJsonStatus.Success,
                 Message = string.Empty,
                 Result = Convert.ToInt32(jsonResult.Result, 16)
+            };
+        }
+
+        /// <summary>
+        /// Returns information about a transaction requested by transaction hash.
+        /// </summary>
+        /// <param name="txhash">the string representing the hash of the transaction</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        public BscscanSingleResult<BscRpcTransactionJson> GetTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionByHash", new Dictionary<string, string>()
+            {
+                { "txhash",txhash }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<BscRpcTransactionJson> jsonResult = ObjectParse<BscRpcJson<BscRpcTransactionJson>>(resp);
+
+            return new BscscanSingleResult<BscRpcTransactionJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
             };
         }
 
@@ -1386,9 +1408,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscRpcTransactionJson GetTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscRpcTransactionJson> GetTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetTransactionByHash(txhash, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetTransactionByHash),
+                    txhash.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscRpcTransactionJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTransactionByHash(txhash, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>

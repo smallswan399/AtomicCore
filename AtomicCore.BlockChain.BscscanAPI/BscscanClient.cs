@@ -689,7 +689,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<int> GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<int> GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getBlockTransactionCountByNumber", new Dictionary<string, string>()
             {
@@ -713,7 +713,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="txhash">the string representing the hash of the transaction</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        public BscscanSingleResult<BscRpcTransactionJson> GetTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BscRpcTransactionJson> GetTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionByHash", new Dictionary<string, string>()
             {
@@ -728,6 +728,60 @@ namespace AtomicCore.BlockChain.BscscanAPI
                 Status = BscscanJsonStatus.Success,
                 Message = string.Empty,
                 Result = jsonResult.Result
+            };
+        }
+
+        /// <summary>
+        /// Returns information about a transaction by block number and transaction index position.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="index">the position of the uncle's index in the block, in hex eg. 0x1</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        private BscscanSingleResult<BscRpcTransactionJson> GetTransactionByBlockNumberAndIndex(long blockNumber, int index, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionByBlockNumberAndIndex", new Dictionary<string, string>()
+            {
+                { "tag",new HexBigInteger(blockNumber).HexValue },
+                { "index",$"0x{index:X}" }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<BscRpcTransactionJson> jsonResult = ObjectParse<BscRpcJson<BscRpcTransactionJson>>(resp);
+
+            return new BscscanSingleResult<BscRpcTransactionJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
+        }
+
+        /// <summary>
+        /// Returns the number of transactions performed by an address.
+        /// </summary>
+        /// <param name="address">the string representing the address to get transaction count</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<int> GetTransactionCount(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getTransactionCount", new Dictionary<string, string>()
+            {
+                { "address",address },
+                { "tag",tag.ToString().ToLower() }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<int>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = Convert.ToInt32(jsonResult.Result,16)
             };
         }
 
@@ -1439,9 +1493,27 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscRpcTransactionJson GetTransactionByBlockNumberAndIndex(long blockNumber, int index, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscRpcTransactionJson> GetTransactionByBlockNumberAndIndex(long blockNumber, int index, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetTransactionByBlockNumberAndIndex(blockNumber, index, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetTransactionByBlockNumberAndIndex),
+                    blockNumber.ToString(),
+                    index.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscRpcTransactionJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTransactionByBlockNumberAndIndex(blockNumber, index, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>
@@ -1453,9 +1525,27 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public int GetTransactionCount(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<int> GetTransactionCount(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetTransactionCount(address, tag, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetTransactionCount),
+                    address.ToString(),
+                    tag.ToString().ToLower(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<int> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetTransactionCount(address, tag, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>

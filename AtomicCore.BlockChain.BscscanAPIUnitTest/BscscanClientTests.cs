@@ -208,6 +208,22 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetTransactionByBlockNumberAndIndexTest()
+        {
+            var result = client.GetTransactionByBlockNumberAndIndex(10556486, 1);
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
+        public void GetTransactionCountTest()
+        {
+            var result = client.GetTransactionCount("0x4430b3230294D12c6AB2aAC5C2cd68E80B16b581");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         #endregion
 
 

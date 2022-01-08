@@ -126,7 +126,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
 
-        private byte[] SignTransaction2Byte(byte[] transaction, byte[] privateKey)
+        private static byte[] SignTransaction2Byte(byte[] transaction, byte[] privateKey)
         {
             var ecKey = new ECKey(privateKey, true);
             var transaction1 = Transaction.Parser.ParseFrom(transaction);

@@ -320,8 +320,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="offset">the number of transactions displayed per page</param>
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         private BscscanListResult<BscInternalTransactionJson> GetInternalTransactionByAddress(string address, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -347,8 +345,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         /// <param name="txhash">the string representing the transaction hash to check for internal transactions</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         private BscscanListResult<BscInternalEventJson> GetInternalTransactionByHash(string txhash, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -418,8 +414,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="offset">the number of transactions displayed per page</param>
         /// <param name="sort">the sorting preference, use asc to sort by ascending and desc to sort by descending</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         private BscscanListResult<BscBEP721TransactionJson> GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -448,8 +442,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="page">the integer page number, if pagination is enabled</param>
         /// <param name="offset">the number of transactions displayed per page</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         private BscscanListResult<BscMineRewardJson> GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -569,8 +561,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="timestamp">the integer representing the Unix timestamp in seconds.</param>
         /// <param name="closest">the closest available block to the provided timestamp, either before or after</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         private BscscanSingleResult<long> GetBlockNumberByTimestamp(long timestamp, BscClosest closest, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -737,8 +727,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="blockNumber">the block number</param>
         /// <param name="index">the position of the uncle's index in the block, in hex eg. 0x1</param>
         /// <param name="network">network</param>
-        /// <param name="cacheMode">cache mode</param>
-        /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
         private BscscanSingleResult<BscRpcTransactionJson> GetTransactionByBlockNumberAndIndex(long blockNumber, int index, BscNetwork network = BscNetwork.BscMainnet)
         {
@@ -1797,7 +1785,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// Returns the current Safe, Proposed and Fast gas prices. 
         /// </summary>
-        /// <param name="apikey">apikey</param>
         /// <param name="network">network</param>
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>

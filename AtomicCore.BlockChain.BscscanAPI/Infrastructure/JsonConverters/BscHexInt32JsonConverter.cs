@@ -32,7 +32,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
             string hex = (string)reader.Value;
             if (hex.StartsWith("0x", StringComparison.Ordinal))
-                hex = hex.Substring(2);
+                hex = hex[2..];
 
             int val;
             try

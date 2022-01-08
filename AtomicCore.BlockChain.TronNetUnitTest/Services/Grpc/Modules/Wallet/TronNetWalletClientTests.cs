@@ -19,7 +19,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         private readonly TronTestRecord _record;
         private readonly ITronNetWalletClient _wallet;
-        Wallet.WalletClient _cli;
+        readonly Wallet.WalletClient _cli;
 
         #endregion
 

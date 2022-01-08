@@ -192,6 +192,15 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetBlockTransactionCountByNumberTest()
+        {
+            var result = client.GetBlockTransactionCountByNumber(10556486);
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+
         #endregion
 
 

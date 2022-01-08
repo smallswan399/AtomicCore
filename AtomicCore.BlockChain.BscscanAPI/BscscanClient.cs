@@ -683,6 +683,32 @@ namespace AtomicCore.BlockChain.BscscanAPI
             };
         }
 
+        /// <summary>
+        /// Returns the number of transactions in a block.
+        /// </summary>
+        /// <param name="blockNumber">the block number</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        public BscscanSingleResult<int> GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_getBlockTransactionCountByNumber", new Dictionary<string, string>()
+            {
+                { "tag",new HexBigInteger(blockNumber).HexValue }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<int>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = Convert.ToInt32(jsonResult.Result, 16)
+            };
+        }
+
         #endregion
 
         #region Gas Tracker
@@ -1330,9 +1356,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public int GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<int> GetBlockTransactionCountByNumber(long blockNumber, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBlockTransactionCountByNumber(blockNumber, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBlockTransactionCountByNumber),
+                    blockNumber.ToString(),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<int> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBlockTransactionCountByNumber(blockNumber, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>

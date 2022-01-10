@@ -879,6 +879,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
             };
         }
 
+        /// <summary>
+        /// Returns the current price per gas in wei.
+        /// </summary>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<long> GasPrice(BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_gasPrice");
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<long>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = Convert.ToInt64(jsonResult.Result,16)
+            };
+        }
+
         #endregion
 
         #region Gas Tracker
@@ -1802,9 +1822,25 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public long GasPrice(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<long> GasPrice(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GasPrice(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GasPrice),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<long> cacheData);
+                if (!exists)
+                {
+                    cacheData = GasPrice(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>

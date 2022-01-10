@@ -933,6 +933,34 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
+        #region Tokens
+
+        /// <summary>
+        /// Returns the total supply of a BEP-20 token.
+        /// </summary>
+        /// <param name="contractaddress">the contract address of the BEP-20 token</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<decimal> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Stats, "tokensupply", new Dictionary<string, string>()
+            {
+                { "contractaddress",contractaddress }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<decimal>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = Convert.ToInt64(jsonResult.Result, 16)
+            };
+        }
+
+        #endregion
+
         #region Gas Tracker
 
         /// <summary>
@@ -1925,9 +1953,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public decimal GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<decimal> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBEP20TotalSupply(contractaddress, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBEP20TotalSupply),
+                    contractaddress,
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBEP20TotalSupply(contractaddress, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>
@@ -1938,7 +1983,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public decimal GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<decimal> GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             throw new NotImplementedException();
         }
@@ -1952,7 +1997,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public decimal GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<decimal> GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             throw new NotImplementedException();
         }

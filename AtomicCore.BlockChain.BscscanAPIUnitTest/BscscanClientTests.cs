@@ -154,18 +154,6 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
 
         #endregion
 
-        #region IBscGasTracker
-
-        [TestMethod()]
-        public void GetGasOracleTest()
-        {
-            var result = client.GetGasOracle();
-
-            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
-        }
-
-        #endregion
-
         #region IBscGethProxy
 
         [TestMethod()]
@@ -317,6 +305,29 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetBEP20BalanceOfTest()
+        {
+            var result = client.GetBEP20BalanceOf("0x89e73303049ee32919903c09e8de5629b84f59eb", "0xe9e7cea3dedca5984780bafc599bd69add087d56");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        #endregion
+
+        #region IBscGasTracker
+
+        [TestMethod()]
+        public void GetGasOracleTest()
+        {
+            var result = client.GetGasOracle();
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        #endregion
+
+        #region IBscStats
 
 
         #endregion

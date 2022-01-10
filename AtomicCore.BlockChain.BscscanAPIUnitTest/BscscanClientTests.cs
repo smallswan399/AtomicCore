@@ -296,8 +296,29 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+
         #endregion
 
+        #region IBscTokens
 
+        [TestMethod()]
+        public void GetBEP20TotalSupplyTest()
+        {
+            var result = client.GetBEP20TotalSupply("0xe9e7cea3dedca5984780bafc599bd69add087d56");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
+        public void GetBEP20CirculatingSupplyTest()
+        {
+            var result = client.GetBEP20CirculatingSupply("0xe9e7cea3dedca5984780bafc599bd69add087d56");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+
+
+        #endregion
     }
 }

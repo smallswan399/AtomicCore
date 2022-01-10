@@ -941,7 +941,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="contractaddress">the contract address of the BEP-20 token</param>
         /// <param name="network">network</param>
         /// <returns></returns>
-        private BscscanSingleResult<decimal> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet)
+        private BscscanSingleResult<BigInteger> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet)
         {
             string url = this.GetRestUrl(network, BscModule.Stats, "tokensupply", new Dictionary<string, string>()
             {
@@ -951,11 +951,35 @@ namespace AtomicCore.BlockChain.BscscanAPI
             string resp = this.RestGet(url);
             BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
 
-            return new BscscanSingleResult<decimal>()
+            return new BscscanSingleResult<BigInteger>()
             {
                 Status = BscscanJsonStatus.Success,
                 Message = string.Empty,
-                Result = Convert.ToInt64(jsonResult.Result, 16)
+                Result = BigInteger.Parse(jsonResult.Result)
+            };
+        }
+
+        /// <summary>
+        /// Returns the current circulating supply of a BEP-20 token. 
+        /// </summary>
+        /// <param name="contractaddress">the contract address of the BEP-20 token</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<BigInteger> GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Stats, "tokenCsupply", new Dictionary<string, string>()
+            {
+                { "contractaddress",contractaddress }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<BigInteger>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = BigInteger.Parse(jsonResult.Result)
             };
         }
 
@@ -1953,7 +1977,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<decimal> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BigInteger> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             if (cacheMode == BscscanCacheMode.None)
                 return GetBEP20TotalSupply(contractaddress, network);
@@ -1964,7 +1988,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
                     contractaddress,
                     network.ToString()
                 );
-                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<decimal> cacheData);
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BigInteger> cacheData);
                 if (!exists)
                 {
                     cacheData = GetBEP20TotalSupply(contractaddress, network);
@@ -1983,9 +2007,26 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<decimal> GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BigInteger> GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBEP20CirculatingSupply(contractaddress, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBEP20CirculatingSupply),
+                    contractaddress,
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BigInteger> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBEP20CirculatingSupply(contractaddress, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>
@@ -1997,7 +2038,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public BscscanSingleResult<decimal> GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BigInteger> GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             throw new NotImplementedException();
         }

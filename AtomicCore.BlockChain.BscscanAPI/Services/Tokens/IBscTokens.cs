@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.BscscanAPI
+﻿using System.Numerics;
+
+namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
     /// IBscTokens Interface
@@ -13,7 +15,7 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscscanSingleResult<decimal> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        BscscanSingleResult<BigInteger> GetBEP20TotalSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
 
         /// <summary>
         /// Returns the current circulating supply of a BEP-20 token. 
@@ -23,7 +25,7 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscscanSingleResult<decimal> GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        BscscanSingleResult<BigInteger> GetBEP20CirculatingSupply(string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
 
         /// <summary>
         /// Returns the current balance of a BEP-20 token of an address.
@@ -34,6 +36,6 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscscanSingleResult<decimal> GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        BscscanSingleResult<BigInteger> GetBEP20BalanceOf(string address, string contractaddress, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

@@ -282,6 +282,21 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void EstimateGasTest()
+        {
+            var result = client.EstimateGas(
+                "0x4e71d92d",
+                "0xEeee7341f206302f2216e39D715B96D8C6901A1C",
+                "0xff22",
+                "0x51da038cc",
+                "0x5f5e0ff"
+            );
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+
         #endregion
 
 

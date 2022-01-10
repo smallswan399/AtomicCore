@@ -895,7 +895,39 @@ namespace AtomicCore.BlockChain.BscscanAPI
             {
                 Status = BscscanJsonStatus.Success,
                 Message = string.Empty,
-                Result = Convert.ToInt64(jsonResult.Result,16)
+                Result = Convert.ToInt64(jsonResult.Result, 16)
+            };
+        }
+
+        /// <summary>
+        /// Makes a call or transaction, which won't be added to the blockchain and returns the gas used. 
+        /// </summary>
+        /// <param name="data">the hash of the method signature and encoded parameters</param>
+        /// <param name="to">the string representing the address to interact with</param>
+        /// <param name="value">the value sent in this transaction, in hex eg. 0xff22</param>
+        /// <param name="gasPrice">the gas price paid for each unit of gas, in wei</param>
+        /// <param name="gas">the amount of gas provided for the transaction, in hex eg. 0x5f5e0ff</param>
+        /// <param name="network">network</param>
+        /// <returns></returns>
+        private BscscanSingleResult<long> EstimateGas(string data, string to, string value, string gasPrice, string gas, BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Proxy, "eth_estimateGas", new Dictionary<string, string>()
+            {
+                { "data",data },
+                { "to",to },
+                { "value",value },
+                { "gas",gas },
+                { "gasPrice",gasPrice }
+            });
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<long>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = Convert.ToInt64(jsonResult.Result, 16)
             };
         }
 
@@ -1849,15 +1881,36 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="data">the hash of the method signature and encoded parameters</param>
         /// <param name="to">the string representing the address to interact with</param>
         /// <param name="value">the value sent in this transaction, in hex eg. 0xff22</param>
-        /// <param name="gas">the amount of gas provided for the transaction, in hex eg. 0x5f5e0ff</param>
         /// <param name="gasPrice">the gas price paid for each unit of gas, in wei</param>
+        /// <param name="gas">the amount of gas provided for the transaction, in hex eg. 0x5f5e0ff</param>
         /// <param name="network">network</param>
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        public long EstimateGas(string data, string to, string value, string gas, string gasPrice, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<long> EstimateGas(string data, string to, string value, string gasPrice, string gas, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return EstimateGas(data, to, value, gasPrice, gas, network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(EstimateGas),
+                    data,
+                    to,
+                    value,
+                    gasPrice,
+                    gas,
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<long> cacheData);
+                if (!exists)
+                {
+                    cacheData = EstimateGas(data, to, value, gasPrice, gas, network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         #endregion

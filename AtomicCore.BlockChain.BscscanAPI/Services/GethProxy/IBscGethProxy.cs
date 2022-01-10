@@ -144,12 +144,12 @@
         /// <param name="data">the hash of the method signature and encoded parameters</param>
         /// <param name="to">the string representing the address to interact with</param>
         /// <param name="value">the value sent in this transaction, in hex eg. 0xff22</param>
-        /// <param name="gas">the amount of gas provided for the transaction, in hex eg. 0x5f5e0ff</param>
         /// <param name="gasPrice">the gas price paid for each unit of gas, in wei</param>
+        /// <param name="gas">the amount of gas provided for the transaction, in hex eg. 0x5f5e0ff</param>
         /// <param name="network">network</param>
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        long EstimateGas(string data, string to, string value, string gas, string gasPrice, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        BscscanSingleResult<long> EstimateGas(string data, string to, string value, string gasPrice, string gas, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

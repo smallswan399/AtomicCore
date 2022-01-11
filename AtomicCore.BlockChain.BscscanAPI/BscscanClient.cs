@@ -125,47 +125,6 @@ namespace AtomicCore.BlockChain.BscscanAPI
         }
 
         /// <summary>
-        /// rest post request(Using HttpClient)
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="url"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private string RestPost<T>(string url, T data)
-        {
-            string resp;
-            try
-            {
-                string remoteUrl;
-                if (string.IsNullOrEmpty(this._agentGetTmp))
-                    remoteUrl = url;
-                else
-                {
-                    string encodeUrl = UrlEncoder.UrlEncode(url);
-                    remoteUrl = string.Format(this._agentGetTmp, encodeUrl);
-                }
-
-                using HttpClient cli = new HttpClient();
-                HttpResponseMessage response = cli.PostAsync(remoteUrl, new StringContent(
-                    Newtonsoft.Json.JsonConvert.SerializeObject(data),
-                    Encoding.UTF8,
-                    APPLICATIONJSON
-                )).Result;
-
-                if (!response.IsSuccessStatusCode)
-                    throw new HttpRequestException($"StatusCode -> {response.StatusCode}, ");
-
-                resp = response.Content.ReadAsStringAsync().Result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return resp;
-        }
-
-        /// <summary>
         /// json -> check error propertys
         /// </summary>
         /// <param name="resp"></param>

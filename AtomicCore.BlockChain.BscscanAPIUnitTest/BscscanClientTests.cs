@@ -337,6 +337,22 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+        [TestMethod()]
+        public void GetBscValidatorListTest()
+        {
+            var result = client.GetBscValidatorList();
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
+        public void GetBNBLastPriceTest()
+        {
+            var result = client.GetBNBLastPrice();
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         #endregion
     }
 }

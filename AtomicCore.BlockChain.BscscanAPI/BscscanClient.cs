@@ -1032,6 +1032,52 @@ namespace AtomicCore.BlockChain.BscscanAPI
 
         #endregion
 
+        #region Stats
+
+        /// <summary>
+        /// Returns the current amount of BNB in circulation.
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private BscscanSingleResult<BigInteger> GetBNBTotalSupply(BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Stats, "bnbsupply");
+
+            string resp = this.RestGet(url);
+            BscRpcJson<string> jsonResult = ObjectParse<BscRpcJson<string>>(resp);
+
+            return new BscscanSingleResult<BigInteger>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = BigInteger.Parse(jsonResult.Result)
+            };
+        }
+
+        /// <summary>
+        /// Returns the top 21 validators for the Binance Smart Chain.
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private BscscanListResult<BscValidatorJson> GetBscValidatorList(BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Stats, "validators");
+
+            string resp = this.RestGet(url);
+            BscRpcJson<List<BscValidatorJson>> jsonResult = ObjectParse<BscRpcJson<List<BscValidatorJson>>>(resp);
+
+            return new BscscanListResult<BscValidatorJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
+        }
+
+        #endregion
+
         #endregion
 
         #region IBscscanClient
@@ -2127,26 +2173,70 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <summary>
         /// Returns the current amount of BNB in circulation.
         /// </summary>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="expiredSeconds"></param>
         /// <returns></returns>
-        public decimal GetBNBTotalSupply()
+        /// <exception cref="NotImplementedException"></exception>
+        public BscscanSingleResult<BigInteger> GetBNBTotalSupply(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBNBTotalSupply(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBNBTotalSupply),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BigInteger> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBNBTotalSupply(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>
         /// Returns the top 21 validators for the Binance Smart Chain.
         /// </summary>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="expiredSeconds"></param>
         /// <returns></returns>
-        public List<string> GetBscValidatorList()
+        /// <exception cref="NotImplementedException"></exception>
+        public BscscanListResult<BscValidatorJson> GetBscValidatorList(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBscValidatorList(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBscValidatorList),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanListResult<BscValidatorJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBscValidatorList(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         /// <summary>
         /// Returns the latest price of 1 BNB.
         /// </summary>
+        /// <param name="network"></param>
+        /// <param name="cacheMode"></param>
+        /// <param name="expiredSeconds"></param>
         /// <returns></returns>
-        public decimal GetBNBLastPrice()
+        /// <exception cref="NotImplementedException"></exception>
+        public BscscanSingleResult<decimal> GetBNBLastPrice(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
             throw new NotImplementedException();
         }

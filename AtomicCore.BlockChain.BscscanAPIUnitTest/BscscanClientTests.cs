@@ -329,6 +329,13 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
 
         #region IBscStats
 
+        [TestMethod()]
+        public void GetBNBTotalSupplyTest()
+        {
+            var result = client.GetBNBTotalSupply();
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
 
         #endregion
     }

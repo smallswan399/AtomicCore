@@ -1076,6 +1076,27 @@ namespace AtomicCore.BlockChain.BscscanAPI
             };
         }
 
+        /// <summary>
+        /// Returns the latest price of 1 BNB.
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private BscscanSingleResult<BscLastPriceJson> GetBNBLastPrice(BscNetwork network = BscNetwork.BscMainnet)
+        {
+            string url = this.GetRestUrl(network, BscModule.Stats, "bnbsupply");
+
+            string resp = this.RestGet(url);
+            BscRpcJson<BscLastPriceJson> jsonResult = ObjectParse<BscRpcJson<BscLastPriceJson>>(resp);
+
+            return new BscscanSingleResult<BscLastPriceJson>()
+            {
+                Status = BscscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = jsonResult.Result
+            };
+        }
+
         #endregion
 
         #endregion
@@ -2236,9 +2257,25 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <param name="expiredSeconds"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public BscscanSingleResult<decimal> GetBNBLastPrice(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
+        public BscscanSingleResult<BscLastPriceJson> GetBNBLastPrice(BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10)
         {
-            throw new NotImplementedException();
+            if (cacheMode == BscscanCacheMode.None)
+                return GetBNBLastPrice(network);
+            else
+            {
+                string cacheKey = BscscanCacheProvider.GenerateCacheKey(
+                    nameof(GetBNBLastPrice),
+                    network.ToString()
+                );
+                bool exists = BscscanCacheProvider.Get(cacheKey, out BscscanSingleResult<BscLastPriceJson> cacheData);
+                if (!exists)
+                {
+                    cacheData = GetBNBLastPrice(network);
+                    BscscanCacheProvider.Set(cacheKey, cacheData, cacheMode, TimeSpan.FromSeconds(expiredSeconds));
+                }
+
+                return cacheData;
+            }
         }
 
         #endregion

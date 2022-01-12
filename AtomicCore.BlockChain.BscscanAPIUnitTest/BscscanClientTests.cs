@@ -37,6 +37,15 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }
 
+
+        [TestMethod()]
+        public void GetBalanceRawTest()
+        {
+            var result = client.GetBalanceRaw("0x0702383c8dd23081d1962c72EeDB72902c731940");
+
+            Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
+        }
+
         [TestMethod()]
         public void GetBalanceListTest()
         {
@@ -354,5 +363,6 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         }
 
         #endregion
+
     }
 }

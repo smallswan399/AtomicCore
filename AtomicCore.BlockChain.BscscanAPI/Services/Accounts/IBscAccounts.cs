@@ -1,4 +1,6 @@
-﻿namespace AtomicCore.BlockChain.BscscanAPI
+﻿using System.Numerics;
+
+namespace AtomicCore.BlockChain.BscscanAPI
 {
     /// <summary>
     /// IBscAccounts Interface
@@ -17,9 +19,20 @@
         BscscanSingleResult<decimal> GetBalance(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
 
         /// <summary>
+        /// Get Balance Raw
+        /// </summary>
+        /// <param name="address">the string representing the address to check for balance</param>
+        /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
+        /// <param name="network">network</param>
+        /// <param name="cacheMode">cache mode</param>
+        /// <param name="expiredSeconds">expired seconds</param>
+        /// <returns></returns>
+        BscscanSingleResult<BigInteger> GetBalanceRaw(string address, BscBlockTag tag = BscBlockTag.Latest, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+
+        /// <summary>
         /// Get Balance List
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="address">the string representing the address to check for balance</param>
         /// <param name="tag">the string pre-defined block parameter, either earliest, pending or latest</param>
         /// <param name="network">network</param>
         /// <param name="cacheMode">cache mode</param>
@@ -123,6 +136,6 @@
         /// <param name="cacheMode">cache mode</param>
         /// <param name="expiredSeconds">expired seconds</param>
         /// <returns></returns>
-        BscscanListResult<BscMineRewardJson> GetMinedBlockListByAddress(string address,string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
+        BscscanListResult<BscMineRewardJson> GetMinedBlockListByAddress(string address, string blocktype, int page = 1, int offset = 10000, BscNetwork network = BscNetwork.BscMainnet, BscscanCacheMode cacheMode = BscscanCacheMode.None, int expiredSeconds = 10);
     }
 }

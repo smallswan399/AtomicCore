@@ -10,8 +10,6 @@
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore,BlockChain,EtherscanAPI</PackageTags>
     <Version>1.1.5</Version>
-    <AssemblyVersion>1.1.5</AssemblyVersion>
-    <FileVersion>1.1.5</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

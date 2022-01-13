@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System.Numerics;
+using System;
+using System.Text.RegularExpressions;
 
 namespace AtomicCore.BlockChain.BscscanAPI
 {
@@ -8,6 +9,17 @@ namespace AtomicCore.BlockChain.BscscanAPI
     /// </summary>
     public class BscBEP20TransactionJson
     {
+        #region Variables
+
+        /// <summary>
+        /// transfer method id
+        /// </summary>
+        public const string TRANSFER_METHOD_ID = "0xa9059cbb";
+
+        #endregion
+
+        #region Propertys
+
         /// <summary>
         /// blockNumber
         /// </summary>
@@ -121,5 +133,54 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// </summary>
         [JsonProperty("confirmations")]
         public long Confirmations { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// get toAddress
+        /// </summary>
+        /// <returns></returns>
+        public string GetToAddress()
+        {
+            if (string.IsNullOrEmpty(TxInput))
+                return string.Empty;
+            if (TxInput.Length != 138)
+                return string.Empty;
+            if (!TxInput.StartsWith(TRANSFER_METHOD_ID, StringComparison.OrdinalIgnoreCase))
+                return string.Empty;
+
+            return $"0x{TxInput.Substring(34, 40)}";
+        }
+
+        /// <summary>
+        /// get bep-20 transfer amount
+        /// </summary>
+        /// <returns></returns>
+        public decimal GetTransferAmount()
+        {
+            if (string.IsNullOrEmpty(TxInput))
+                return decimal.Zero;
+            if (TxInput.Length != 138)
+                return decimal.Zero;
+            if (!TxInput.StartsWith(TRANSFER_METHOD_ID, StringComparison.OrdinalIgnoreCase))
+                return decimal.Zero;
+
+            string hex = TxInput.Substring(74, 64);
+            if (string.IsNullOrEmpty(hex))
+                return decimal.Zero;
+
+            hex = Regex.Replace(hex, @"^0+", string.Empty, RegexOptions.IgnoreCase);
+            if (string.IsNullOrEmpty(hex))
+                return decimal.Zero;
+
+            if (TokenDecimal > 0)
+                return Nethereum.Util.UnitConversion.Convert.FromWei(new Nethereum.Hex.HexTypes.HexBigInteger(hex), this.TokenDecimal);
+            else
+                return (decimal)new Nethereum.Hex.HexTypes.HexBigInteger(hex).Value;
+        }
+
+        #endregion
     }
 }

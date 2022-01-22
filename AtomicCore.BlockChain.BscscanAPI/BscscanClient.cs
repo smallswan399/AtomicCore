@@ -55,7 +55,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         #region Private Methods
 
         /// <summary>
-        /// 根据网络获取基础请求地址
+        /// get base url
         /// </summary>
         /// <param name="network"></param>
         /// <returns></returns>
@@ -366,16 +366,20 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscBEP20TransactionJson> GetBEP20TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Account, "tokentx", new Dictionary<string, string>()
+            //basic params
+            var jsonParams = new Dictionary<string, string>()
             {
                 { "address",address },
-                { "contractaddress",contractaddress },
                 { "startblock",startblock.ToString() },
                 { "endblock",endblock.ToString() },
                 { "page",page.ToString() },
                 { "offset",offset.ToString() },
                 { "sort",sort.ToString().ToLower() }
-            });
+            };
+            if (!string.IsNullOrEmpty(contractaddress))
+                jsonParams.Add("contractaddress", contractaddress);
+
+            string url = this.GetRestUrl(network, BscModule.Account, "tokentx", jsonParams);
 
             string resp = this.RestGet(url);
             BscscanListResult<BscBEP20TransactionJson> jsonResult = ObjectParse<BscscanListResult<BscBEP20TransactionJson>>(resp);
@@ -406,16 +410,20 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <returns></returns>
         private BscscanListResult<BscBEP721TransactionJson> GetBEP721TransactionByAddress(string address, string contractaddress, int startblock = 0, int endblock = int.MaxValue, int page = 1, int offset = 10000, BscSort sort = BscSort.Desc, BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Account, "tokennfttx", new Dictionary<string, string>()
+            //basic params
+            var jsonParams = new Dictionary<string, string>()
             {
                 { "address",address },
-                { "contractaddress",contractaddress },
                 { "startblock",startblock.ToString() },
                 { "endblock",endblock.ToString() },
                 { "page",page.ToString() },
                 { "offset",offset.ToString() },
                 { "sort",sort.ToString().ToLower() }
-            });
+            };
+            if (!string.IsNullOrEmpty(contractaddress))
+                jsonParams.Add("contractaddress", contractaddress);
+
+            string url = this.GetRestUrl(network, BscModule.Account, "tokennfttx", jsonParams);
 
             string resp = this.RestGet(url);
             BscscanListResult<BscBEP721TransactionJson> jsonResult = ObjectParse<BscscanListResult<BscBEP721TransactionJson>>(resp);

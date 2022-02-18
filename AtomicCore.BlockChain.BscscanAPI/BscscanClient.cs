@@ -1081,7 +1081,7 @@ namespace AtomicCore.BlockChain.BscscanAPI
         /// <exception cref="NotImplementedException"></exception>
         private BscscanSingleResult<BscLastPriceJson> GetBNBLastPrice(BscNetwork network = BscNetwork.BscMainnet)
         {
-            string url = this.GetRestUrl(network, BscModule.Stats, "bnbsupply");
+            string url = this.GetRestUrl(network, BscModule.Stats, "bnbprice");
 
             string resp = this.RestGet(url);
             BscRpcJson<BscLastPriceJson> jsonResult = ObjectParse<BscRpcJson<BscLastPriceJson>>(resp);

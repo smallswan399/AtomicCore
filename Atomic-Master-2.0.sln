@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore", "AtomicCore\AtomicCore.csproj", "{BBD9F726-4A9D-4525-8388-5211CCDDC0FE}"
 EndProject
@@ -65,9 +65,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.Block
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.BlockCypherAPIUnitTest", "AtomicCore.BlockChain.BlockCypherAPIUnitTest\AtomicCore.BlockChain.BlockCypherAPIUnitTest.csproj", "{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.BscscanAPI", "AtomicCore.BlockChain.BscscanAPI\AtomicCore.BlockChain.BscscanAPI.csproj", "{C26081AD-C830-4951-AA0B-093B17F81C97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.BscscanAPI", "AtomicCore.BlockChain.BscscanAPI\AtomicCore.BlockChain.BscscanAPI.csproj", "{C26081AD-C830-4951-AA0B-093B17F81C97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtomicCore.BlockChain.BscscanAPIUnitTest", "AtomicCore.BlockChain.BscscanAPIUnitTest\AtomicCore.BlockChain.BscscanAPIUnitTest.csproj", "{EF51876E-D82B-4900-B449-A4737520F9EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.BlockChain.BscscanAPIUnitTest", "AtomicCore.BlockChain.BscscanAPIUnitTest\AtomicCore.BlockChain.BscscanAPIUnitTest.csproj", "{EF51876E-D82B-4900-B449-A4737520F9EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtomicCore.UnitTest", "AtomicCore.UnitTest\AtomicCore.UnitTest.csproj", "{A4E39AD1-20F3-4F64-AE16-6292D3852C9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -183,6 +185,10 @@ Global
 		{EF51876E-D82B-4900-B449-A4737520F9EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF51876E-D82B-4900-B449-A4737520F9EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF51876E-D82B-4900-B449-A4737520F9EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4E39AD1-20F3-4F64-AE16-6292D3852C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4E39AD1-20F3-4F64-AE16-6292D3852C9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4E39AD1-20F3-4F64-AE16-6292D3852C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E39AD1-20F3-4F64-AE16-6292D3852C9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -215,6 +221,7 @@ Global
 		{9FB772E1-5FB5-4EDB-BAAA-D9025E2B7CD6} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 		{C26081AD-C830-4951-AA0B-093B17F81C97} = {5E75EB7D-DC21-47DF-9299-5D0F653D87C2}
 		{EF51876E-D82B-4900-B449-A4737520F9EF} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
+		{A4E39AD1-20F3-4F64-AE16-6292D3852C9A} = {35F57B42-FA48-4D50-8B93-C0C49BA67BD2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {942DB662-B41D-4454-8FF9-2F118FA2B541}

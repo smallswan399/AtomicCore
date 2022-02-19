@@ -66,15 +66,18 @@ namespace AtomicCore
         /// </summary>
         /// <param name="base64"></param>
         /// <returns></returns>
-        public static string ConvertToOriginal(string base64)
+        public static string ConvertToOriginal(string base64, System.Text.Encoding encoding = null)
         {
             if (string.IsNullOrEmpty(base64))
                 throw new ArgumentNullException("base64");
 
-            char[] charBuffer = base64.Replace(' ', '+').ToCharArray();
+            char[] charBuffer = base64.Replace('-', '+').Replace('_', '/').PadRight(4 * ((base64.Length + 3) / 4), '=').ToCharArray();
             byte[] bytes = Convert.FromBase64CharArray(charBuffer, 0, charBuffer.Length);
 
-            return (new UnicodeEncoding()).GetString(bytes);
+            if(null == encoding)
+                encoding = System.Text.Encoding.UTF8;
+
+            return encoding.GetString(bytes);
         }
 
         /// <summary>
@@ -82,12 +85,12 @@ namespace AtomicCore
         /// </summary>
         /// <param name="base64">Base64编码文本</param>
         /// <returns></returns>
-        public static Byte[] ConvertToBuffer(string base64)
+        public static byte[] ConvertToBuffer(string base64)
         {
             if (string.IsNullOrEmpty(base64))
                 throw new ArgumentNullException("base64");
 
-            char[] charBuffer = base64.Replace(' ', '+').ToCharArray();
+            char[] charBuffer = base64.Replace('-', '+').Replace('_', '/').PadRight(4 * ((base64.Length + 3) / 4), '=').ToCharArray();
             byte[] bytes = Convert.FromBase64CharArray(charBuffer, 0, charBuffer.Length);
 
             return bytes;
@@ -103,7 +106,7 @@ namespace AtomicCore
             if (string.IsNullOrEmpty(base64))
                 throw new ArgumentNullException("base64");
 
-            char[] charBuffer = base64.Replace(' ', '+').ToCharArray();
+            char[] charBuffer = base64.Replace('-', '+').Replace('_', '/').PadRight(4 * ((base64.Length + 3) / 4), '=').ToCharArray();
             byte[] bytes = Convert.FromBase64CharArray(charBuffer, 0, charBuffer.Length);
             MemoryStream ms = new MemoryStream(bytes);
 

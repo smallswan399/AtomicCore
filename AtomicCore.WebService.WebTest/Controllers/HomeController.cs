@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AtomicCore.WebService.WebTest.Controllers
 {
@@ -10,9 +8,14 @@ namespace AtomicCore.WebService.WebTest.Controllers
     {
         public IActionResult Index()
         {
-            var app = ConfigurationJsonManager.AppSettings;
+            var appsetting = ConfigurationJsonManager.AppSettings;
+            var connection = ConfigurationJsonManager.ConnectionStrings;
 
-            return Ok(DateTime.Now.ToString());
+            string testKey = appsetting["TestKey"];
+
+            string dbs = string.Join("||||", connection.Select(s => s.Value.ConnectionString));
+
+            return Ok($"{testKey}-----{dbs}-----{DateTime.Now}");
         }
     }
 }

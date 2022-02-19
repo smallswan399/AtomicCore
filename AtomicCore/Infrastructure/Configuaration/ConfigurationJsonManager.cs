@@ -15,14 +15,44 @@ namespace AtomicCore
         #region Variable
 
         /// <summary>
+        /// env key - ASPNETCORE_ENVIRONMENT
+        /// </summary>
+        private const string c_env_development_key = "ASPNETCORE_ENVIRONMENT";
+
+        /// <summary>
+        /// env value - ASPNETCORE_ENVIRONMENT
+        /// </summary>
+        private const string c_env_development_val = "Development";
+
+        /// <summary>
         /// appsettings.json
         /// </summary>
-        private const string c_appsettingsFileName = "appsettings.json";
+        private const string c_appsettings_main_fileName = "appsettings.json";
+
+        /// <summary>
+        /// appsettings.Development.json
+        /// </summary>
+        private const string c_appsettings_development_fileName = "appsettings.Development.json";
+
+        /// <summary>
+        /// appsettings.Production.json
+        /// </summary>
+        private const string c_appsettings_production_fileName = "appsettings.Production.json";
 
         /// <summary>
         /// connections.json
         /// </summary>
-        private const string c_connectionsFileName = "connections.json";
+        private const string c_connections_main_fileName = "connections.json";
+
+        /// <summary>
+        /// connections.Development.json
+        /// </summary>
+        private const string c_connections_development_fileName = "connections.Development.json";
+
+        /// <summary>
+        /// connections.Production.json
+        /// </summary>
+        private const string c_connections_production_fileName = "connections.Production.json";
 
         /// <summary>
         /// connections.json -> connectionString
@@ -71,43 +101,91 @@ namespace AtomicCore
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ResetRootDir(string dirPath = null)
         {
+            //runtime environment
+            bool isDevelopment = false;
+            string env_val = Environment.GetEnvironmentVariable(c_env_development_key);
+            if (c_env_development_val.Equals(env_val, StringComparison.OrdinalIgnoreCase))
+                isDevelopment = true;
+
+            //base dir
             string baseDir = System.IO.Directory.GetCurrentDirectory();
             if (!string.IsNullOrEmpty(dirPath))
                 baseDir = Path.Combine(baseDir, dirPath);
 
-            string appsettingJsonPath = Path.Combine(baseDir, c_appsettingsFileName);
-            string connectionsJsonPath = Path.Combine(baseDir, c_connectionsFileName);
+            //main config setting
+            string appsetting_main_path = Path.Combine(baseDir, c_appsettings_main_fileName);
+            string connections_main_path = Path.Combine(baseDir, c_connections_main_fileName);
 
-            bool appsetting_existed = true;
-            bool connection_existed = true;
-            Console.WriteLine($"[ConfigurationJsonManager] --> check appsetting.json file existed, the path is '{appsettingJsonPath}'");
-            Console.WriteLine($"[ConfigurationJsonManager] --> check connection.json file existed, the path is '{connectionsJsonPath}'");
+            //extra appsetting configuration
+            string appsetting_extra_path;
+            if (isDevelopment)
+                appsetting_extra_path = Path.Combine(baseDir, c_appsettings_development_fileName);
+            else
+                appsetting_extra_path = Path.Combine(baseDir, c_appsettings_production_fileName);
 
-            if (!File.Exists(appsettingJsonPath))
+            //extra connection configuration
+            string connection_extra_path;
+            if (isDevelopment)
+                connection_extra_path = Path.Combine(baseDir, c_connections_development_fileName);
+            else
+                connection_extra_path = Path.Combine(baseDir, c_connections_production_fileName);
+
+            //check config file exists
+            bool appsetting_main_existed = true;
+            bool appsetting_extra_existed = true;
+            bool connection_main_existed = true;
+            bool connection_extra_existed = true;
+            //Console.WriteLine($"[ConfigurationJsonManager] --> check appsetting.json file existed, the path is '{appsetting_main_path}'");
+            //Console.WriteLine($"[ConfigurationJsonManager] --> check appsetting.{(isDevelopment ? "Development" : "Production")}.json file existed, the path is '{appsetting_extra_path}'");
+            //Console.WriteLine($"[ConfigurationJsonManager] --> check connection.json file existed, the path is '{connections_main_path}'");
+            //Console.WriteLine($"[ConfigurationJsonManager] --> check connection.{(isDevelopment ? "Development" : "Production")}.json file existed, the path is '{connection_extra_path}'");
+            if (!File.Exists(appsetting_main_path))
             {
-                Console.WriteLine($"[ConfigurationJsonManager] --> The '{c_appsettingsFileName}' file does not exist, please check if the file is added to the project and set to 'copy if newer'!");
-                appsetting_existed = false;
+                Console.WriteLine($"[ConfigurationJsonManager] --> The '{c_appsettings_main_fileName}' file does not exist, please check if the file is added to the project and set to 'copy if newer'!");
+                appsetting_main_existed = false;
             }
-            if (!File.Exists(connectionsJsonPath))
+            if (!File.Exists(appsetting_extra_path))
             {
-                Console.WriteLine($"[ConfigurationJsonManager]  --> The {c_connectionsFileName} file does not exist, please check if the file is added in the project and set to 'copy if newer'!");
-                connection_existed = false;
+                Console.WriteLine($"[ConfigurationJsonManager] --> The 'appsetting.{(isDevelopment ? "Development" : "Production")}.json' file does not exist, please check if the file is added to the project and set to 'copy if newer'!");
+                appsetting_extra_existed = false;
+            }
+            if (!File.Exists(connections_main_path))
+            {
+                Console.WriteLine($"[ConfigurationJsonManager]  --> The {c_connections_main_fileName} file does not exist, please check if the file is added in the project and set to 'copy if newer'!");
+                connection_main_existed = false;
+            }
+            if (!File.Exists(connection_extra_path))
+            {
+                Console.WriteLine($"[ConfigurationJsonManager]  --> The connections.{(isDevelopment ? "Development" : "Production")}.json file does not exist, please check if the file is added in the project and set to 'copy if newer'!");
+                connection_extra_existed = false;
             }
 
-            if (appsetting_existed)
-                AppSettings = new ConfigurationBuilder()
+            //loading appsettings
+            if (appsetting_main_existed)
+            {
+                var appSettingBuilder = new ConfigurationBuilder()
                         .SetBasePath(baseDir)
-                        .AddJsonFile(c_appsettingsFileName, optional: true, reloadOnChange: true)
-                        .Build();
+                        .AddJsonFile(c_appsettings_main_fileName, optional: true, reloadOnChange: true);
+                if (appsetting_extra_existed)
+                    appSettingBuilder.AddJsonFile(appsetting_extra_path, optional: true, reloadOnChange: true);
 
-            if (connection_existed)
+                AppSettings = appSettingBuilder.Build();
+            }
+
+            //loading connection
+            if (connection_main_existed)
             {
+                var connectionBuilder = new ConfigurationBuilder()
+                        .SetBasePath(baseDir)
+                        .AddJsonFile(c_connections_main_fileName, optional: true, reloadOnChange: true);
+                if (connection_extra_existed)
+                    connectionBuilder.AddJsonFile(connection_extra_path, optional: true, reloadOnChange: true);
+
+                var connectionRoot = connectionBuilder.Build();
+
                 ConnectionStrings = new Dictionary<string, ConnectionStringJsonSettings>();
-                IConfiguration connectionJsonConf = new ConfigurationBuilder()
-                        .SetBasePath(baseDir)
-                        .AddJsonFile(c_connectionsFileName, optional: true, reloadOnChange: true)
-                        .Build();
-                List<IConfigurationSection> childSections = connectionJsonConf.GetChildren().ToList();
+
+                List<IConfigurationSection> childSections = connectionRoot.GetChildren().ToList();
                 if (null != childSections && childSections.Any())
                 {
                     ConnectionStringJsonSettings jsonSetting;

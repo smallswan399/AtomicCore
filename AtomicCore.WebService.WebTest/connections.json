@@ -1,0 +1,6 @@
+{
+    "By_ABC": {
+        "connectionString": "Data Source=127.0.0.1,9527;Initial Catalog=By_ABC;User ID=sa;Password=123456",
+        "providerName": "Mssql2008"
+    }
+}

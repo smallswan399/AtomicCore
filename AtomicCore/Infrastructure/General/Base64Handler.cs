@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 
 namespace AtomicCore
 {
@@ -14,12 +13,14 @@ namespace AtomicCore
         /// </summary>
         /// <param name="origText">普通文本</param>
         /// <returns></returns>
-        public static string ConvertToBase64(string origText)
+        public static string ConvertToBase64(string origText, System.Text.Encoding encoding = null)
         {
             if (string.IsNullOrEmpty(origText))
                 throw new ArgumentNullException("origText");
+            if (null == encoding)
+                encoding = System.Text.Encoding.UTF8;
 
-            byte[] binBuffer = (new UnicodeEncoding()).GetBytes(origText.Replace(' ', '+'));
+            byte[] binBuffer = encoding.GetBytes(origText.Replace(' ', '+'));
             int len = (int)Math.Ceiling(binBuffer.Length / 3d) * 4;
             char[] charBuffer = new char[len];
             Convert.ToBase64CharArray(binBuffer, 0, binBuffer.Length, charBuffer, 0);
@@ -70,12 +71,11 @@ namespace AtomicCore
         {
             if (string.IsNullOrEmpty(base64))
                 throw new ArgumentNullException("base64");
+            if (null == encoding)
+                encoding = System.Text.Encoding.UTF8;
 
             char[] charBuffer = base64.Replace('-', '+').Replace('_', '/').PadRight(4 * ((base64.Length + 3) / 4), '=').ToCharArray();
             byte[] bytes = Convert.FromBase64CharArray(charBuffer, 0, charBuffer.Length);
-
-            if(null == encoding)
-                encoding = System.Text.Encoding.UTF8;
 
             return encoding.GetString(bytes);
         }

@@ -160,30 +160,37 @@ namespace AtomicCore
                 connection_extra_existed = false;
             }
 
+            //initial property value
+            ConnectionStrings = new Dictionary<string, ConnectionStringJsonSettings>();
+
             //loading appsettings
             if (appsetting_main_existed)
             {
+                //load configuration builder and compile
                 var appSettingBuilder = new ConfigurationBuilder()
                         .SetBasePath(baseDir)
                         .AddJsonFile(c_appsettings_main_fileName, optional: true, reloadOnChange: true);
                 if (appsetting_extra_existed)
                     appSettingBuilder.AddJsonFile(appsetting_extra_path, optional: true, reloadOnChange: true);
 
+                //set 'AppSettings' property value
                 AppSettings = appSettingBuilder.Build();
+
+                //
             }
 
             //loading connection
             if (connection_main_existed)
             {
+                //load configuration builder
                 var connectionBuilder = new ConfigurationBuilder()
                         .SetBasePath(baseDir)
                         .AddJsonFile(c_connections_main_fileName, optional: true, reloadOnChange: true);
                 if (connection_extra_existed)
                     connectionBuilder.AddJsonFile(connection_extra_path, optional: true, reloadOnChange: true);
 
+                //configuration compile
                 var connectionRoot = connectionBuilder.Build();
-
-                ConnectionStrings = new Dictionary<string, ConnectionStringJsonSettings>();
 
                 List<IConfigurationSection> childSections = connectionRoot.GetChildren().ToList();
                 if (null != childSections && childSections.Any())

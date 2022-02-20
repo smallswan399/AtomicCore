@@ -11,7 +11,8 @@ namespace AtomicCore
         /// <summary>
         /// 将普通文本转换成Base64编码的文本
         /// </summary>
-        /// <param name="origText">普通文本</param>
+        /// <param name="origText">原文本字符串</param>
+        /// <param name="encoding">编码类型</param>
         /// <returns></returns>
         public static string ConvertToBase64(string origText, System.Text.Encoding encoding = null)
         {
@@ -32,7 +33,7 @@ namespace AtomicCore
         /// <summary>
         /// 将Byte[]转换成Base64编码文本
         /// </summary>
-        /// <param name="buffer">Byte[]</param>
+        /// <param name="buffer">原字节数组</param>
         /// <returns></returns>
         public static string ConvertToBase64(byte[] buffer)
         {
@@ -50,7 +51,7 @@ namespace AtomicCore
         /// <summary>
         /// 将Stream流转换成Base64编码文本
         /// </summary>
-        /// <param name="stream">文件流</param>
+        /// <param name="stream">原文件流</param>
         /// <returns></returns>
         public static string ConvertToBase64(Stream stream)
         {
@@ -65,7 +66,8 @@ namespace AtomicCore
         /// <summary>
         /// 将Base64编码的文本转换成普通文本
         /// </summary>
-        /// <param name="base64"></param>
+        /// <param name="base64">base64字符串</param>
+        /// <param name="encoding">编码类型</param>
         /// <returns></returns>
         public static string ConvertToOriginal(string base64, System.Text.Encoding encoding = null)
         {

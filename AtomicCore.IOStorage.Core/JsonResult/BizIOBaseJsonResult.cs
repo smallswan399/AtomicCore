@@ -10,13 +10,17 @@ namespace AtomicCore.IOStorage.Core
         #region Constructors
 
         /// <summary>
-        /// 默认构造函数
+        /// Constructors
         /// </summary>
         public BizIOBaseJsonResult()
         {
 
         }
 
+        /// <summary>
+        /// Constructors
+        /// </summary>
+        /// <param name="errorMsg"></param>
         public BizIOBaseJsonResult(string errorMsg)
         {
             this.Code = BizIOStateCode.Failure;

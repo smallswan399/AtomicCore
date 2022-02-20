@@ -5,10 +5,25 @@
     /// </summary>
     public enum AssetType
     {
+        /// <summary>
+        /// BTC
+        /// </summary>
         BTC,
+        /// <summary>
+        /// ETH
+        /// </summary>
         ETH,
+        /// <summary>
+        /// BCH
+        /// </summary>
         BCH,
+        /// <summary>
+        /// BTCTEST
+        /// </summary>
         BTCTEST,
+        /// <summary>
+        /// BCHTEST
+        /// </summary>
         BCHTEST
     }
 }

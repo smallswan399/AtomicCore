@@ -11,6 +11,9 @@ namespace AtomicCore.BlockChain.BlockCypherAPI
     /// </summary>
     public class BlockCypherListWalletsJson
     {
+        /// <summary>
+        /// WalletNames
+        /// </summary>
         [JsonProperty("wallet_names")]
         public string WalletNames { get; set; }
     }

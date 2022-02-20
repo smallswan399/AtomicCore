@@ -531,7 +531,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
 
 
         /// <summary>
-        /// 20.Get a single contract's abi & byteCode
+        /// 20.Get a single contract's abi byteCode
         /// </summary>
         /// <param name="contract">contract address</param>
         /// <returns></returns>

@@ -8,11 +8,34 @@ namespace AtomicCore.BlockChain.OMNINet
     /// </summary>
     public static class SigHashType
     {
+        /// <summary>
+        /// ALL
+        /// </summary>
         public const string All = "ALL";
+
+        /// <summary>
+        /// NONE
+        /// </summary>
         public const string None = "NONE";
+
+        /// <summary>
+        /// SINGLE
+        /// </summary>
         public const string Single = "SINGLE";
+
+        /// <summary>
+        /// ALL|ANYONECANPAY
+        /// </summary>
         public const string AllAnyoneCanPay = "ALL|ANYONECANPAY";
+
+        /// <summary>
+        /// NONE|ANYONECANPAY
+        /// </summary>
         public const string NoneAnyoneCanPay = "NONE|ANYONECANPAY";
+
+        /// <summary>
+        /// SINGLE|ANYONECANPAY
+        /// </summary>
         public const string SingleAnyoneCanPay = "SINGLE|ANYONECANPAY";
     }
 }

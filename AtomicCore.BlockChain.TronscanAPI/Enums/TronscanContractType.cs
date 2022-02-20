@@ -111,7 +111,7 @@
         CreateSmartContract = 30,
 
         /// <summary>
-        /// Trigger Smart Contract(eg:Trc20 && 721)
+        /// Trigger Smart Contract(eg:Trc20 and 721)
         /// </summary>
         TriggerSmartContract = 31,
 

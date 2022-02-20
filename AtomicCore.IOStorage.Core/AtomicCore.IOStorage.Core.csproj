@@ -9,7 +9,8 @@
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore.IOStorage.Core</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.6</Version>
+    <Version>1.1.7</Version>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AtomicCore.Infrastructure.General
+namespace AtomicCore
 {
     /// <summary>
     /// UUID Handler

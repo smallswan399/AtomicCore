@@ -145,22 +145,12 @@
         /// <returns></returns>
         TronChainNodeListJson GetChainNodes();
 
-
-
-
-
-
-
         /// <summary>
-        /// 20.Get a single contract's abi & byteCode
+        /// 20.Get a single contract's abi and byteCode
         /// </summary>
         /// <param name="contract">contract address</param>
         /// <returns></returns>
         TronContractABICodeJson GetContractABI(string contract);
-
-
-
-
 
         /// <summary>
         /// 39.List the TRC-20 transfers related to a specified account

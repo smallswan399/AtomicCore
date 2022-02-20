@@ -9,7 +9,8 @@
     <Authors>171331668@qq.com</Authors>
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
     <PackageTags>AtomicCore,BlockChain,EtherscanAPI</PackageTags>
-    <Version>1.1.6</Version>
+    <Version>1.1.7</Version>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,9 @@
 
 namespace AtomicCore.BlockChain.OMNINet
 {
-    //  Note: Do not alter the capitalization of the enum members as they are being cast as-is to the RPC server
+    /// <summary>
+    /// Note: Do not alter the capitalization of the enum members as they are being cast as-is to the RPC server
+    /// </summary>
     public enum NodeAction
     {
         /// <summary>

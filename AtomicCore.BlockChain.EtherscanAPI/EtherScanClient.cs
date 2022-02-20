@@ -215,7 +215,6 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
         /// <summary>
         /// 获取网络手续费（三档）
-        /// https://api-cn.etherscan.com/api?module=gastracker&action=gasoracle
         /// </summary>
         /// <returns></returns>
         public EtherscanSingleResult<EthGasOracleJsonResult> GetGasOracle()

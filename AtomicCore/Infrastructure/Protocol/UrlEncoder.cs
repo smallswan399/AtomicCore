@@ -230,7 +230,7 @@ namespace AtomicCore
             return false;
         }
 
-        private static string UrlEncodeSpaces(string str) => str != null && str.Contains(' ') ? str.Replace(" ", "%20") : str;
+        //private static string UrlEncodeSpaces(string str) => str != null && str.Contains(' ') ? str.Replace(" ", "%20") : str;
 
         private static char ToCharLower(int value)
         {
@@ -243,6 +243,9 @@ namespace AtomicCore
             return (char)value;
         }
 
+        /// <summary>
+        /// CharToHexLookup
+        /// </summary>
         public static ReadOnlySpan<byte> CharToHexLookup => new byte[]
         {
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 15

@@ -139,6 +139,7 @@ namespace AtomicCore
         /// 下载图片流至内存缓冲字节数组中
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="contenType"></param>
         /// <returns></returns>
         public static byte[] DownImage(string url, ref string contenType)
         {
@@ -228,7 +229,7 @@ namespace AtomicCore
         /// <summary>
         /// 图片ContentType
         /// </summary>
-        private static Dictionary<string, string> s_imgContentTypeDics = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> s_imgContentTypeDics = new Dictionary<string, string>()
         {
             {".fax"," image/fax " },
             {".gif","image/gif" },

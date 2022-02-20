@@ -175,8 +175,6 @@ namespace AtomicCore
 
                 //set 'AppSettings' property value
                 AppSettings = appSettingBuilder.Build();
-
-                //
             }
 
             //loading connection

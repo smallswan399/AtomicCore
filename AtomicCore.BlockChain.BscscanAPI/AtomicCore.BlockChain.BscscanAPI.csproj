@@ -9,8 +9,8 @@
     <Copyright>Copyright 2022</Copyright>
     <Authors>171331668@qq.com</Authors>
     <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
-    <PackageTags>AtomicCore,BlockChain，BscChain,BscscanAPI</PackageTags>
-    <Version>1.0.5</Version>
+    <PackageTags>AtomicCore,BlockChain,BscChain,BscscanAPI</PackageTags>
+    <Version>1.0.6</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -3,6 +3,14 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Description>https://www.blockcypher.com/dev/bitcoin/?shell#restful-resources</Description>
+    <Copyright>Copyright 2022</Copyright>
+    <Authors>171331668@qq.com</Authors>
+    <PackageProjectUrl>https://github.com/dannyhu/AtomicCore</PackageProjectUrl>
+    <PackageTags>AtomicCore,BlockChain,Bitcoin,Dash,Dogecoin,Litecoin</PackageTags>
+    <Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

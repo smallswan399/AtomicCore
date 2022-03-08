@@ -115,6 +115,17 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         }
 
         [TestMethod()]
+        public void GetAccountResourceTest()
+        {
+            var resource = _cli.GetAccountResource(new Account()
+            {
+                Address = ByteString.CopyFrom(Base58Encoder.DecodeFromBase58Check("TPqgW6WJurCtjCvrvy6PLY46sKbyiwSFg7"))
+            }, headers: _wallet.GetHeaders());
+
+            Assert.IsTrue(resource.AssetNetLimit.Count >= 0);
+        }
+
+        [TestMethod()]
         public void GetTransactionByIdTest()
         {
             string txid = "31125a86fc2a1934a0fd9b1e9b238df23e29173745c11bb65741269dfb02690f";

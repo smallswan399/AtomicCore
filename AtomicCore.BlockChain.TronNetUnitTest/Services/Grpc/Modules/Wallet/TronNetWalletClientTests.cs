@@ -45,7 +45,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetLastBlockTest()
         {
-            Block block = _cli.GetNowBlock(new EmptyMessage(), headers: _wallet.GetHeaders());
+            Block block = _cli.GetNowBlock(new EmptyMessage());
 
             Assert.IsTrue(block.BlockHeader.RawData.Number > 0);
         }
@@ -55,7 +55,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             Block block = _cli.GetBlockByNum(new NumberMessage()
             {
-                Num = 1
+                Num = 38982180
             }, headers: _wallet.GetHeaders());
 
             string blockHash = block.GetBlockHash();

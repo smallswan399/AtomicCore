@@ -14,18 +14,18 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             services.AddTronNet(x =>
             {
                 x.Network = TronNetwork.MainNet;
-                x.FullNodeRestAPI = "https://api.trongrid.io";
-                x.SolidityNodeRestAPI = "https://api.trongrid.io";
+                x.FullNodeRestAPI = "http://18.178.138.73:8090";
+                x.SolidityNodeRestAPI = "http://18.178.138.73:8090";
                 x.SuperNodeRestAPI = "http://47.241.20.47:8090";
-                x.EventSrvAPI = "https://api.trongrid.io";
+                x.EventSrvAPI = "http://18.178.138.73:8090";
                 x.Channel = new GrpcChannelOption 
                 { 
-                    Host = "grpc.trongrid.io", 
+                    Host = "18.178.138.73", 
                     Port = 50051 
                 };
                 x.SolidityChannel = new GrpcChannelOption 
                 { 
-                    Host = "grpc.trongrid.io", 
+                    Host = "18.178.138.73", 
                     Port = 50052 
                 };
                 x.ApiKey = "30213a7e-bc62-4f79-9a78-f651d3234047";
@@ -45,7 +45,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 x.SuperNodeRestAPI = "https://api.shasta.trongrid.io";
                 x.EventSrvAPI = "https://api.shasta.trongrid.io";
                 x.Channel = new GrpcChannelOption 
-                { 
+                {
                     Host = "grpc.shasta.trongrid.io", 
                     Port = 50051 
                 };

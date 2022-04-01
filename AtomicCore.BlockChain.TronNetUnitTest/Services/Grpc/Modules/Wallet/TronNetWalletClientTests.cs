@@ -128,15 +128,42 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetTransactionByIdTest()
         {
-            string txid = "31125a86fc2a1934a0fd9b1e9b238df23e29173745c11bb65741269dfb02690f";
+            string txid = "5c73f7e846928e44235d5188a56b028b3e59cfd5ac75f9d625783d254db957e2";
 
+            //获取交易信息
             Transaction txInfo = _cli.GetTransactionById(new BytesMessage()
             {
                 Value = ByteString.CopyFrom(txid.HexToByteArray())
             }, headers: _wallet.GetHeaders());
+            int txSize = txInfo.CalculateSize();
+
+            //拓展交易数据
+            var txExt = new TransactionExtention()
+            {
+                Result = new Return()
+                {
+                    Code = Return.Types.response_code.Success,
+                    Message = ByteString.CopyFrom("SUCCESS", Encoding.UTF8),
+                    Result = true
+                },
+                Transaction = txInfo,
+                Txid = ByteString.CopyFrom(txInfo.GetTxid().HexToByteArray())
+            };
+            txExt.ConstantResult.Add(ByteString.CopyFrom("SUCCESS", Encoding.UTF8));
+            int extSize = txExt.CalculateSize();
 
             string tx_id = txInfo.GetTxid();
             Assert.IsTrue(!string.IsNullOrEmpty(tx_id));
+
+            //获取交易票据
+            TransactionInfo txReceipt = _cli.GetTransactionInfoById(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(txid.HexToByteArray())
+            }, headers: _wallet.GetHeaders());
+            if (null != txReceipt && txReceipt.BlockNumber > 0)
+            {
+                var tx_fee = txReceipt.Fee;
+            }
 
             //解析RawData数据
             long bh = txInfo.RawData.RefBlockNum;

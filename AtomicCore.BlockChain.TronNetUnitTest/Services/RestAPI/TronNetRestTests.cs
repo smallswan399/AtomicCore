@@ -481,14 +481,19 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetContractTest()
         {
-            //TestNet
-            TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
-            ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+            var mainnetAPI = _record.TronClient.GetRestAPI();
+            var usdt = mainnetAPI.GetContract("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t");
+            Assert.IsTrue(usdt.IsAvailable());
 
-            //abi index 26 
-            TronNetContractMetaDataJson result = testRestAPI.GetContract("TB7whW3J9jb5Amoi4R6WgTtMbWPeqMBjSw");
 
-            Assert.IsTrue(result.IsAvailable());
+            ////TestNet
+            //TronTestRecord shatasnet = TronTestServiceExtension.GetTestRecord();
+            //ITronNetRest testRestAPI = shatasnet.TronClient.GetRestAPI();
+
+            ////abi index 26 
+            //TronNetContractMetaDataJson result = testRestAPI.GetContract("TB7whW3J9jb5Amoi4R6WgTtMbWPeqMBjSw");
+
+            //Assert.IsTrue(result.IsAvailable());
         }
 
         #endregion

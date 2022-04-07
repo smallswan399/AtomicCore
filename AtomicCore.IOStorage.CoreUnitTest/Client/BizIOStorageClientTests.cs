@@ -28,11 +28,12 @@ namespace AtomicCore.IOStorage.Core.Tests
             {
                 fs.Seek(0, SeekOrigin.Begin);
 
-                BizIOStorageClient client = new BizIOStorageClient("http://192.168.0.11:8777");
+                BizIOStorageClient client = new BizIOStorageClient("http://1.13.6.53:8777");
                 result = client.UploadFile(new BizIOUploadFileInput()
                 {
-                    //APIKey = "a6e2f27ee1f544cc889898e4397f7b07",
+                    APIKey = "a6e2f27ee1f544cc889898e4397f7b07",
                     BizFolder = "Test",
+                    SubFolder = "dog",
                     FileStream = fs,
                     FileName = "test.jpg"
                 });

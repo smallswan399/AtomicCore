@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -90,6 +91,26 @@ namespace AtomicCore.BlockChain.TronNet
             TronNetECKey key = new TronNetECKey(privateKey.HexToByteArray(), true, network);
 
             return key.GetPublicAddress();
+        }
+
+        /// <summary>
+        /// tron address valid
+        /// </summary>
+        /// <param name="tronAddress"></param>
+        /// <param name="startWithChar"></param>
+        /// <returns></returns>
+        public static bool ValidTronAddress(string tronAddress, string startWithChar = "T")
+        {
+            if (string.IsNullOrEmpty(tronAddress))
+                return false;
+            if (!tronAddress.StartsWith(startWithChar))
+                return false;
+            if (!Regex.IsMatch(tronAddress, @"^[0-9a-zA-Z]{34}$", RegexOptions.None))
+                return false;
+
+            byte[] tronAddressBytes = Base58Encoder.DecodeFromBase58Check(tronAddress);
+
+            return null != tronAddressBytes;
         }
 
         /// <summary>

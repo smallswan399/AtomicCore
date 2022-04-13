@@ -12,6 +12,8 @@ namespace AtomicCore.IOStorage.Core.Tests
     [TestClass()]
     public class BizIOStorageClientTests
     {
+        private const string endpointUrl = "http://127.0.0.1:8777";
+
         static BizIOStorageClientTests()
         {
             AtomicCore.AtomicKernel.Initialize();
@@ -28,7 +30,7 @@ namespace AtomicCore.IOStorage.Core.Tests
             {
                 fs.Seek(0, SeekOrigin.Begin);
 
-                BizIOStorageClient client = new BizIOStorageClient("http://1.13.6.53:8777");
+                BizIOStorageClient client = new BizIOStorageClient(endpointUrl);
                 result = client.UploadFile(new BizIOUploadFileInput()
                 {
                     APIKey = "a6e2f27ee1f544cc889898e4397f7b07",
@@ -53,7 +55,7 @@ namespace AtomicCore.IOStorage.Core.Tests
             {
                 fs.Seek(0, SeekOrigin.Begin);
 
-                BizIOStorageClient client = new BizIOStorageClient("http://1.13.6.53:8777");
+                BizIOStorageClient client = new BizIOStorageClient(endpointUrl);
                 result = client.UploadFile(new BizIOUploadFileInput()
                 {
                     APIKey = "a6e2f27ee1f544cc889898e4397f7b07",

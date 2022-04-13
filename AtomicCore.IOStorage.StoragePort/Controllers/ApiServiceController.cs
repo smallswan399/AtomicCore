@@ -173,7 +173,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 return Ok(new BizIOSingleUploadJsonResult(string.Format("最大上传不得超过【{0}】M", _pathProvider.FileSizeLimit / (1024 * 1024))));
 
             string fileExt = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (null != _pathProvider.PermittedExtensions && !_pathProvider.PermittedExtensions.Contains(fileExt))
+            if (null != _pathProvider.PermittedExtensions && !_pathProvider.PermittedExtensions.Select(s => s.Trim()).Any(d => d.Equals(fileExt, StringComparison.OrdinalIgnoreCase)))
                 return Ok(new BizIOSingleUploadJsonResult(string.Format("非法的文件格式 -> 当前格式为【{0}】", fileExt)));
 
             //读取文件流并保存数据

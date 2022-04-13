@@ -195,13 +195,11 @@ namespace AtomicCore.IOStorage.StoragePort
         private static bool IsValidFileExtensionAndSignature(string fileName, Stream data, string[] permittedExtensions)
         {
             if (string.IsNullOrEmpty(fileName) || data == null || data.Length == 0)
-            {
                 return false;
-            }
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
 
-            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Select(s => s.Trim()).Any(d => d.Equals(ext, StringComparison.OrdinalIgnoreCase)))
             {
                 return false;
             }

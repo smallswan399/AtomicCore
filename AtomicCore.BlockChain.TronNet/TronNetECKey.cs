@@ -108,9 +108,17 @@ namespace AtomicCore.BlockChain.TronNet
             if (!Regex.IsMatch(tronAddress, @"^[0-9a-zA-Z]{34}$", RegexOptions.None))
                 return false;
 
-            byte[] tronAddressBytes = Base58Encoder.DecodeFromBase58Check(tronAddress);
+            byte[] tronAddressBytes;
+            try
+            {
+                tronAddressBytes = Base58Encoder.DecodeFromBase58Check(tronAddress);
+            }
+            catch
+            {
+                return false;
+            }
 
-            return null != tronAddressBytes;
+            return null != tronAddressBytes && tronAddressBytes.Length > 0;
         }
 
         /// <summary>

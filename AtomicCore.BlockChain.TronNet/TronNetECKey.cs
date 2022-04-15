@@ -96,29 +96,63 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// tron address valid
         /// </summary>
-        /// <param name="tronAddress"></param>
-        /// <param name="startWithChar"></param>
+        /// <param name="tronAddress">tron address</param>
+        /// <param name="startWithChar">first character of address</param>
         /// <returns></returns>
         public static bool ValidTronAddress(string tronAddress, string startWithChar = "T")
         {
             if (string.IsNullOrEmpty(tronAddress))
-                return false;
+                throw new ArgumentNullException(nameof(tronAddress));
+            if (string.IsNullOrEmpty(startWithChar))
+                startWithChar = "T";
             if (!tronAddress.StartsWith(startWithChar))
                 return false;
             if (!Regex.IsMatch(tronAddress, @"^[0-9a-zA-Z]{34}$", RegexOptions.None))
                 return false;
 
-            byte[] tronAddressBytes;
+            byte[] vchData;
             try
             {
-                tronAddressBytes = Base58Encoder.DecodeFromBase58Check(tronAddress);
+                vchData = Base58Encoder.DecodeFromBase58Check(tronAddress);
             }
             catch
             {
                 return false;
             }
 
-            return null != tronAddressBytes && tronAddressBytes.Length > 0;
+            return null != vchData && vchData.Length > 0;
+        }
+
+        /// <summary>
+        /// tron address valid
+        /// </summary>
+        /// <param name="tronAddress">tron address</param>
+        /// <param name="startWithChar">first character of address</param>
+        /// <param name="vchData">true: address bytes ,false : null</param>
+        /// <returns></returns>
+        public static bool ValidTronAddress(string tronAddress, string startWithChar, out byte[] vchData)
+        {
+            vchData = null;
+
+            if (string.IsNullOrEmpty(tronAddress))
+                throw new ArgumentNullException(nameof(tronAddress));
+            if (string.IsNullOrEmpty(startWithChar))
+                startWithChar = "T";
+            if (!tronAddress.StartsWith(startWithChar))
+                return false;
+            if (!Regex.IsMatch(tronAddress, @"^[0-9a-zA-Z]{34}$", RegexOptions.None))
+                return false;
+
+            try
+            {
+                vchData = Base58Encoder.DecodeFromBase58Check(tronAddress);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return null != vchData && vchData.Length > 0;
         }
 
         /// <summary>

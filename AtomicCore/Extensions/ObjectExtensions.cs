@@ -86,6 +86,9 @@ namespace AtomicCore.Extensions
         {
             if (propery.Body is MemberExpression member)
                 return member.Member.Name;
+            if (propery.Body is UnaryExpression unary)
+                if (unary.Operand is MemberExpression operand)
+                    return operand.Member.Name;
 
             throw new Exception($"'propery' is not MemberExpression Lambda");
         }

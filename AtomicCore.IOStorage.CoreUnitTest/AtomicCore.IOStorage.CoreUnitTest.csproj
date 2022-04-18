@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AtomicCore" Version="1.1.7" />
+    <PackageReference Include="AtomicCore.IOStorage.Core" Version="1.1.7" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
@@ -15,11 +17,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AtomicCore.IOStorage.Core\AtomicCore.IOStorage.Core.csproj" />
-    <ProjectReference Include="..\AtomicCore\AtomicCore.csproj" />
   </ItemGroup>
 
 </Project>

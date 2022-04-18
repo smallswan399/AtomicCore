@@ -12,7 +12,7 @@ namespace AtomicCore.IOStorage.Core.Tests
     [TestClass()]
     public class BizIOStorageClientTests
     {
-        private const string endpointUrl = "http://127.0.0.1:8777";
+        private const string endpointUrl = "http://1.13.6.53:8777";
 
         static BizIOStorageClientTests()
         {

@@ -213,23 +213,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
         #region IEtherScanClient Methods
 
-        /// <summary>
-        /// 获取网络手续费（三档）
-        /// </summary>
-        /// <returns></returns>
-        public EtherscanSingleResult<EthGasOracleJsonResult> GetGasOracle()
-        {
-            //拼接URL
-            string url = this.CreateRestUrl("gastracker", "gasoracle");
-
-            //请求API
-            string resp = this.RestGet(url);
-
-            //解析JSON
-            EtherscanSingleResult<EthGasOracleJsonResult> jsonResult = SingleParse<EthGasOracleJsonResult>(resp);
-
-            return jsonResult;
-        }
+        #region IEtherAccounts
 
         /// <summary>
         /// 获取地址余额(若数额超过decimal的最大值会抛出数据异常)
@@ -452,6 +436,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             return jsonResult;
         }
 
+        #endregion
+
+        #region IEtherContracts
+
         /// <summary>
         /// 获取合约ABI接口
         /// </summary>
@@ -476,6 +464,29 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             return jsonResult;
         }
 
+        #endregion
+
+        #region IEtherGasTracker
+
+        /// <summary>
+        /// 获取网络手续费（三档）
+        /// </summary>
+        /// <returns></returns>
+        public EtherscanSingleResult<EthGasOracleJsonResult> GetGasOracle()
+        {
+            //拼接URL
+            string url = this.CreateRestUrl("gastracker", "gasoracle");
+
+            //请求API
+            string resp = this.RestGet(url);
+
+            //解析JSON
+            EtherscanSingleResult<EthGasOracleJsonResult> jsonResult = SingleParse<EthGasOracleJsonResult>(resp);
+
+            return jsonResult;
+        }
+
+        #endregion
 
         #endregion
     }

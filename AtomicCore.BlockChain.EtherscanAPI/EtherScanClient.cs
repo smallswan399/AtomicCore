@@ -489,11 +489,29 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         #region IEtherProxy
 
         /// <summary>
+        /// Returns the number of most recent block
+        /// </summary>
+        /// <returns></returns>
+        public long GetBlockNumber()
+        {
+            //拼接URL
+            StringBuilder urlBuilder = new StringBuilder(this.CreateRestUrl("proxy", "eth_blockNumber"));
+
+            //请求API
+            string resp = this.RestGet(urlBuilder.ToString());
+
+            //解析JSON
+            EtherscanProxyResult proxyResult = ParseRpcResponse(resp);
+
+            return Convert.ToInt64(proxyResult.Result, 16);
+        }
+
+        /// <summary>
         /// Returns the number of transactions performed by an address.
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public EtherscanSingleResult<long> GetTransactionCount(string address)
+        public long GetTransactionCount(string address)
         {
             //基础判断
             if (string.IsNullOrEmpty(address))
@@ -508,10 +526,8 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
             //解析JSON
             EtherscanProxyResult proxyResult = ParseRpcResponse(resp);
-            if (string.IsNullOrEmpty(proxyResult.Result))
-                return new EtherscanSingleResult<long>(EtherscanJsonStatus.Failure, "rpc error");
 
-            return new EtherscanSingleResult<long>(EtherscanJsonStatus.Success, string.Empty, Convert.ToInt64(proxyResult.Result, 16));
+            return Convert.ToInt64(proxyResult.Result, 16);
         }
 
         #endregion

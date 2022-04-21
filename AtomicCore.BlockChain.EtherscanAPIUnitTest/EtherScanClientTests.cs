@@ -66,7 +66,10 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         [TestMethod()]
         public void GetERC20TransactionsTest()
         {
-            EtherscanListResult<EthErc20TransactionJsonResult> result = this._client.GetERC20Transactions("0xcF62baF1237124d11740D4c89eF088C501FA102A", "0xA2b4C0Af19cC16a6CfAcCe81F192B024d625817D");
+            EtherscanListResult<EthErc20TransactionJsonResult> result = this._client.GetERC20Transactions(
+                "0x849A02be4c2ec8BbD06052C5A0Cd51147994Ad96",
+                "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+            );
 
             Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
         }
@@ -80,11 +83,19 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         }
 
         [TestMethod()]
+        public void GetBlockNumberTest()
+        {
+            var result = this._client.GetBlockNumber();
+
+            Assert.IsTrue(result >= 0);
+        }
+
+        [TestMethod()]
         public void GetTransactionCountTest()
         {
-            EtherscanSingleResult<long> result = this._client.GetTransactionCount("0xa9C1de6B74bF9ed9710871bc3274b7E2fB12F363");
+            var result = this._client.GetTransactionCount("0xa9C1de6B74bF9ed9710871bc3274b7E2fB12F363");
 
-            Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
+            Assert.IsTrue(result >= 0);
         }
     }
 }

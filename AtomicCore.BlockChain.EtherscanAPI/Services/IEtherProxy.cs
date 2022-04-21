@@ -6,10 +6,16 @@
     public interface IEtherProxy
     {
         /// <summary>
+        /// Returns the number of most recent block
+        /// </summary>
+        /// <returns></returns>
+        long GetBlockNumber();
+
+        /// <summary>
         /// Returns the number of transactions performed by an address.
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        EtherscanSingleResult<long> GetTransactionCount(string address);
+        long GetTransactionCount(string address);
     }
 }

@@ -506,18 +506,25 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// Returns the number of most recent block
         /// </summary>
         /// <returns></returns>
-        public long GetBlockNumber()
+        public EtherscanSingleResult<long> GetBlockNumber()
         {
             //拼接URL
             StringBuilder urlBuilder = new StringBuilder(this.CreateRestUrl("proxy", "eth_blockNumber"));
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            string url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanProxyResult proxyResult = ParseRpcResponse(resp);
 
-            return Convert.ToInt64(proxyResult.Result, 16);
+            return new EtherscanSingleResult<long>()
+            {
+                Status = EtherscanJsonStatus.Success,
+                Message = string.Empty,
+                Url = url,
+                Result = Convert.ToInt64(proxyResult.Result, 16)
+            };
         }
 
         /// <summary>
@@ -525,7 +532,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public long GetTransactionCount(string address)
+        public EtherscanSingleResult<long> GetTransactionCount(string address)
         {
             //基础判断
             if (string.IsNullOrEmpty(address))
@@ -536,12 +543,19 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             urlBuilder.AppendFormat(c_addressTemp, address);
 
             //请求API
+            string url = urlBuilder.ToString();
             string resp = this.RestGet(urlBuilder.ToString());
 
             //解析JSON
             EtherscanProxyResult proxyResult = ParseRpcResponse(resp);
 
-            return Convert.ToInt64(proxyResult.Result, 16);
+            return new EtherscanSingleResult<long>()
+            {
+                Status = EtherscanJsonStatus.Success,
+                Message = string.Empty,
+                Result = Convert.ToInt64(proxyResult.Result, 16),
+                Url = url
+            };
         }
 
         #endregion

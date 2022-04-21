@@ -87,7 +87,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         {
             var result = this._client.GetBlockNumber();
 
-            Assert.IsTrue(result >= 0);
+            Assert.IsTrue(result.Result>= 0);
         }
 
         [TestMethod()]
@@ -95,7 +95,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         {
             var result = this._client.GetTransactionCount("0xa9C1de6B74bF9ed9710871bc3274b7E2fB12F363");
 
-            Assert.IsTrue(result >= 0);
+            Assert.IsTrue(result.Result >= 0);
         }
     }
 }

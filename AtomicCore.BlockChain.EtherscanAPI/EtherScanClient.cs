@@ -209,6 +209,26 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             return jsonResult;
         }
 
+        /// <summary>
+        /// 解析RPC代理返回
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        private EtherscanProxyResult ParseRpcResponse(string resp)
+        {
+            EtherscanProxyResult jsonResult;
+            try
+            {
+                jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject<EtherscanProxyResult>(resp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return jsonResult;
+        }
+
         #endregion
 
         #region IEtherScanClient Methods
@@ -462,6 +482,36 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             EtherscanSingleResult<string> jsonResult = SingleParse<string>(resp);
 
             return jsonResult;
+        }
+
+        #endregion
+
+        #region IEtherProxy
+
+        /// <summary>
+        /// Returns the number of transactions performed by an address.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public EtherscanSingleResult<long> GetTransactionCount(string address)
+        {
+            //基础判断
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException("address");
+
+            //拼接URL
+            StringBuilder urlBuilder = new StringBuilder(this.CreateRestUrl("proxy", "eth_getTransactionCount"));
+            urlBuilder.AppendFormat(c_addressTemp, address);
+
+            //请求API
+            string resp = this.RestGet(urlBuilder.ToString());
+
+            //解析JSON
+            EtherscanProxyResult proxyResult = ParseRpcResponse(resp);
+            if (string.IsNullOrEmpty(proxyResult.Result))
+                return new EtherscanSingleResult<long>(EtherscanJsonStatus.Failure, "rpc error");
+
+            return new EtherscanSingleResult<long>(EtherscanJsonStatus.Success, string.Empty, Convert.ToInt64(proxyResult.Result, 16));
         }
 
         #endregion

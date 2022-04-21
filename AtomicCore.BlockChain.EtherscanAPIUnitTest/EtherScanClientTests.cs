@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using AtomicCore.BlockChain.EtherscanAPI;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AtomicCore.BlockChain.EtherscanAPI.Tests
 {
@@ -74,6 +75,14 @@ namespace AtomicCore.BlockChain.EtherscanAPI.Tests
         public void GetContractAbiTest()
         {
             EtherscanSingleResult<string> result = this._client.GetContractAbi("0xfeffbc959961b6e24cbaf8a91a6ca6abd1c3ffc5");
+
+            Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
+        }
+
+        [TestMethod()]
+        public void GetTransactionCountTest()
+        {
+            EtherscanSingleResult<long> result = this._client.GetTransactionCount("0xa9C1de6B74bF9ed9710871bc3274b7E2fB12F363");
 
             Assert.IsTrue(result.Status == EtherscanJsonStatus.Success);
         }

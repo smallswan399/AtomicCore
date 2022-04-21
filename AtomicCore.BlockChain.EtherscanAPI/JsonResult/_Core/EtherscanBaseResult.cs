@@ -54,6 +54,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
         [JsonProperty("message")]
         public string Message { get; set; }
 
+        /// <summary>
+        /// rest url
+        /// </summary>
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
         #endregion
     }
 }

@@ -261,7 +261,8 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             urlBuilder.Append(c_latestTag);
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            string url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanSingleResult<BigInteger> jsonResult = SingleParse<BigInteger>(resp);
@@ -271,6 +272,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 {
                     Status = jsonResult.Status,
                     Message = jsonResult.Message,
+                    Url = url,
                     Result = decimal.Zero
                 };
             }
@@ -291,6 +293,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             {
                 Status = jsonResult.Status,
                 Message = jsonResult.Message,
+                Url = url,
                 Result = balance
             };
         }
@@ -320,7 +323,8 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             urlBuilder.Append(c_latestTag);
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            string url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanSingleResult<BigInteger> jsonResult = SingleParse<BigInteger>(resp);
@@ -330,6 +334,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 {
                     Status = jsonResult.Status,
                     Message = jsonResult.Message,
+                    Url = url,
                     Result = BigInteger.Zero
                 };
             }
@@ -338,6 +343,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             {
                 Status = jsonResult.Status,
                 Message = jsonResult.Message,
+                Url = url,
                 Result = jsonResult.Result
             };
         }
@@ -371,10 +377,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 urlBuilder.AppendFormat("&offset={0}", limit);
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanListResult<EthNormalTransactionJsonResult> jsonResult = ListParse<EthNormalTransactionJsonResult>(resp);
+            jsonResult.Url = url;
 
             return jsonResult;
         }
@@ -408,10 +416,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 urlBuilder.AppendFormat("&offset={0}", limit);
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanListResult<EthInternalTransactionJsonResult> jsonResult = ListParse<EthInternalTransactionJsonResult>(resp);
+            jsonResult.Url = url;
 
             return jsonResult;
         }
@@ -448,10 +458,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
                 urlBuilder.AppendFormat("&contractaddress={0}", contract);
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanListResult<EthErc20TransactionJsonResult> jsonResult = ListParse<EthErc20TransactionJsonResult>(resp);
+            jsonResult.Url = url;
 
             return jsonResult;
         }
@@ -476,10 +488,12 @@ namespace AtomicCore.BlockChain.EtherscanAPI
             urlBuilder.AppendFormat(c_addressTemp, address);
 
             //请求API
-            string resp = this.RestGet(urlBuilder.ToString());
+            string url = urlBuilder.ToString();
+            string resp = this.RestGet(url);
 
             //解析JSON
             EtherscanSingleResult<string> jsonResult = SingleParse<string>(resp);
+            jsonResult.Url = url;
 
             return jsonResult;
         }
@@ -548,6 +562,7 @@ namespace AtomicCore.BlockChain.EtherscanAPI
 
             //解析JSON
             EtherscanSingleResult<EthGasOracleJsonResult> jsonResult = SingleParse<EthGasOracleJsonResult>(resp);
+            jsonResult.Url = url;
 
             return jsonResult;
         }

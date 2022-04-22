@@ -37,7 +37,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// <param name="pathProvider"></param>
         public ApiServiceController(IBizPathSrvProvider pathProvider)
         {
-            this._pathProvider = pathProvider;
+            _pathProvider = pathProvider;
         }
 
         #endregion

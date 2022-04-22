@@ -1,22 +1,27 @@
-﻿# syntax=docker/dockerfile:1
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["AtomicCore.IOStorage.StoragePort/AtomicCore.IOStorage.StoragePort.csproj", "AtomicCore.IOStorage.StoragePort/"]
+RUN dotnet restore "AtomicCore.IOStorage.StoragePort/AtomicCore.IOStorage.StoragePort.csproj"
+COPY . .
+WORKDIR "/src/AtomicCore.IOStorage.StoragePort"
+RUN dotnet build "AtomicCore.IOStorage.StoragePort.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "AtomicCore.IOStorage.StoragePort.csproj" -c Release -o /app/publish
+
+FROM base AS final
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore "AtomicCore.IOStorage.StoragePort.csproj"
+ENV IOSTORAGE_APPTOKEN=
+ENV IOSTORAGE_SAVEROOTDIR=
+ENV IOSTORAGE_ALLOWFILEEXTS=
+ENV IOSTORAGE_ALLOWFILEMBSIZELIMIT=
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish "AtomicCore.IOStorage.StoragePort.csproj" -c Release -o out
-
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
-WORKDIR /app
-ENV IOSTORAGE_APPTOKEN=a6e2f27ee1f544cc889898e4397f7b07
-ENV IOSTORAGE_SAVEROOTDIR=uploads
-ENV IOSTORAGE_ALLOWFILEEXTS=.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx
-ENV IOSTORAGE_ALLOWFILEMBSIZELIMIT=50
-ENV Logging__Console__FormatterName=simple
-COPY --from=build-env /app/out .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AtomicCore.IOStorage.StoragePort.dll"]

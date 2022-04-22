@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
@@ -67,6 +66,18 @@ namespace AtomicCore.IOStorage.StoragePort
 
             #endregion
 
+            #region Appsetting配置参数实例化（单例模型）
+
+            services.AddSingleton(BizIOStorageConfig.Create(Configuration));
+
+            #endregion
+
+            #region PathSrv接口注入
+
+            services.AddSingleton<IBizPathSrvProvider, BizPathSrvProvider>();
+
+            #endregion
+
             #region 运行环境部署（Linux or IIS）
 
             //如果部署在linux系统上，需要加上下面的配置：
@@ -87,14 +98,6 @@ namespace AtomicCore.IOStorage.StoragePort
                 // Handle requests up to 50 MB
                 options.MaxRequestBodySize = 52428800;
             });
-
-            #endregion
-
-            #region 加载读取配置项（AppSettings）
-
-            IConfigurationSection ioStorageSec = Configuration.GetSection("IOStorage");
-            services.Configure<BizIOStorageConfig>(ioStorageSec);
-            services.AddSingleton<IBizPathSrvProvider, BizPathSrvProvider>();
 
             #endregion
 

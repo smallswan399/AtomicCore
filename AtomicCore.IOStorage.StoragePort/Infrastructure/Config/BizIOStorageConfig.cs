@@ -153,7 +153,13 @@ namespace AtomicCore.IOStorage.StoragePort
                     config = rootSec.Get<BizIOStorageConfig>();
 
                     if (null != config && null != logger)
+                    {
                         logger.LogInformation($"[{LOGO_TAG}] -> adaptive loading data from appsettings.json!");
+                        logger.LogInformation($"[{LOGO_TAG}] -> accessToken -> {config.AppToken}");
+                        logger.LogInformation($"[{LOGO_TAG}] -> saveRootDir -> {config.SaveRootDir}");
+                        logger.LogInformation($"[{LOGO_TAG}] -> allowFileExts -> {config.AllowFileExts}");
+                        logger.LogInformation($"[{LOGO_TAG}] -> allowSizeMaxLimit -> {config.AllowFileMBSizeLimit}");
+                    }
                 }
             }
 

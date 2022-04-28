@@ -8,7 +8,7 @@
         /// <summary>
         /// Advanced Encryption Standard, AES
         /// </summary>
-        public const string AES = "Crypto_Aes";
+        public const string AES = "Crypto_AES";
 
         /// <summary>
         /// AES CBC/PKCS5Padding, AES - CBC/PKCS5Padding
@@ -18,6 +18,6 @@
         /// <summary>
         /// Data Encryption Standard, DES
         /// </summary>
-        public const string DES = "Crypto_Des";
+        public const string DES = "Crypto_DES";
     }
 }

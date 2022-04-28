@@ -112,8 +112,8 @@ namespace AtomicCore
             {
                 if (argumentParam[0] is string algorithmKey)
                 {
-                    var saltBytes = Encoding.UTF8.GetBytes(MD5Handler.Generate(algorithmKey, false, Encoding.UTF8));
-                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
+                    var tmp_salt = Encoding.UTF8.GetBytes(MD5Handler.Generate(algorithmKey, false, Encoding.UTF8));
+                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(algorithmKey), tmp_salt, iterations);
                 }
                 else
                     rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
@@ -178,8 +178,8 @@ namespace AtomicCore
             {
                 if (argumentParam[0] is string algorithmKey)
                 {
-                    var saltBytes = Encoding.UTF8.GetBytes(MD5Handler.Generate(algorithmKey, false, Encoding.UTF8));
-                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
+                    var tmp_salt = Encoding.UTF8.GetBytes(MD5Handler.Generate(algorithmKey, false, Encoding.UTF8));
+                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(algorithmKey), tmp_salt, iterations);
                 }
                 else
                     rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);

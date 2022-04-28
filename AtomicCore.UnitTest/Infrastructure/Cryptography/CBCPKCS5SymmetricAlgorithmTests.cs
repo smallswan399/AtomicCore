@@ -1,5 +1,4 @@
-﻿using AtomicCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -47,7 +46,11 @@ namespace AtomicCore.Tests
         [TestMethod()]
         public void DecryptTest()
         {
-            Assert.Fail();
+            IDecryptAlgorithm encrypt = AtomicCore.AtomicKernel.Dependency.Resolve<IDecryptAlgorithm>(CryptoMethods.CBCPKCS5);
+
+            var result = encrypt.Decrypt("w9J5WCAYfPDL8r8gvT8i9A==", "123456");
+
+            Assert.IsTrue(!string.IsNullOrEmpty(result));
         }
 
         public class ClsCrypto
@@ -94,17 +97,15 @@ namespace AtomicCore.Tests
                 return Encoding.UTF8.GetString(originalBytes);
             }
 
-            public static byte[] HexStringToByteArray(string strHex)
-            {
-                dynamic r = new byte[strHex.Length / 2];
-                for (int i = 0; i <= strHex.Length - 1; i += 2)
-                {
-                    r[i / 2] = Convert.ToByte(Convert.ToInt32(strHex.Substring(i, 2), 16));
-                }
-                return r;
-            }
-
-
+            //public static byte[] HexStringToByteArray(string strHex)
+            //{
+            //    dynamic r = new byte[strHex.Length / 2];
+            //    for (int i = 0; i <= strHex.Length - 1; i += 2)
+            //    {
+            //        r[i / 2] = Convert.ToByte(Convert.ToInt32(strHex.Substring(i, 2), 16));
+            //    }
+            //    return r;
+            //}
 
             //private byte[] GenerateKey(string strPassword, int cb = 128 / 8)
             //{

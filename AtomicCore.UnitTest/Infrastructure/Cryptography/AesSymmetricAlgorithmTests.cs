@@ -44,7 +44,7 @@ namespace AtomicCore.Tests
         {
             IEncryptAlgorithm encrypt = AtomicCore.AtomicKernel.Dependency.Resolve<IEncryptAlgorithm>(CryptoMethods.AES);
 
-            var result = encrypt.Encrypt("1234afd");
+            var result = encrypt.Encrypt("1234afd", "abcdefgabcdefg12");
 
             Assert.IsTrue(!string.IsNullOrEmpty(result));
         }

@@ -101,7 +101,6 @@ namespace AtomicCore
             {
                 rDel.Mode = CipherMode.ECB;
                 rDel.Padding = PaddingMode.PKCS7;
-
                 rDel.Key = keyArray;
 
                 byte[] cipherBytes;
@@ -151,9 +150,9 @@ namespace AtomicCore
 
             using (var rDel = new RijndaelManaged())
             {
-                rDel.Key = keyArray;
                 rDel.Mode = CipherMode.ECB;
                 rDel.Padding = PaddingMode.PKCS7;
+                rDel.Key = keyArray;
 
                 byte[] plainText;
                 using (ICryptoTransform transform = rDel.CreateDecryptor())

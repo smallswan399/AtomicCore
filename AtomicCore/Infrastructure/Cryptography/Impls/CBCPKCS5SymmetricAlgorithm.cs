@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -18,20 +17,26 @@ namespace AtomicCore
         private const string def_consultKey = "gotogether";
 
         /// <summary>
-        /// key min length
+        /// iterations
         /// </summary>
-        private const int c_min_keyLenght = 16;
+        private const int iterations = 1000;
 
         /// <summary>
-        /// iv min length
+        /// key size
         /// </summary>
-        private const int c_min_ivLength = 8;
+        private const int keySize = 256;
+
+        /// <summary>
+        /// block size
+        /// </summary>
+        private const int blockSize = 128;
 
         #endregion
 
         #region IDesSymmetricAlgorithm
 
         private string _algorithmKey = null;
+        private byte[] _saltBytes = null;
 
         /// <summary>
         /// 获取算法KEY（会自动从conf文件中读取symmetryKey节点配置,或不存在则会启用默认值）
@@ -52,10 +57,24 @@ namespace AtomicCore
                             confKey = def_consultKey;
                     }
 
-                    this._algorithmKey = MD5Handler.Generate(confKey, true).Top(c_min_keyLenght);
+                    this._algorithmKey = confKey;
                 }
 
                 return this._algorithmKey;
+            }
+        }
+
+        /// <summary>
+        /// Salt Bytes
+        /// </summary>
+        public byte[] SaltBytes
+        {
+            get
+            {
+                if (null == _saltBytes)
+                    _saltBytes = Encoding.UTF8.GetBytes(MD5Handler.Generate(this.AlgorithmKey, false, Encoding.UTF8));
+
+                return _saltBytes;
             }
         }
 
@@ -77,63 +96,49 @@ namespace AtomicCore
         /// <returns></returns>
         public string Encrypt(string origialText, params object[] argumentParam)
         {
-            string result = string.Empty;
+            #region 基础判断
 
-            #region 加密参数选取
+            if (string.IsNullOrEmpty(origialText))
+                throw new ArgumentNullException(nameof(origialText));
 
-            string key_str, vi_str;
+            #endregion
+
+            #region Salt Calc Key & VI
+
+            Rfc2898DeriveBytes rfc2898;
             if (null == argumentParam || argumentParam.Length <= 0)
-            {
-                key_str = this.AlgorithmKey;
-                vi_str = this.AlgorithmKey;
-            }
+                rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
             else
             {
-                if (argumentParam.Length == 1)
+                if (argumentParam[0] is string algorithmKey)
                 {
-                    key_str = argumentParam.First().ToString();
-                    vi_str = argumentParam.First().ToString();
-                }
-                else if (argumentParam.Length >= 2)
-                {
-                    key_str = argumentParam[0].ToString();
-                    vi_str = argumentParam[1].ToString();
+                    var saltBytes = Encoding.UTF8.GetBytes(MD5Handler.Generate(algorithmKey, false, Encoding.UTF8));
+                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
                 }
                 else
-                {
-                    key_str = this.AlgorithmKey;
-                    vi_str = this.AlgorithmKey;
-                }
-
-                if (key_str.Length < c_min_keyLenght)
-                    key_str = key_str.PadRight(c_min_keyLenght, char.MinValue);
-                if(vi_str.Length < c_min_ivLength)
-                    vi_str = vi_str.PadRight(c_min_ivLength, char.MinValue);
+                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
             }
+
+            Span<byte> keyVectorData = rfc2898.GetBytes(keySize / 8 + blockSize / 8);
+            var key = keyVectorData.Slice(0, keySize / 8).ToArray();
+            var iv = keyVectorData.Slice(keySize / 8).ToArray();
 
             #endregion
 
             #region 执行AES加密 
 
+            string result = string.Empty;
+            byte[] plainText = Encoding.UTF8.GetBytes(origialText);
+
             using (var rijndaelCipher = new RijndaelManaged())
             {
                 rijndaelCipher.Mode = CipherMode.CBC;
                 rijndaelCipher.Padding = PaddingMode.PKCS7;
-                rijndaelCipher.KeySize = 128;
-                rijndaelCipher.BlockSize = 128;
+                rijndaelCipher.KeySize = keySize;
+                rijndaelCipher.BlockSize = blockSize;
 
-                byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes(key_str);
-                byte[] keyBytes = new byte[16];
-
-                int len = pwdBytes.Length;
-                if (len > keyBytes.Length) len = keyBytes.Length;
-                System.Array.Copy(pwdBytes, keyBytes, len);
-                rijndaelCipher.Key = keyBytes;
-
-                byte[] ivBytes = System.Text.Encoding.UTF8.GetBytes(vi_str);
-                rijndaelCipher.IV = ivBytes;
-
-                byte[] plainText = Encoding.UTF8.GetBytes(origialText);
+                rijndaelCipher.Key = key;
+                rijndaelCipher.IV = iv;
 
                 byte[] cipherBytes;
                 using (ICryptoTransform transform = rijndaelCipher.CreateEncryptor())
@@ -155,58 +160,55 @@ namespace AtomicCore
         /// <returns></returns>
         public string Decrypt(string ciphertext, params object[] argumentParam)
         {
-            string result = string.Empty;
+            #region 基础判断
 
-            #region 解密参数选取
+            if (string.IsNullOrEmpty(ciphertext))
+                throw new ArgumentNullException(nameof(ciphertext));
+            if (!Base64Handler.IsBase64Format(ciphertext))
+                throw new ArgumentException($"'{ciphertext}' is not a valid base64!");
 
-            string key_str, vi_str;
+            #endregion
+
+            #region Salt Calc Key & VI
+
+            Rfc2898DeriveBytes rfc2898;
             if (null == argumentParam || argumentParam.Length <= 0)
-            {
-                key_str = this.AlgorithmKey;
-                vi_str = this.AlgorithmKey;
-            }
-            if (argumentParam.Length == 1)
-            {
-                key_str = argumentParam.First().ToString();
-                vi_str = argumentParam.First().ToString();
-            }
-            else if (argumentParam.Length >= 2)
-            {
-                key_str = argumentParam[0].ToString();
-                vi_str = argumentParam[1].ToString();
-            }
+                rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
             else
             {
-                key_str = this.AlgorithmKey;
-                vi_str = this.AlgorithmKey;
+                if (argumentParam[0] is string algorithmKey)
+                {
+                    var saltBytes = Encoding.UTF8.GetBytes(MD5Handler.Generate(algorithmKey, false, Encoding.UTF8));
+                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
+                }
+                else
+                    rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(this.AlgorithmKey), SaltBytes, iterations);
             }
+
+            Span<byte> keyVectorData = rfc2898.GetBytes(keySize / 8 + blockSize / 8);
+            var key = keyVectorData.Slice(0, keySize / 8).ToArray();
+            var iv = keyVectorData.Slice(keySize / 8).ToArray();
 
             #endregion
 
             #region 执行AES解密
 
+            string result = string.Empty;
+            byte[] cipher_bytes = Convert.FromBase64String(ciphertext);
+
             using (RijndaelManaged rijndaelCipher = new RijndaelManaged())
             {
                 rijndaelCipher.Mode = CipherMode.CBC;
                 rijndaelCipher.Padding = PaddingMode.PKCS7;
-                rijndaelCipher.KeySize = 128;
-                rijndaelCipher.BlockSize = 128;
+                rijndaelCipher.KeySize = keySize;
+                rijndaelCipher.BlockSize = blockSize;
 
-                byte[] encryptedData = Convert.FromBase64String(ciphertext);
-                byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes(key_str);
-                byte[] keyBytes = new byte[16];
-
-                int len = pwdBytes.Length;
-                if (len > keyBytes.Length) len = keyBytes.Length;
-                System.Array.Copy(pwdBytes, keyBytes, len);
-                rijndaelCipher.Key = keyBytes;
-
-                byte[] ivBytes = System.Text.Encoding.UTF8.GetBytes(vi_str);
-                rijndaelCipher.IV = ivBytes;
+                rijndaelCipher.Key = key;
+                rijndaelCipher.IV = iv;
 
                 byte[] plainText;
                 using (ICryptoTransform transform = rijndaelCipher.CreateDecryptor())
-                    plainText = transform.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+                    plainText = transform.TransformFinalBlock(cipher_bytes, 0, cipher_bytes.Length);
 
                 result = Encoding.UTF8.GetString(plainText);
             }

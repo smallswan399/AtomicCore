@@ -60,7 +60,7 @@ namespace AtomicCore
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// 加密函数

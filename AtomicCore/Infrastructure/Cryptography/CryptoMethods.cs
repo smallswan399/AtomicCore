@@ -6,7 +6,17 @@
     public static class CryptoMethods
     {
         /// <summary>
-        /// Data Encryption Standard算法,属于对称加解密
+        /// Advanced Encryption Standard, AES
+        /// </summary>
+        public const string AES = "Crypto_Aes";
+
+        /// <summary>
+        /// AES CBC/PKCS5Padding, AES - CBC/PKCS5Padding
+        /// </summary>
+        public const string CBCPKCS5 = "Crypto_CBC_PKCS5";
+
+        /// <summary>
+        /// Data Encryption Standard, DES
         /// </summary>
         public const string DES = "Crypto_Des";
     }

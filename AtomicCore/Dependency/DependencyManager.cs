@@ -429,11 +429,23 @@ namespace AtomicCore.Dependency
         /// <param name="builder"></param>
         private void CryptographyRegistration(ContainerBuilder builder)
         {
+            builder.RegisterType<AesSymmetricAlgorithm>()
+                .As(typeof(IEncryptAlgorithm), typeof(IDecryptAlgorithm), typeof(IDesSymmetricAlgorithm))
+                .Named<IEncryptAlgorithm>(CryptoMethods.AES)
+                .Named<IDecryptAlgorithm>(CryptoMethods.AES)
+                .Named<IDesSymmetricAlgorithm>(CryptoMethods.AES).InstancePerDependency();
+
             builder.RegisterType<DesSymmetricAlgorithm>()
                 .As(typeof(IEncryptAlgorithm), typeof(IDecryptAlgorithm), typeof(IDesSymmetricAlgorithm))
                 .Named<IEncryptAlgorithm>(CryptoMethods.DES)
                 .Named<IDecryptAlgorithm>(CryptoMethods.DES)
                 .Named<IDesSymmetricAlgorithm>(CryptoMethods.DES).InstancePerDependency();
+
+            builder.RegisterType<CBCPKCS5SymmetricAlgorithm>()
+                .As(typeof(IEncryptAlgorithm), typeof(IDecryptAlgorithm), typeof(IDesSymmetricAlgorithm))
+                .Named<IEncryptAlgorithm>(CryptoMethods.CBCPKCS5)
+                .Named<IDecryptAlgorithm>(CryptoMethods.CBCPKCS5)
+                .Named<IDesSymmetricAlgorithm>(CryptoMethods.CBCPKCS5).InstancePerDependency();
         }
 
         /// <summary>

@@ -40,5 +40,15 @@ namespace AtomicCore.Tests
 
             Assert.IsTrue(!string.IsNullOrEmpty(orig));
         }
+
+        [TestMethod()]
+        public void IsBase64FormatTest()
+        {
+            string value = "eyJhdmF0YXIiOiIvYXZhdGFyL2RlZmF1bHQvdXNlcnMvMi5wbmciLCJuaWNrbmFtZSI6InRlc3Q1NjciLCJvcGVuSWQiOiJJUDNzUDRzV0FNYzhjX0JuXzd2Um0zTU9VeHVRSFlSSSIsInBvZCI6IldIMnpBVExiM1hMZHpiR29YTjVvS1UyMGpMMVRVVDR4IiwicmFuZHN0ciI6InNaZElOZ1JtVE4yMSIsInNleCI6MSwic2lnbiI6ImY1YmRiOTIyN2JiYjQyYzUxMWVkMjYwOWE2NjUyYjczIiwidGltZSI6MTY0NjI5MjUxMzE5NX0";
+
+            var flag = Base64Handler.IsBase64Format(value);
+
+            Assert.IsTrue(flag);
+        }
     }
 }

@@ -1,13 +1,33 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AtomicCore
 {
     /// <summary>
     /// Base64处理类
+    /// 64 * 64 * 64 * 64 = 256 * 256 * 256
     /// </summary>
     public static class Base64Handler
     {
+        /// <summary>
+        /// Base64 Char Scope
+        /// </summary>
+        public static char[] BASE64_CODE = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '=' };
+
+        /// <summary>
+        /// 判断字符串是否符合BASE64基本格式
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static bool IsBase64Format(string text)
+        {
+            if (!Regex.IsMatch(text, @"^[A-Za-z0-9\+\/\=]+$", RegexOptions.IgnoreCase))
+                return false;
+
+            return true;
+        }
+
         /// <summary>
         /// 将普通文本转换成Base64编码的文本
         /// </summary>

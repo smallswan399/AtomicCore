@@ -32,9 +32,15 @@ namespace AtomicCore
             {
                 if (null == this._algorithmKey)
                 {
-                    string confKey = ConfigurationJsonManager.AppSettings["symmetryKey"];
-                    if (string.IsNullOrEmpty(confKey))
+                    string confKey;
+                    if (null == ConfigurationJsonManager.AppSettings)
                         confKey = def_consultKey;
+                    else
+                    {
+                        confKey = ConfigurationJsonManager.AppSettings["symmetryKey"];
+                        if (string.IsNullOrEmpty(confKey))
+                            confKey = def_consultKey;
+                    }
 
                     this._algorithmKey = MD5Handler.Generate(confKey, true).Top(8);
                 }
@@ -75,6 +81,9 @@ namespace AtomicCore
             if (argumentParam.Length == 1)
                 key_str = argumentParam.First().ToString();
             else
+                key_str = this.AlgorithmKey;
+
+            if (string.IsNullOrEmpty(key_str))
                 key_str = this.AlgorithmKey;
 
             #endregion

@@ -13,9 +13,19 @@ namespace AtomicCore
         #region Variable
 
         /// <summary>
-        /// 默认协商KEY
+        /// default key
         /// </summary>
-        public const string def_consultKey = "gotogether";
+        private const string def_consultKey = "gotogether";
+
+        /// <summary>
+        /// key min length
+        /// </summary>
+        private const int c_min_keyLenght = 16;
+
+        /// <summary>
+        /// iv min length
+        /// </summary>
+        private const int c_min_ivLength = 8;
 
         #endregion
 
@@ -42,7 +52,7 @@ namespace AtomicCore
                             confKey = def_consultKey;
                     }
 
-                    this._algorithmKey = MD5Handler.Generate(confKey, true).Top(8);
+                    this._algorithmKey = MD5Handler.Generate(confKey, true).Top(c_min_keyLenght);
                 }
 
                 return this._algorithmKey;
@@ -58,10 +68,6 @@ namespace AtomicCore
         {
             return Base64Handler.IsBase64Format(ciphertext);
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// 加密函数
@@ -81,20 +87,28 @@ namespace AtomicCore
                 key_str = this.AlgorithmKey;
                 vi_str = this.AlgorithmKey;
             }
-            if (argumentParam.Length == 1)
-            {
-                key_str = argumentParam.First().ToString();
-                vi_str = argumentParam.First().ToString();
-            }
-            else if (argumentParam.Length >= 2)
-            {
-                key_str = argumentParam[0].ToString();
-                vi_str = argumentParam[1].ToString();
-            }
             else
             {
-                key_str = this.AlgorithmKey;
-                vi_str = this.AlgorithmKey;
+                if (argumentParam.Length == 1)
+                {
+                    key_str = argumentParam.First().ToString();
+                    vi_str = argumentParam.First().ToString();
+                }
+                else if (argumentParam.Length >= 2)
+                {
+                    key_str = argumentParam[0].ToString();
+                    vi_str = argumentParam[1].ToString();
+                }
+                else
+                {
+                    key_str = this.AlgorithmKey;
+                    vi_str = this.AlgorithmKey;
+                }
+
+                if (key_str.Length < c_min_keyLenght)
+                    key_str = key_str.PadRight(c_min_keyLenght, char.MinValue);
+                if(vi_str.Length < c_min_ivLength)
+                    vi_str = vi_str.PadRight(c_min_ivLength, char.MinValue);
             }
 
             #endregion

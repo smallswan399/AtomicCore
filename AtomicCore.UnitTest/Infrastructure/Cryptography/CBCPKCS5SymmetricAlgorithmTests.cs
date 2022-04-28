@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using AtomicCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,14 +15,23 @@ namespace AtomicCore.Tests
         }
 
         [TestMethod()]
-        public void HomeTest()
+        public void SaltEncryptTest()
         {
             var cls = new ClsCrypto("123456");
 
             var encrypt = cls.Encrypt("1234afd");
-            var dencrypt = cls.Decrypt(encrypt);
 
-            Assert.IsNotNull(dencrypt);
+            Assert.IsTrue(!string.IsNullOrEmpty(encrypt));
+        }
+
+        [TestMethod()]
+        public void SaltDecryptTest()
+        {
+            var cls = new ClsCrypto("123456");
+
+            var dencrypt = cls.Decrypt("EmPhSwSlopxv93BPOaQ3bQ==");
+
+            Assert.IsTrue(!string.IsNullOrEmpty(dencrypt));
         }
 
         [TestMethod()]
@@ -34,21 +44,36 @@ namespace AtomicCore.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(result));
         }
 
+        [TestMethod()]
+        public void DecryptTest()
+        {
+            Assert.Fail();
+        }
+
         public class ClsCrypto
         {
+            private const int iterations = 6;
+            private const int keyLength = 256;
+            private const int blockSize = 128;
+
             private RijndaelManaged myRijndael = new RijndaelManaged();
-            private int iterations = 1000;
             private byte[] salt = System.Text.Encoding.UTF8.GetBytes("insight123resultxyz");
 
-            public ClsCrypto(string strPassword, string iv = "e84ad660c4721ae0e84ad660c4721ae0")
+            public ClsCrypto(string strPassword)
             {
-                myRijndael.BlockSize = 128;
-                myRijndael.KeySize = 128;
-                myRijndael.IV = HexStringToByteArray(iv);
+                // salt
+                var rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(strPassword), salt, iterations);
+                Span<byte> keyVectorData = rfc2898.GetBytes(keyLength / 8 + blockSize / 8);
+                var key = keyVectorData.Slice(0, keyLength / 8).ToArray();
+                var iv = keyVectorData.Slice(keyLength / 8).ToArray();
+
+                myRijndael.BlockSize = blockSize;
+                myRijndael.KeySize = keyLength;
+                myRijndael.IV = iv;
 
                 myRijndael.Padding = PaddingMode.PKCS7;
                 myRijndael.Mode = CipherMode.CBC;
-                myRijndael.Key = GenerateKey(strPassword);
+                myRijndael.Key = key;
             }
 
             public string Encrypt(string strPlainText)
@@ -79,12 +104,21 @@ namespace AtomicCore.Tests
                 return r;
             }
 
-            private byte[] GenerateKey(string strPassword)
-            {
-                Rfc2898DeriveBytes rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(strPassword), salt, iterations);
 
-                return rfc2898.GetBytes(128 / 8);
-            }
+
+            //private byte[] GenerateKey(string strPassword, int cb = 128 / 8)
+            //{
+            //    Rfc2898DeriveBytes rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(strPassword), salt, iterations);
+
+            //    return rfc2898.GetBytes(cb);
+            //}
+
+            //private byte[] GenerateIV(string strPassword, int cb = 128 / 8)
+            //{
+            //    Rfc2898DeriveBytes rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(strPassword), salt, iterations);
+
+            //    return rfc2898.GetBytes(cb);
+            //}
         }
     }
 }

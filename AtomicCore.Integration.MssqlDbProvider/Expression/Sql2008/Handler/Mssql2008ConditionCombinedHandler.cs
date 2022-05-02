@@ -406,7 +406,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
 
                         #region 1.解析级联条件
 
-                        Mssql2008ConditionCombinedResult joinResult = Mssql2008ConditionCombinedHandler.ExecuteResolver(methodCallExp.Arguments[1], this._dbMappingHandler, true);
+                        Mssql2008ConditionCombinedResult joinResult = ExecuteResolver(methodCallExp.Arguments[1], this._dbMappingHandler, true);
                         if (joinResult.IsAvailable())
                         {
                             List<object> joinParams = new List<object>();
@@ -455,9 +455,35 @@ namespace AtomicCore.Integration.MssqlDbProvider
                         #region 2.解析子查询的条件
 
                         Expression childExps = methodCallExp.Arguments[2];
+                        //针对直接写条件的处理
                         if (childExps is UnaryExpression)
                         {
                             childExps = (childExps as UnaryExpression).Operand;
+                        }
+                        //针对拼接动态条件的处理
+                        if (childExps is MemberExpression memberAccess)
+                        {
+                            // 动态条件为变量字段的处理
+                            if (memberAccess.Member is FieldInfo fi &&
+                                memberAccess.Expression is ConstantExpression filed_constant_exp)
+                            {
+                                var exp = fi.GetValue(filed_constant_exp.Value);
+                                if (exp is LambdaExpression lambdaExp)
+                                    childExps = lambdaExp;
+                            }
+                            // 动态条件为属性的情况的取值
+                            else if (memberAccess.Member is PropertyInfo pi &&
+                                memberAccess.Expression is ConstantExpression property_constant_exp)
+                            {
+                                var exp = pi.GetValue(property_constant_exp.Value);
+                                if (exp is LambdaExpression lambdaExp)
+                                    childExps = lambdaExp;
+                            }
+                            else
+                            {
+                                this._result.AppendError(string.Format("动态参数类型为{0}类型,无法解析", memberAccess.Member.MemberType));
+                                return base.VisitMethodCall(methodCallExp, false);
+                            }
                         }
                         if (ExpressionType.Lambda != childExps.NodeType)
                         {
@@ -560,7 +586,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                                 expression = methodCallExp.Reduce();
                                 break;
 
-                                #endregion
+                            #endregion
                             default:
                                 expression = base.VisitMethodCall(methodCallExp, false);
                                 break;

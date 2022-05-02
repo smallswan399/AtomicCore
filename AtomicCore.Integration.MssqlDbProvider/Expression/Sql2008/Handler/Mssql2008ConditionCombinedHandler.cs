@@ -461,7 +461,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
                             childExps = (childExps as UnaryExpression).Operand;
                         }
                         //针对拼接动态条件的处理
-                        if (childExps is MemberExpression memberAccess)
+                        else if (childExps is MemberExpression memberAccess)
                         {
                             // 动态条件为变量字段的处理
                             if (memberAccess.Member is FieldInfo fi &&

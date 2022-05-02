@@ -456,9 +456,9 @@ namespace AtomicCore.Integration.MssqlDbProvider
 
                         Expression childExps = methodCallExp.Arguments[2];
                         //针对直接写条件的处理
-                        if (childExps is UnaryExpression)
+                        if (childExps is UnaryExpression unaryExp)
                         {
-                            childExps = (childExps as UnaryExpression).Operand;
+                            childExps = unaryExp.Operand;
                         }
                         //针对拼接动态条件的处理
                         else if (childExps is MemberExpression memberAccess)
@@ -485,6 +485,8 @@ namespace AtomicCore.Integration.MssqlDbProvider
                                 return base.VisitMethodCall(methodCallExp, false);
                             }
                         }
+
+                        // 传入 Mssql2008WhereScriptHandler.ExecuteResolver 之前的前置条件判断
                         if (ExpressionType.Lambda != childExps.NodeType)
                         {
                             this._result.AppendError(string.Format("条件表达式为{0}类型,无法解析", childExps.NodeType));

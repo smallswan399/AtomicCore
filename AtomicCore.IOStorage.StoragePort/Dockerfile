@@ -1,6 +1,8 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+RUN apt update -y && apt install nano -y && apt install tzdata -y
+RUN apt install libgdiplus -y && cd /usr/lib && ln -s libgdiplus.so gdiplus.dll
 WORKDIR /app
 EXPOSE 80
 

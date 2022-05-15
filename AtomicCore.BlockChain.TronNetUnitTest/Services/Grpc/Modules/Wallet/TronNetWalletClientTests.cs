@@ -73,7 +73,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             string blockHash = block.GetBlockHash();
             byte[] blockHashBytes = blockHash.HexToByteArray();
 
-            //create tx
+            // get trx(这个可以获取到TRX)
+            var account = _cli.GetAccount(new Account()
+            {
+                Address = ByteString.CopyFrom(Base58Encoder.DecodeFromBase58Check(ownerAddress))
+            }, headers: _wallet.GetHeaders());
+            var trx_sun = account.Balance;
+
+            //create tx（自己编译的节点这个无法获取到TRX）
             AccountBalanceResponse balance = _cli.GetAccountBalance(new AccountBalanceRequest()
             {
                 AccountIdentifier = new AccountIdentifier()

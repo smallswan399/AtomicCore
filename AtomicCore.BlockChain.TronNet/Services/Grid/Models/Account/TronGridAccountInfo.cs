@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -47,27 +45,45 @@ namespace AtomicCore.BlockChain.TronNet
         public ulong LatestOprationTime { get; set; }
 
         /// <summary>
-        /// latest consume free time # UTC-TIMESTAMP
-        /// </summary>
-        [JsonProperty("latest_consume_free_time")]
-        public ulong LatestConsumeFreeTime { get; set; }
-
-        /// <summary>
         /// trc10 # trc10 asset list
         /// </summary>
         [JsonProperty("assetV2")]
-        public List<TronGridKVInfo> AssetV2 { get; set; }
-
-        /// <summary>
-        /// free_asset_net_usageV2
-        /// </summary>
-        [JsonProperty("free_asset_net_usageV2")]
-        public List<TronGridKVInfo> FreeAssetNetUsageV2 { get; set; }
+        public TronGridKVInfo[] TRC10 { get; set; }
 
         /// <summary>
         /// trc20 # trc20 asset list
         /// </summary>
         [JsonProperty("trc20")]
         public Dictionary<string, System.Numerics.BigInteger> TRC20 { get; set; }
+
+        ///////// <summary>
+        ///////// free_asset_net_usageV2
+        ///////// </summary>
+        //////[JsonProperty("free_asset_net_usageV2")]
+        //////public TronGridKVInfo[] FreeAssetNetUsageV2 { get; set; }
+
+        /////// <summary>
+        /////// frozen self trx balance for self get bandwidth
+        /////// </summary>
+        ////[JsonProperty("frozen")]
+        ////public TronGridFrozenInfo[] BandwidthResource { get; set; }
+
+        /////// <summary>
+        /////// account resource # energy
+        /////// </summary>
+        ////[JsonProperty("account_resource")]
+        ////public TronGridEnergyResource AccountResource { get; set; }
+
+        /////// <summary>
+        /////// latest consume free time # UTC-TIMESTAMP
+        /////// </summary>
+        ////[JsonProperty("latest_consume_free_time")]
+        ////public ulong LatestConsumeFreeTime { get; set; }
+
+        /////// <summary>
+        /////// delegated_frozen_balance_for_bandwidth # Fronze TRX FOR OTHER ADDRESS
+        /////// </summary>
+        ////[JsonProperty("delegated_frozen_balance_for_bandwidth"), JsonConverter(typeof(TronNetTrxUnitJsonConverter))]
+        ////public decimal DelegatedFrozenBalanceForBandwidth { get; set; }
     }
 }

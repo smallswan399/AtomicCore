@@ -2,6 +2,7 @@
 using Nethereum.Util;
 using Newtonsoft.Json;
 using System;
+using System.Numerics;
 
 namespace AtomicCore.BlockChain.BscscanAPI
 {
@@ -28,9 +29,13 @@ namespace AtomicCore.BlockChain.BscscanAPI
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.Value == null)
-                return null;
+                return decimal.Zero;
 
-            HexBigInteger hbi = new HexBigInteger(reader.Value.ToString());
+            string value_str = reader.Value.ToString();
+            if (string.IsNullOrEmpty(value_str) || !BigInteger.TryParse(value_str, out BigInteger bigInteger))
+                return decimal.Zero;
+
+            HexBigInteger hbi = new HexBigInteger(bigInteger);
 
             return UnitConversion.Convert.FromWei(hbi.Value, UnitConversion.EthUnit.Ether);
         }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nethereum.Util;
 
 namespace AtomicCore.BlockChain.BscscanAPI.Tests
 {
@@ -69,7 +70,10 @@ namespace AtomicCore.BlockChain.BscscanAPI.Tests
         [TestMethod()]
         public void GetInternalTransactionByAddressTest()
         {
-            var result = client.GetInternalTransactionByAddress("0x33350dd80773DEB379D79ceb035b49E5E79E3615");
+            ////var hbi = System.Numerics.BigInteger.Parse("358424896370793");
+            ////var amount = UnitConversion.Convert.FromWei(hbi, UnitConversion.EthUnit.Ether);
+
+            var result = client.GetInternalTransactionByAddress("0x091dD81C8B9347b30f1A4d5a88F92d6F2A42b059");
 
             Assert.IsTrue(result.Status == BscscanJsonStatus.Success);
         }

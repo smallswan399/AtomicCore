@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AtomicCore.BlockChain.TronNet
+﻿namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// TronGrid Account Rest
@@ -10,5 +6,12 @@ namespace AtomicCore.BlockChain.TronNet
     /// </summary>
     public interface ITronGridAccountRest
     {
+        /// <summary>
+        /// Get Account Info
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridRequestQuery query = null);
     }
 }

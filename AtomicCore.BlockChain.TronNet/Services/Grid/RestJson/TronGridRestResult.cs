@@ -8,6 +8,8 @@ namespace AtomicCore.BlockChain.TronNet
     /// <typeparam name="T"></typeparam>
     public sealed class TronGridRestResult<T>
     {
+        #region Propertys
+
         /// <summary>
         /// success
         /// </summary>
@@ -31,5 +33,23 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("meta")]
         public TronGridMetaInfo Meta { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// The Result is available
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAvailable()
+        {
+            if (null == Error)
+                return true;
+
+            return string.IsNullOrEmpty(Error);
+        }
+
+        #endregion
     }
 }

@@ -12,6 +12,6 @@
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridRequestQuery query = null);
+        TronGridAccountInfo GetAccount(string address, TronGridRequestQuery query = null);
     }
 }

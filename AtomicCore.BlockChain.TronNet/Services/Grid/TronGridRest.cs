@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -14,7 +15,10 @@ namespace AtomicCore.BlockChain.TronNet
     {
         #region Variables
 
-        private readonly IOptions<TronNetOptions> _options;
+        /// <summary>
+        /// base url
+        /// </summary>
+        private readonly string _baseUrl;
 
         #endregion
 
@@ -26,7 +30,10 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="options"></param>
         public TronGridRest(IOptions<TronNetOptions> options)
         {
-            _options = options;
+            _baseUrl = options.Value.TronGridSrvAPI;
+
+            if (string.IsNullOrEmpty(_baseUrl))
+                _baseUrl = "https://api.trongrid.io/";
         }
 
         #endregion
@@ -65,7 +72,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="resp"></param>
         /// <returns></returns>
         private TronGridRestResult<T> ObjectParse<T>(string resp)
-            where T : new()
         {
             TronGridRestResult<T> jsonResult;
             try
@@ -90,7 +96,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridRequestQuery query = null)
+        public TronGridAccountInfo GetAccount(string address, TronGridRequestQuery query = null)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
@@ -99,12 +105,14 @@ namespace AtomicCore.BlockChain.TronNet
             if (null != query)
                 query_str = query.GetQuery();
 
-            string url = $"{this._options.Value.FullNodeRestAPI}/v1/accounts/{address}{(string.IsNullOrEmpty(query_str) ? string.Empty : $"?{query_str}")}";
-            string resp = this.RestGet(url);
+            string url = $"{_baseUrl}/v1/accounts/{address}{(string.IsNullOrEmpty(query_str) ? string.Empty : $"?{query_str}")}";
+            string resp = RestGet(url);
 
             var result = ObjectParse<TronGridAccountInfo>(resp);
+            if (!result.IsAvailable())
+                return null;
 
-            return result;
+            return result.Data.FirstOrDefault();
         }
 
         #endregion

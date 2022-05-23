@@ -30,7 +30,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// active_permission
         /// </summary>
         [JsonProperty("active_permission")]
-        public TronGridActivePermissionInfo ActivePermission { get; set; }
+        public TronGridActivePermissionInfo[] ActivePermission { get; set; }
 
         /// <summary>
         /// create time # UTC-TIMESTAMP
@@ -53,7 +53,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// trc20 # trc20 asset list
         /// </summary>
-        [JsonProperty("trc20")]
+        [JsonProperty("trc20"), JsonConverter(typeof(TronGridTRC20KVJsonConverter))]
         public Dictionary<string, System.Numerics.BigInteger> TRC20 { get; set; }
 
         ///////// <summary>

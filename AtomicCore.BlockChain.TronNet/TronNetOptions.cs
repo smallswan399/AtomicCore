@@ -33,6 +33,11 @@ namespace AtomicCore.BlockChain.TronNet
         public string EventSrvAPI { get; set; }
 
         /// <summary>
+        /// Tron Grid Srv Api
+        /// </summary>
+        public string TronGridSrvAPI { get; set; }
+
+        /// <summary>
         /// Grpc Channel
         /// </summary>
         public GrpcChannelOption Channel { get; set; }

@@ -18,6 +18,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 x.SolidityNodeRestAPI = "http://18.178.138.73:8090";
                 x.SuperNodeRestAPI = "http://47.241.20.47:8090";
                 x.EventSrvAPI = "http://18.178.138.73:8090";
+                x.TronGridSrvAPI = "https://api.trongrid.io";
                 x.Channel = new GrpcChannelOption 
                 { 
                     Host = "18.178.138.73", 
@@ -44,6 +45,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 x.SolidityNodeRestAPI = "https://api.shasta.trongrid.io";
                 x.SuperNodeRestAPI = "https://api.shasta.trongrid.io";
                 x.EventSrvAPI = "https://api.shasta.trongrid.io";
+                x.TronGridSrvAPI = "https://api.shasta.trongrid.io";
                 x.Channel = new GrpcChannelOption 
                 {
                     Host = "grpc.shasta.trongrid.io", 

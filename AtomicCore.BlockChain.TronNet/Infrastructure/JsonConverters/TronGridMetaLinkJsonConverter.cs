@@ -36,6 +36,7 @@ namespace AtomicCore.BlockChain.TronNet
                     { "next", metaLinkInfo.Next }
                 });
                 writer.WriteValue(link_json);
+                return;
             }
 
             throw new NotImplementedException($"'TronGridMetaLinkJsonConverter' need value type is 'TronGridMetaLinkInfo', but current type is '{value.GetType().FullName}'");

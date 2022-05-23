@@ -17,6 +17,12 @@
         ITronNetRest GetRestAPI();
 
         /// <summary>
+        /// Get Grid Api
+        /// </summary>
+        /// <returns></returns>
+        ITronGridRest GetGridAPI();
+
+        /// <summary>
         /// Grpc Channel Client
         /// </summary>
         /// <returns></returns>

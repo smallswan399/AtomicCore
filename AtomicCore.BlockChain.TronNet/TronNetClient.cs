@@ -11,6 +11,7 @@ namespace AtomicCore.BlockChain.TronNet
 
         private readonly IOptions<TronNetOptions> _options;
         private readonly ITronNetRest _restApiClient;
+        private readonly ITronGridRest _gridApiClient;
         private readonly IGrpcChannelClient _channelClient;
         private readonly ITronNetWalletClient _walletClient;
         private readonly ITronNetTransactionClient _transactionClient;
@@ -24,12 +25,14 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         /// <param name="options"></param>
         /// <param name="restApiClient"></param>
+        /// <param name="gridApiClient"></param>
         /// <param name="channelClient"></param>
         /// <param name="walletClient"></param>
         /// <param name="transactionClient"></param>
         public TronNetClient(
             IOptions<TronNetOptions> options,
             ITronNetRest restApiClient,
+            ITronGridRest gridApiClient,
             IGrpcChannelClient channelClient,
             ITronNetWalletClient walletClient,
             ITronNetTransactionClient transactionClient
@@ -37,6 +40,7 @@ namespace AtomicCore.BlockChain.TronNet
         {
             _options = options;
             _restApiClient = restApiClient;
+            _gridApiClient = gridApiClient;
             _channelClient = channelClient;
             _walletClient = walletClient;
             _transactionClient = transactionClient;
@@ -89,6 +93,15 @@ namespace AtomicCore.BlockChain.TronNet
         public ITronNetRest GetRestAPI()
         {
             return _restApiClient;
+        }
+
+        /// <summary>
+        /// Get Grid Api
+        /// </summary>
+        /// <returns></returns>
+        public ITronGridRest GetGridAPI()
+        {
+            return _gridApiClient;
         }
 
         #endregion

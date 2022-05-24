@@ -11,7 +11,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// address
         /// </summary>
-        [JsonProperty("address")]
+        [JsonProperty("address"), JsonConverter(typeof(TronGridAddressBase58JsonConverter))]
         public string Address { get; set; }
 
         /// <summary>

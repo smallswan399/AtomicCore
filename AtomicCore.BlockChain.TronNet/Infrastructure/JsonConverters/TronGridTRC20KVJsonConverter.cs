@@ -18,7 +18,6 @@ namespace AtomicCore.BlockChain.TronNet
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JArray jas = JArray.Load(reader);
-
             var dics = new Dictionary<string, System.Numerics.BigInteger>();
 
             foreach (var item in jas.Children())
@@ -35,8 +34,10 @@ namespace AtomicCore.BlockChain.TronNet
                 var jas = new JArray();
                 foreach (var item in dics)
                 {
-                    var jo = new JObject();
-                    jo.Add(new JProperty(item.Key, item.Value.ToString()));
+                    var jo = new JObject
+                    {
+                        new JProperty(item.Key, item.Value.ToString())
+                    };
 
                     jas.Add(jo);
                 }

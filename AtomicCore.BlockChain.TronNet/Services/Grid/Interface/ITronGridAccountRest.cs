@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace AtomicCore.BlockChain.TronNet
+﻿namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
     /// TronGrid Account Rest

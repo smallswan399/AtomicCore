@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
@@ -38,10 +39,18 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetTransactionsTest()
         {
-            var result = _gridApiClient.GetTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm", new TronGridRequestQuery()
+            var result = _gridApiClient.GetTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm");
+
+            var item = result.Data.FirstOrDefault(d => d.RawData.Contract.Any(d => d.Type == TronNetContractType.TriggerSmartContract));
+            if (null != item)
             {
-                Limit = 100
-            });
+                var contract = item.RawData.Contract.FirstOrDefault(d => d.Type == TronNetContractType.TriggerSmartContract);
+                var trc20Info = contract.Parameter.Value.ToObject<TronGridTriggerSmartContractInfo>();
+
+                string toAddress = trc20Info.GetToAddress();
+                var rawAmount = trc20Info.GetRawAmount();
+                var amount = trc20Info.GetAmount(6);
+            }
 
             Assert.IsTrue(result.IsAvailable());
         }

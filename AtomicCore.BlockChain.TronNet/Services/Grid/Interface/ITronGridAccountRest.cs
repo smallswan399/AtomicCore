@@ -13,5 +13,7 @@
         /// <param name="query"></param>
         /// <returns></returns>
         TronGridAccountInfo GetAccount(string address, TronGridRequestQuery query = null);
+
+
     }
 }

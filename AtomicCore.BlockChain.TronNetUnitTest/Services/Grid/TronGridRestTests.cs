@@ -31,14 +31,18 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
         #endregion
 
+        #region ITronGridAccountRest
+
         [TestMethod()]
         public void GetAccountTest()
         {
             var result = _gridApiClient.GetAccount("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm");
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            //var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
 
             Assert.IsTrue(result != null);
         }
+
+        #endregion
     }
 }

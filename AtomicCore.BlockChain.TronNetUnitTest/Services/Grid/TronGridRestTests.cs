@@ -40,7 +40,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
 
             //var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
 
-            Assert.IsTrue(result != null);
+            Assert.IsTrue(result.IsAvailable());
         }
 
         #endregion

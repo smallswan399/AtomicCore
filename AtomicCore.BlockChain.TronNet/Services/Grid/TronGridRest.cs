@@ -96,7 +96,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public TronGridAccountInfo GetAccount(string address, TronGridRequestQuery query = null)
+        public TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridRequestQuery query = null)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
@@ -109,10 +109,8 @@ namespace AtomicCore.BlockChain.TronNet
             string resp = RestGet(url);
 
             var result = ObjectParse<TronGridAccountInfo>(resp);
-            if (!result.IsAvailable())
-                return null;
 
-            return result.Data.FirstOrDefault();
+            return result;
         }
 
         #endregion

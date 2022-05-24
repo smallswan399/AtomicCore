@@ -113,6 +113,29 @@ namespace AtomicCore.BlockChain.TronNet
             return result;
         }
 
+        /// <summary>
+        /// Get the transfer records of an account history, including trc10 & trc20 transfers and TRX transfers 
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public TronGridRestResult<TronGridTransactionInfo> GetTransactions(string address, TronGridRequestQuery query = null)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentNullException(nameof(address));
+
+            string query_str = string.Empty;
+            if (null != query)
+                query_str = query.GetQuery();
+
+            string url = $"{_baseUrl}/v1/accounts/{address}/transactions{(string.IsNullOrEmpty(query_str) ? string.Empty : $"?{query_str}")}";
+            string resp = RestGet(url);
+
+            var result = ObjectParse<TronGridTransactionInfo>(resp);
+
+            return result;
+        }
+
         #endregion
     }
 }

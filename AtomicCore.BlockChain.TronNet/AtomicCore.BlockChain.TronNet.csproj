@@ -59,4 +59,8 @@
     <Protobuf Include="Protos\google\protobuf\descriptor.proto" GrpcServices="Client" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Grid\Models\Transaction\ParamValue\" />
+  </ItemGroup>
+
 </Project>

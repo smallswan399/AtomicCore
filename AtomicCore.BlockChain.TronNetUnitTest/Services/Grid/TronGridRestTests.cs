@@ -40,7 +40,7 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             var result = _gridApiClient.GetTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm", new TronGridRequestQuery()
             {
-                Limit = 1
+                Limit = 100
             });
 
             Assert.IsTrue(result.IsAvailable());

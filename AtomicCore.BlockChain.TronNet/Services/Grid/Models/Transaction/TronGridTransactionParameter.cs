@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AtomicCore.BlockChain.TronNet
 {
@@ -14,9 +15,9 @@ namespace AtomicCore.BlockChain.TronNet
         public string TypeUrl { get; set; }
 
         /// <summary>
-        /// value
+        /// value # parse the data with TronGridTransactionParameterValueHelper
         /// </summary>
         [JsonProperty("value")]
-        public object Value { get; set; }
+        public JObject Value { get; set; }
     }
 }

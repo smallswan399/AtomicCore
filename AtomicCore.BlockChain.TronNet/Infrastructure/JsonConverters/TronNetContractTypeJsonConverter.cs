@@ -20,8 +20,8 @@ namespace AtomicCore.BlockChain.TronNet
 
             if (reader.Value is string enumName)
             {
-                bool flag = Enum.TryParse(enumName,true,out TronNetContractType enumType);
-                if(!flag)
+                bool flag = Enum.TryParse(enumName, true, out TronNetContractType enumType);
+                if (!flag)
                     return TronNetContractType.UnKnow;
 
                 return enumType;

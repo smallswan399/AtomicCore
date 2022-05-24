@@ -14,20 +14,20 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             services.AddTronNet(x =>
             {
                 x.Network = TronNetwork.MainNet;
-                x.FullNodeRestAPI = "http://18.178.138.73:8090";
-                x.SolidityNodeRestAPI = "http://18.178.138.73:8090";
-                x.SuperNodeRestAPI = "http://47.241.20.47:8090";
-                x.EventSrvAPI = "http://18.178.138.73:8090";
+                x.FullNodeRestAPI = "https://tron.intoken.club";
+                x.SolidityNodeRestAPI = "https://tron.intoken.club";
+                x.SuperNodeRestAPI = "https://tron.intoken.club";
+                x.EventSrvAPI = "https://tron.intoken.club";
                 x.TronGridSrvAPI = "https://api.trongrid.io";
                 x.Channel = new GrpcChannelOption 
                 { 
-                    Host = "18.178.138.73", 
-                    Port = 50051 
+                    Host = "gtron.intoken.club", 
+                    Port = 80 
                 };
                 x.SolidityChannel = new GrpcChannelOption 
                 { 
-                    Host = "18.178.138.73", 
-                    Port = 50052 
+                    Host = "gtron.intoken.club", 
+                    Port = 80 
                 };
                 x.ApiKey = "30213a7e-bc62-4f79-9a78-f651d3234047";
             });

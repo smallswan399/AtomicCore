@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AtomicCore.BlockChain.TronNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
@@ -38,11 +32,22 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         {
             var result = _gridApiClient.GetAccount("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm");
 
-            //var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            Assert.IsTrue(result.IsAvailable());
+        }
+
+        [TestMethod()]
+        public void GetTransactionsTest()
+        {
+            var result = _gridApiClient.GetTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm", new TronGridRequestQuery()
+            {
+                Limit = 1
+            });
 
             Assert.IsTrue(result.IsAvailable());
         }
 
         #endregion
+
+
     }
 }

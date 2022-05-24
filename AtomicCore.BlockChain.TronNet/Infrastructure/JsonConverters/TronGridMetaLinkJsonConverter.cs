@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -16,10 +17,8 @@ namespace AtomicCore.BlockChain.TronNet
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (reader.Value == null)
-                return null;
-
-            var dics = JsonConvert.DeserializeObject<Dictionary<string, string>>(reader.Value.ToString());
+            var jo = JObject.Load(reader);
+            var dics = jo.ToObject<Dictionary<string, string>>();
 
             return new TronGridMetaLinkInfo()
             {

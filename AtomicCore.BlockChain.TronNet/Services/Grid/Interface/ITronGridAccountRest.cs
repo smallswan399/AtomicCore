@@ -21,5 +21,13 @@
         /// <param name="query"></param>
         /// <returns></returns>
         TronGridRestResult<TronGridTransactionInfo> GetTransactions(string address, TronGridTransactionQuery query = null);
+
+        /// <summary>
+        /// Get historical TRC20 transfer records for an account
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        TronGridRestResult<TronGridTrc20Info> GetTrc20Transactions(string address, TronGridTrc20Query query = null);
     }
 }

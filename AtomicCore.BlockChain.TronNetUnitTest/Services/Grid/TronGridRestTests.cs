@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using AtomicCore.BlockChain.TronNet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
@@ -51,6 +52,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 var rawAmount = trc20Info.GetRawAmount();
                 var amount = trc20Info.GetAmount(6);
             }
+
+            Assert.IsTrue(result.IsAvailable());
+        }
+
+        [TestMethod()]
+        public void GetTrc20TransactionsTest()
+        {
+            var result = _gridApiClient.GetTrc20Transactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm");
 
             Assert.IsTrue(result.IsAvailable());
         }

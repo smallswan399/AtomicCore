@@ -3,16 +3,11 @@
 namespace AtomicCore.BlockChain.TronNet
 {
     /// <summary>
-    /// TronGrid Request Query
+    /// TronGrid Transaction Query
     /// </summary>
-    public class TronGridRequestQuery
+    public class TronGridTransactionQuery : TronGridBaseQuery
     {
         #region Propertys
-
-        /// <summary>
-        /// null:null | true:only_confirmed | false:only_unconfirmed
-        /// </summary>
-        public bool? OnlyConfirmed { get; set; }
 
         /// <summary>
         /// null:null | only_from = true | only_from = false
@@ -56,21 +51,16 @@ namespace AtomicCore.BlockChain.TronNet
 
         #endregion
 
-        #region Public Methods
+        #region Override Methods
 
         /// <summary>
-        /// get query parameters
+        /// build query
         /// </summary>
         /// <returns></returns>
-        public string GetQuery()
+        protected override List<string> BuildQuery()
         {
-            var paramList = new List<string>();
+            var paramList = base.BuildQuery();
 
-            if (null != this.OnlyConfirmed)
-                if (this.OnlyConfirmed.Value)
-                    paramList.Add("only_confirmed=true");
-                else
-                    paramList.Add("only_unconfirmed=true");
             if (null != OnlyFrom)
                 paramList.Add($"only_from={OnlyFrom.Value.ToString().ToLower()}");
             if (null != OnlyTo)
@@ -88,7 +78,7 @@ namespace AtomicCore.BlockChain.TronNet
             if (null != SearchInternal)
                 paramList.Add($"search_internal={SearchInternal.Value.ToString().ToLower()}");
 
-            return string.Join("&", paramList);
+            return paramList;
         }
 
         #endregion

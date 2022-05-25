@@ -96,7 +96,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridRequestQuery query = null)
+        public TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridBaseQuery query = null)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));
@@ -119,7 +119,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public TronGridRestResult<TronGridTransactionInfo> GetTransactions(string address, TronGridRequestQuery query = null)
+        public TronGridRestResult<TronGridTransactionInfo> GetTransactions(string address, TronGridTransactionQuery query = null)
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentNullException(nameof(address));

@@ -12,7 +12,7 @@
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridRequestQuery query = null);
+        TronGridRestResult<TronGridAccountInfo> GetAccount(string address, TronGridBaseQuery query = null);
 
         /// <summary>
         /// Get the transfer records of an account history, including trc10 & trc20 transfers and TRX transfers 
@@ -20,6 +20,6 @@
         /// <param name="address"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        TronGridRestResult<TronGridTransactionInfo> GetTransactions(string address, TronGridRequestQuery query = null);
+        TronGridRestResult<TronGridTransactionInfo> GetTransactions(string address, TronGridTransactionQuery query = null);
     }
 }

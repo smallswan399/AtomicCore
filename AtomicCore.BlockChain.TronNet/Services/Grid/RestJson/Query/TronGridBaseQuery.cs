@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronGrid Base Query
     /// </summary>
-    public class TronGridBaseQuery
+    public class TronGridBaseQuery : ITronGridQuery
     {
         #region Propertys
 

@@ -6,5 +6,11 @@
     /// </summary>
     public interface ITronGridTRC10Rest
     {
+        /// <summary>
+        /// Get a list of all TRC10s
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        TronGridRestResult<TronGridAssetTrc10Info> GetTrc10List(TronGridAssetTrc10Query query = null);
     }
 }

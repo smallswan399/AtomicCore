@@ -160,5 +160,28 @@ namespace AtomicCore.BlockChain.TronNet
         }
 
         #endregion
+
+        #region ITronGridTRC10Rest
+
+        /// <summary>
+        /// Get a list of all TRC10s
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public TronGridRestResult<TronGridAssetTrc10Info> GetTrc10List(TronGridAssetTrc10Query query = null)
+        {
+            string query_str = string.Empty;
+            if (null != query)
+                query_str = query.GetQuery();
+
+            string url = $"{_baseUrl}/v1/assets/{(string.IsNullOrEmpty(query_str) ? string.Empty : $"?{query_str}")}";
+            string resp = RestGet(url);
+
+            var result = ObjectParse<TronGridAssetTrc10Info>(resp);
+
+            return result;
+        }
+
+        #endregion
     }
 }

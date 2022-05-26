@@ -64,6 +64,27 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             Assert.IsTrue(result.IsAvailable());
         }
 
+
+        #endregion
+
+        #region ITronGridTRC10Rest
+
+        [TestMethod()]
+        public void GetTrc10ListTest()
+        {
+            var result = _gridApiClient.GetTrc10List();
+
+            Assert.IsTrue(result.IsAvailable());
+        }
+
+        [TestMethod()]
+        public void GetTrc10ListByNameTest()
+        {
+            var result = _gridApiClient.GetTrc10ListByName("USDT");
+
+            Assert.IsTrue(result.IsAvailable());
+        }
+
         #endregion
 
 

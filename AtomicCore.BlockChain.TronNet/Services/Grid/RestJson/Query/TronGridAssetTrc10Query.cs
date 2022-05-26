@@ -26,6 +26,28 @@ namespace AtomicCore.BlockChain.TronNet
 
         #endregion
 
+        #region Protected Methods
+
+        /// <summary>
+        /// build query
+        /// </summary>
+        /// <returns></returns>
+        protected virtual List<string> BuildQuery()
+        {
+            var paramList = new List<string>();
+
+            if (null != Limit)
+                paramList.Add($"limit={Limit.Value}");
+            if (!string.IsNullOrEmpty(OrderBy))
+                paramList.Add($"order_by={OrderBy}");
+            if (!string.IsNullOrEmpty(FingerPrint))
+                paramList.Add($"fingerprint={FingerPrint}");
+
+            return paramList;
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -34,16 +56,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public string GetQuery()
         {
-            var paramList = new List<string>();
-
-            if(null != Limit)
-                paramList.Add($"limit={Limit.Value}");
-            if (!string.IsNullOrEmpty(OrderBy))
-                paramList.Add($"order_by={OrderBy}");
-            if (!string.IsNullOrEmpty(FingerPrint))
-                paramList.Add($"fingerprint={FingerPrint}");
-
-            return string.Join("&", paramList);
+            return string.Join("&", BuildQuery());
         }
 
         #endregion

@@ -190,7 +190,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <returns></returns>
         public TronGridRestResult<TronGridAssetTrc10Info> GetTrc10ListByName(string name, TronGridAssetTrc10ByNameQuery query = null)
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
             string query_str = string.Empty;
@@ -198,6 +198,29 @@ namespace AtomicCore.BlockChain.TronNet
                 query_str = query.GetQuery();
 
             string url = $"{_baseUrl}/v1/assets/{name}/list{(string.IsNullOrEmpty(query_str) ? string.Empty : $"?{query_str}")}";
+            string resp = RestGet(url);
+
+            var result = ObjectParse<TronGridAssetTrc10Info>(resp);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Query TRC10 by ID or issuer
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public TronGridRestResult<TronGridAssetTrc10Info> GetTrc10ListByIdentifier(string identifier, TronGridAssetTrc10ByIdentifierQuery query = null)
+        {
+            if (string.IsNullOrEmpty(identifier))
+                throw new ArgumentNullException(nameof(identifier));
+
+            string query_str = string.Empty;
+            if (null != query)
+                query_str = query.GetQuery();
+
+            string url = $"{_baseUrl}/v1/assets/{identifier}{(string.IsNullOrEmpty(query_str) ? string.Empty : $"?{query_str}")}";
             string resp = RestGet(url);
 
             var result = ObjectParse<TronGridAssetTrc10Info>(resp);

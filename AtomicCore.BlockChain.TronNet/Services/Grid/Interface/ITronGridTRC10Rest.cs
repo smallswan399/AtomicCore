@@ -20,5 +20,13 @@
         /// <param name="query"></param>
         /// <returns></returns>
         TronGridRestResult<TronGridAssetTrc10Info> GetTrc10ListByName(string name, TronGridAssetTrc10ByNameQuery query = null);
+
+        /// <summary>
+        /// Query TRC10 by ID or issuer
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        TronGridRestResult<TronGridAssetTrc10Info> GetTrc10ListByIdentifier(string identifier, TronGridAssetTrc10ByIdentifierQuery query = null);
     }
 }

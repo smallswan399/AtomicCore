@@ -10,7 +10,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// txID
         /// </summary>
-        [JsonProperty("txID")]
+        [JsonProperty("transaction_id")]
         public string TxHash { get; set; }
 
         /// <summary>

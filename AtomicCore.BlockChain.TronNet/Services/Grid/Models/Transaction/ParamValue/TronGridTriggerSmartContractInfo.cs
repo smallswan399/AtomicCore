@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronGrid Trigger SmartContract Info
     /// </summary>
-    public class TronGridTriggerSmartContractInfo : ITronGridTransactionParamValue
+    public class TronGridTriggerSmartContractInfo : TronGridTransactionParamValue
     {
         #region Variables
 
@@ -23,12 +23,6 @@ namespace AtomicCore.BlockChain.TronNet
         /// </summary>
         [JsonProperty("data")]
         public string Data { get; set; }
-
-        /// <summary>
-        /// owner_address
-        /// </summary>
-        [JsonProperty("owner_address"), JsonConverter(typeof(TronGridAddressBase58JsonConverter))]
-        public string OwnerAddress { get; set; }
 
         /// <summary>
         /// contract_address

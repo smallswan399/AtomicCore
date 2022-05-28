@@ -17,5 +17,21 @@ namespace AtomicCore.BlockChain.TronNet
         public string OwnerAddress { get; set; }
 
         #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// ParamValue Parse To Object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="paramValue"></param>
+        /// <returns></returns>
+        public static T Parse<T>(Newtonsoft.Json.Linq.JObject paramValue)
+            where T : TronGridTransactionParamValue, new()
+        {
+            return paramValue.ToObject<T>();
+        }
+
+        #endregion
     }
 }

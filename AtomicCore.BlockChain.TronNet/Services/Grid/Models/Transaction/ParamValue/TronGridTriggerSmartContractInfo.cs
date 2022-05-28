@@ -5,6 +5,7 @@ namespace AtomicCore.BlockChain.TronNet
     /// <summary>
     /// TronGrid Trigger SmartContract Info
     /// </summary>
+    [TronNetParamValue(TronNetContractType.TriggerSmartContract)]
     public class TronGridTriggerSmartContractInfo : TronGridTransactionParamValue
     {
         #region Variables

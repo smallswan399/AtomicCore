@@ -35,10 +35,10 @@ namespace AtomicCore.BlockChain.TronNet
         public long ResourceValue { get; set; }
 
         /// <summary>
-        /// frozen_balance
+        /// frozen_balance # TRX
         /// </summary>
-        [JsonProperty("frozen_balance")]
-        public long FrozenBalance { get; set; }
+        [JsonProperty("frozen_balance"), JsonConverter(typeof(TronNetTrxUnitJsonConverter))]
+        public decimal FrozenBalance { get; set; }
 
         /// <summary>
         /// receiver_address

@@ -79,6 +79,12 @@ namespace AtomicCore.BlockChain.TronNet
         [JsonProperty("block_timestamp")]
         public long BlockTimestamp { get; set; }
 
+        /// <summary>
+        /// unfreeze_amount # TRX
+        /// </summary>
+        [JsonProperty("unfreeze_amount"), JsonConverter(typeof(TronNetTrxUnitJsonConverter))]
+        public decimal UnfreezeAmount { get; set; }
+
         //internal_transactions
     }
 }

@@ -46,7 +46,11 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             if (null != item)
             {
                 var contract = item.RawData.Contract.FirstOrDefault(d => d.Type == TronNetContractType.TriggerSmartContract);
-                var trc20Info = contract.Parameter.Value.ToObject<TronGridTriggerSmartContractInfo>();
+                var paramValue = contract.Parameter.Value;
+
+                var flag = paramValue.IncludContractAddress("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t");
+
+                var trc20Info = paramValue.Parse<TronGridTriggerSmartContractInfo>();
 
                 string toAddress = trc20Info.GetToAddress();
                 var rawAmount = trc20Info.GetRawAmount();

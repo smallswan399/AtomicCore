@@ -17,7 +17,7 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// value # parse the data with TronGridTransactionParameterValueHelper
         /// </summary>
-        [JsonProperty("value")]
-        public JObject Value { get; set; }
+        [JsonProperty("value"), JsonConverter(typeof(TronGridParamValueJsonConverter))]
+        public ITronGridTransactionParamValue Value { get; set; }
     }
 }

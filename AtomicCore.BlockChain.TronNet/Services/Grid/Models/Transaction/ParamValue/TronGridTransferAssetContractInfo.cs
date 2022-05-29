@@ -25,8 +25,28 @@ namespace AtomicCore.BlockChain.TronNet
         /// <summary>
         /// amount
         /// </summary>
-        [JsonProperty("amount"), JsonConverter(typeof(TronNetTrxUnitJsonConverter))]
-        public decimal Amount { get; set; }
+        [JsonProperty("amount")]
+        public long Amount { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Get Amount
+        /// </summary>
+        /// <param name="decimals"></param>
+        /// <returns></returns>
+        public decimal GetAmount(int decimals)
+        {
+            if (decimals < decimal.Zero)
+                return decimal.Zero;
+
+            if (decimals > 1)
+                return TronNetUntils.ValueToAmount(Amount, decimals);
+            else
+                return Amount;
+        }
 
         #endregion
     }

@@ -40,7 +40,13 @@ namespace AtomicCore.BlockChain.TronNet.Tests
         [TestMethod()]
         public void GetTransactionsTest()
         {
-            var result = _gridApiClient.GetTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm");
+            var hex_address = TronNetECKey.ConvertToHexAddress("TEEBzBuyVvE2YT1ub3xHe9UtcfwXtS1KeV");
+
+            var result = _gridApiClient.GetTransactions("TK7XWSuRi5PxYDUQ53L43baio7ZBWukcGm", new TronGridTransactionQuery()
+            {
+                Limit = 20,
+                OnlyTo = true
+            });
 
             var item = result.Data.FirstOrDefault(d => d.RawData.Contract.Any(d => d.Type == TronNetContractType.TriggerSmartContract));
             if (null != item)
@@ -48,13 +54,14 @@ namespace AtomicCore.BlockChain.TronNet.Tests
                 var contract = item.RawData.Contract.FirstOrDefault(d => d.Type == TronNetContractType.TriggerSmartContract);
                 var paramValue = contract.Parameter.Value;
 
-                var flag = paramValue.IncludContractAddress("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t");
+                if (paramValue.IncludContractAddress("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"))
+                {
+                    var trc20Info = paramValue.Parse<TronGridTriggerSmartContractInfo>();
 
-                var trc20Info = paramValue.Parse<TronGridTriggerSmartContractInfo>();
-
-                string toAddress = trc20Info.GetToAddress();
-                var rawAmount = trc20Info.GetRawAmount();
-                var amount = trc20Info.GetAmount(6);
+                    string toAddress = trc20Info.GetToAddress();
+                    var rawAmount = trc20Info.GetRawAmount();
+                    var amount = trc20Info.GetAmount(6);
+                }
             }
 
             Assert.IsTrue(result.IsAvailable());

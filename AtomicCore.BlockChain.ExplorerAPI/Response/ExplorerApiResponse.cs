@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace AtomicCore.BlockChain.ExplorerAPI
 {
     /// <summary>
-    /// btc address txs response
+    /// Explorer Api Response
     /// </summary>
-    public class BtcAddressTxsResponse : List<BtcTransactionJson>
+    public abstract class ExplorerApiResponse
     {
         /// <summary>
         /// debug url

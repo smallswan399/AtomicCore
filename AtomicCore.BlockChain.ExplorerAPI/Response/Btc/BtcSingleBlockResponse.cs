@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
     /// <summary>
     /// Btc Single Block Response
     /// </summary>
-    public class BtcSingleBlockResponse
+    public class BtcSingleBlockResponse : ExplorerApiResponse
     {
         /// <summary>
         /// address

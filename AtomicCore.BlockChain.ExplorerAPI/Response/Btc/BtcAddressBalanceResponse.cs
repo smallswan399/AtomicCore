@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
     /// <summary>
     /// the btc balance of address
     /// </summary>
-    public class BtcAddressBalanceResponse
+    public class BtcAddressBalanceResponse : ExplorerApiResponse
     {
         /// <summary>
         /// address

@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AtomicCore.BlockChain.ExplorerAPI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AtomicCore.BlockChain.ExplorerAPI.Tests
 {
@@ -55,7 +49,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
         {
             IBtcExplorerClient cli = new BtcExplorerClient();
 
-            var result = cli.GetAddressTxs("3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ");
+            var result = cli.GetAddressTxs("1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P");
 
             Assert.IsTrue(null != result);
         }

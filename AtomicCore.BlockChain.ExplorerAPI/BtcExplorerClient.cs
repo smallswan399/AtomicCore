@@ -65,6 +65,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string resp = RestGet(url);
 
                 resultData = ObjectParse<BtcSingleBlockResponse>(resp);
+                resultData.DebugUrl = url;
             }
             else
             {
@@ -76,6 +77,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                     string resp = RestGet(url);
 
                     resultData = ObjectParse<BtcSingleBlockResponse>(resp);
+                    resultData.DebugUrl = url;
 
                     ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }
@@ -116,6 +118,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string resp = RestGet(url);
 
                 resultData = ObjectParse<BtcUnspentOutputResponse>(resp);
+                resultData.DebugUrl = url;
             }
             else
             {
@@ -133,6 +136,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                     string resp = RestGet(url);
 
                     resultData = ObjectParse<BtcUnspentOutputResponse>(resp);
+                    resultData.DebugUrl = url;
 
                     ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }
@@ -162,6 +166,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string resp = RestGet(url);
 
                 resultData = ObjectParse<BtcAddressBalanceResponse>(resp);
+                resultData.DebugUrl = url;
             }
             else
             {
@@ -173,6 +178,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                     string resp = RestGet(url);
 
                     resultData = ObjectParse<BtcAddressBalanceResponse>(resp);
+                    resultData.DebugUrl = url;
 
                     ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }
@@ -210,6 +216,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 string resp = RestGet(url);
 
                 resultData = ObjectParse<BtcAddressTxsResponse>(resp);
+                resultData.DebugUrl = url;
             }
             else
             {
@@ -227,6 +234,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                     string resp = RestGet(url);
 
                     resultData = ObjectParse<BtcAddressTxsResponse>(resp);
+                    resultData.DebugUrl = url;
 
                     ApiMsCacheProvider.Set(cacheKey, resultData, cacheMode, TimeSpan.FromSeconds(cacheSeconds));
                 }

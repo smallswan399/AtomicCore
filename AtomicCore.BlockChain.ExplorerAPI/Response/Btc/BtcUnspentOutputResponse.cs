@@ -5,7 +5,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI
     /// <summary>
     /// btc unspent output response
     /// </summary>
-    public class BtcUnspentOutputResponse
+    public class BtcUnspentOutputResponse : ExplorerApiResponse
     {
         /// <summary>
         /// notice

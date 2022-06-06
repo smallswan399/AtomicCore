@@ -125,7 +125,7 @@ namespace AtomicCore.BlockChain.OmniscanAPI.Tests
             //3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ
             //1DeRF2bLsSFRjsFBuyhfjJ9BE5PD9Uy7gL
 
-            var result = client.GetTxList("3A1YfC2VeYZjVyavBAKhbjuc8odurW9yzQ");
+            var result = client.GetTxList("1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P");
 
             Assert.IsTrue(null != result);
         }

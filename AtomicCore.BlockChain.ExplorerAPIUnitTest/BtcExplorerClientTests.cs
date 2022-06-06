@@ -49,7 +49,7 @@ namespace AtomicCore.BlockChain.ExplorerAPI.Tests
         {
             IBtcExplorerClient cli = new BtcExplorerClient();
 
-            var result = cli.GetAddressTxs("1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P");
+            var result = cli.GetAddressTxs("1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P", 0, 50);
 
             Assert.IsTrue(null != result);
         }

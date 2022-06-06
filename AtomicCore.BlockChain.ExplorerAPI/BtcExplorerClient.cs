@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace AtomicCore.BlockChain.ExplorerAPI
@@ -206,13 +207,13 @@ namespace AtomicCore.BlockChain.ExplorerAPI
             BtcAddressTxsResponse resultData = null;
             if (cacheSeconds <= 0 || ExplorerAPICacheMode.None == cacheMode)
             {
-                StringBuilder urlBuilder = new StringBuilder($"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full");
+                List<string> paramList = new List<string>();
                 if (offset > 0)
-                    urlBuilder.Append($"offset={offset}");
+                    paramList.Add($"offset={offset}");
                 if (limit > 0)
-                    urlBuilder.Append($"limit={limit}");
+                    paramList.Add($"limit={limit}");
 
-                string url = urlBuilder.ToString();
+                string url = $"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full{(paramList.Count > 0 ? $"?{string.Join("&", paramList)}" : string.Empty)}";
                 string resp = RestGet(url);
 
                 resultData = ObjectParse<BtcAddressTxsResponse>(resp);
@@ -224,13 +225,13 @@ namespace AtomicCore.BlockChain.ExplorerAPI
                 bool exists = ApiMsCacheProvider.Get(cacheKey, out resultData);
                 if (!exists)
                 {
-                    StringBuilder urlBuilder = new StringBuilder($"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full");
+                    List<string> paramList = new List<string>();
                     if (offset > 0)
-                        urlBuilder.Append($"offset={offset}");
+                        paramList.Add($"offset={offset}");
                     if (limit > 0)
-                        urlBuilder.Append($"limit={limit}");
+                        paramList.Add($"limit={limit}");
 
-                    string url = urlBuilder.ToString();
+                    string url = $"{C_APIREST_BASEURL}/haskoin-store/btc/address/{address}/transactions/full{(paramList.Count > 0 ? $"?{string.Join("&", paramList)}" : string.Empty)}";
                     string resp = RestGet(url);
 
                     resultData = ObjectParse<BtcAddressTxsResponse>(resp);

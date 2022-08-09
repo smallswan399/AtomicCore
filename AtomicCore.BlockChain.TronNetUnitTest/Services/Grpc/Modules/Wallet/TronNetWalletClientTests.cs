@@ -1,14 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AtomicCore.BlockChain.TronNet;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Grpc.Core;
 using Google.Protobuf;
-using System.Buffers.Text;
-using Newtonsoft.Json.Linq;
 
 namespace AtomicCore.BlockChain.TronNet.Tests
 {
@@ -189,6 +183,40 @@ namespace AtomicCore.BlockChain.TronNet.Tests
             string ownerAddress = contractTransfer.OwnerAddress.ToStringUtf8();
             string toAddress = contractTransfer.ToAddress.ToStringUtf8();
             long amount = contractTransfer.Amount;
+        }
+
+        [TestMethod()]
+        public void GetAccountPermissionUpdateTx()
+        {
+            // 9e83be9742adf54df17db0ed0610df9598b73d5363a0fcbb5315af4b171db397
+            string txid = "9e83be9742adf54df17db0ed0610df9598b73d5363a0fcbb5315af4b171db397";
+
+            //获取交易信息
+            Transaction txInfo = _cli.GetTransactionById(new BytesMessage()
+            {
+                Value = ByteString.CopyFrom(txid.HexToByteArray())
+            }, headers: _wallet.GetHeaders());
+            if (null == txInfo)
+                Assert.Fail();
+
+            // 解析contract
+            var contract = txInfo.RawData.Contract.FirstOrDefault();
+            if (null == contract)
+                Assert.Fail();
+            if (contract.Type != Transaction.Types.Contract.Types.ContractType.AccountPermissionUpdateContract)
+                Assert.Fail();
+            var permissionUpdate = AccountPermissionUpdateContract.Parser.ParseFrom(contract.Parameter.Value);
+
+            // addressies
+            string ownerAddr = permissionUpdate.OwnerAddress.GetTronAddress(TronNetwork.MainNet);
+            string op_addr = permissionUpdate.Owner.Keys.First().Address.GetTronAddress(TronNetwork.MainNet);
+            string ap_addr = permissionUpdate.Actives.First().Keys.First().Address.GetTronAddress(TronNetwork.MainNet);
+
+            // operation pows
+            var bytes = permissionUpdate.Actives.FirstOrDefault().Operations.ToByteArray();
+            var hex = bytes.ToHex();    // 0x7fff1fc0033e0300000000000000000000000000000000000000000000000000
+
+            Assert.IsTrue(true);
         }
     }
 }

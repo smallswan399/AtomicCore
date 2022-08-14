@@ -11,6 +11,11 @@ namespace AtomicCore
     public static class ExpressionCalculater
     {
         /// <summary>
+        /// string type
+        /// </summary>
+        private static readonly Type STRINGTYPE = typeof(string);
+
+        /// <summary>
         /// 判断表达式中是否包含的有参数
         /// </summary>
         /// <param name="exp">需要被判断的表达式</param>
@@ -50,7 +55,7 @@ namespace AtomicCore
         /// <returns></returns>
         public static object GetValue(Expression expression, params object[] args)
         {
-            object expVal;
+            // 处理表达式
             if (!(expression is LambdaExpression lambdaExp))
             {
                 List<ParameterExpression> parameters = null;
@@ -64,15 +69,49 @@ namespace AtomicCore
                 lambdaExp = Expression.Lambda(expression, parameters);
             }
 
+            // 判断表达式参数
+            object[] invoken_args = null;
+            if (null != lambdaExp.Parameters && lambdaExp.Parameters.Count > 0)
+                if (null == args || args.Length < lambdaExp.Parameters.Count)
+                {
+                    int p_index = 0;
+                    int max_index = args.Length - 1;
+                    var po_list = new List<object>();
+                    foreach (var p in lambdaExp.Parameters)
+                    {
+                        if (p_index <= max_index)
+                            po_list.Add(args[p_index]);
+                        else
+                            po_list.Add(GetDefaultValue(p.Type));
+
+                        p_index++;
+                    }
+
+                    invoken_args = po_list.ToArray();
+                }
+                else
+                    invoken_args = args;
+
             // 生成lambda表达式
             var currentDelegate = lambdaExp.Compile();
-            expVal = currentDelegate.DynamicInvoke(args);
+            object retVal = currentDelegate.DynamicInvoke(invoken_args);
+            var retType = currentDelegate.Method.ReturnParameter.ParameterType;
 
             // 强制将null字符串转化为string.Empty
-            if (expVal is string str_val && string.IsNullOrEmpty(str_val))
-                expVal = string.Empty;
+            if (STRINGTYPE.IsAssignableFrom(retType) && null == retVal)
+                retVal = string.Empty;
 
-            return expVal;
+            return retVal;
+        }
+
+        /// <summary>
+        /// 返回默认值
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        public static object GetDefaultValue(Type targetType)
+        {
+            return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
         }
     }
 }

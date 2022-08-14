@@ -16,8 +16,8 @@ namespace AtomicCore.Tests
             //Delegate showTiwice = fun1;
             //var res2 = showTiwice.DynamicInvoke("123");
 
-            Expression<Func<string, string>> func = d => d;
-            var obj = ExpressionCalculater.GetValue(func, "avbc");
+            Expression<Func<string, string, string>> func = (x, y) => y;
+            var obj = ExpressionCalculater.GetValue(func, new object[] { null });
 
             Assert.IsTrue(null != obj);
         }

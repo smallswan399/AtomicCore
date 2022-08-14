@@ -54,8 +54,10 @@ namespace AtomicCore.Integration.MssqlDbProviderUnitTest
         [TestMethod]
         public void TestUpdateSinglePartial()
         {
+            string qq = null;
+
             DbNonRecord upResult = BizDbRepository.Topic_QQS.Update(d =>
-                d.qq == "10001",
+                d.qq == qq,
             up => new Topic_QQS()
             {
                 text = "update partial success"

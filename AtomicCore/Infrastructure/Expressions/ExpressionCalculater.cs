@@ -55,7 +55,16 @@ namespace AtomicCore
         /// <returns></returns>
         public static object GetValue(Expression expression, params object[] args)
         {
-            // 处理表达式
+            // 常量表达式(快速处理方案)
+            if (expression is ConstantExpression constantExp)
+            {
+                if (STRINGTYPE.IsAssignableFrom(constantExp.Type) && null == constantExp.Value)
+                    return string.Empty;
+
+                return constantExp.Value;
+            }
+
+            // 表达式万能处理流程（性能可能稍差一点）
             if (!(expression is LambdaExpression lambdaExp))
             {
                 List<ParameterExpression> parameters = null;

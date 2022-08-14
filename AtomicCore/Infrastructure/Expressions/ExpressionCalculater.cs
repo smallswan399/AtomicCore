@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -50,8 +51,21 @@ namespace AtomicCore
         public static object GetValue(Expression expression, params object[] args)
         {
             object expVal;
-            LambdaExpression lambdaExp = Expression.Lambda(expression);
-            Delegate currentDelegate = lambdaExp.Compile();
+            if (!(expression is LambdaExpression lambdaExp))
+            {
+                List<ParameterExpression> parameters = null;
+                if (null != args && args.Length > 0)
+                {
+                    parameters = new List<ParameterExpression>();
+                    foreach (var arg in args)
+                        parameters.Add(Expression.Parameter(arg.GetType()));
+                }
+
+                lambdaExp = Expression.Lambda(expression, parameters);
+            }
+
+            // 生成lambda表达式
+            var currentDelegate = lambdaExp.Compile();
             expVal = currentDelegate.DynamicInvoke(args);
 
             // 强制将null字符串转化为string.Empty

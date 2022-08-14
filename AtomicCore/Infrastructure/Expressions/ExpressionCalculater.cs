@@ -49,10 +49,15 @@ namespace AtomicCore
         /// <returns></returns>
         public static object GetValue(Expression expression, params object[] args)
         {
-            object expVal = null;
+            object expVal;
             LambdaExpression lambdaExp = Expression.Lambda(expression);
             Delegate currentDelegate = lambdaExp.Compile();
             expVal = currentDelegate.DynamicInvoke(args);
+
+            // 强制将null字符串转化为string.Empty
+            if (expVal is string str_val && string.IsNullOrEmpty(str_val))
+                expVal = string.Empty;
+
             return expVal;
         }
     }

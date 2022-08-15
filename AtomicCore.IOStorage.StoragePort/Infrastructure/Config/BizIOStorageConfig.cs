@@ -124,7 +124,7 @@ namespace AtomicCore.IOStorage.StoragePort
                     logger.LogInformation($"[{LOGO_TAG}] -> accessToken -> {accessToken}");
                     logger.LogInformation($"[{LOGO_TAG}] -> saveRootDir -> {saveRootDir}");
                     logger.LogInformation($"[{LOGO_TAG}] -> allowFileExts -> {allowFileExts}");
-                    logger.LogInformation($"[{LOGO_TAG}] -> allowSizeMaxLimit -> {allowSizeMaxLimit}");
+                    logger.LogInformation($"[{LOGO_TAG}] -> allowSizeMaxLimit -> [{allowSizeMaxLimit}]M");
 
                     config = new BizIOStorageConfig()
                     {
@@ -158,7 +158,7 @@ namespace AtomicCore.IOStorage.StoragePort
                         logger.LogInformation($"[{LOGO_TAG}] -> accessToken -> {config.AppToken}");
                         logger.LogInformation($"[{LOGO_TAG}] -> saveRootDir -> {config.SaveRootDir}");
                         logger.LogInformation($"[{LOGO_TAG}] -> allowFileExts -> {config.AllowFileExts}");
-                        logger.LogInformation($"[{LOGO_TAG}] -> allowSizeMaxLimit -> {config.AllowFileMBSizeLimit}");
+                        logger.LogInformation($"[{LOGO_TAG}] -> allowSizeMaxLimit -> [{config.AllowFileMBSizeLimit}]M");
                     }
                 }
             }
@@ -172,7 +172,7 @@ namespace AtomicCore.IOStorage.StoragePort
                     AppToken = random_token,
                     SaveRootDir = "uploads",
                     AllowFileExts = ".jpg,.jpeg,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.wgt,.apk,.bmp,.png,.psd,.txt,.pdf",
-                    AllowFileMBSizeLimit = "50"
+                    AllowFileMBSizeLimit = "[50]M"
                 };
                 logger.LogWarning($"[{LOGO_TAG}] -> the randwom access token is '{random_token}'");
                 logger.LogInformation($"[{LOGO_TAG}] -> redis initializes default local connection!");

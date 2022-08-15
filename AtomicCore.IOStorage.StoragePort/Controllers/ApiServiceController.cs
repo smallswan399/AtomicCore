@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -27,6 +28,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </summary>
         private readonly IBizPathSrvProvider _pathProvider = null;
 
+        /// <summary>
+        /// 日志实例
+        /// </summary>
+        private readonly ILogger<ApiServiceController> _logger;
+
         #endregion
 
         #region Constructors
@@ -35,9 +41,11 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="pathProvider"></param>
-        public ApiServiceController(IBizPathSrvProvider pathProvider)
+        /// <param name="logger"></param>
+        public ApiServiceController(IBizPathSrvProvider pathProvider, ILogger<ApiServiceController> logger)
         {
             _pathProvider = pathProvider;
+            _logger = logger;
         }
 
         #endregion
@@ -185,7 +193,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
 
                 //计算存储路径 + 上传文件
                 string savePath = GetSaveIOPath(bizFolder, indexFolder, fileName);
-                Console.WriteLine($"--> savePath is {savePath},ready to save file!");
+                _logger.LogInformation($"[UploadingFormFile] -> savePath is {savePath},ready to save file!");
 
                 //开始异步写入磁盘
                 await WriteFileAsync(stream, savePath);
@@ -268,7 +276,7 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             string io_saveRoot = this._pathProvider.MapPath(_pathProvider.SaveRootDir).ToLower();
             if (!Directory.Exists(io_saveRoot))
             {
-                Console.WriteLine($"--> save root path '{io_saveRoot}' has not exists,ready to created!");
+                _logger.LogInformation($"[GetSaveIOPath] -> save root path '{io_saveRoot}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_saveRoot);
             }
 
@@ -276,8 +284,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             string io_bizFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder)).ToLower();
             if (!Directory.Exists(io_bizFolder))
             {
-                Console.WriteLine($"--> io_bizFolder path is '{io_bizFolder}' has not exists......");
-                Console.WriteLine($"--> directory '{bizFolder}' has not exists,ready to created!");
+                _logger.LogInformation($"[GetSaveIOPath] -> io_bizFolder path is '{io_bizFolder}' has not exists......");
+                _logger.LogInformation($"[GetSaveIOPath] -> directory '{bizFolder}' has not exists,ready to created!");
                 Directory.CreateDirectory(io_bizFolder);
             }
 
@@ -291,8 +299,8 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
                 io_indexFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder, indexFolder)).ToLower();
                 if (!Directory.Exists(io_indexFolder))
                 {
-                    Console.WriteLine($"--> io_indexFolder path is '{io_indexFolder}' has not exists......");
-                    Console.WriteLine($"--> directory '{indexFolder}' has not exists,ready to created!");
+                    _logger.LogInformation($"[GetSaveIOPath] -> io_indexFolder path is '{io_indexFolder}' has not exists......");
+                    _logger.LogInformation($"[GetSaveIOPath] -> directory '{indexFolder}' has not exists,ready to created!");
                     Directory.CreateDirectory(io_indexFolder);
                 }
             }

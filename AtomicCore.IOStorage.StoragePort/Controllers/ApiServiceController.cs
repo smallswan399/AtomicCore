@@ -153,13 +153,14 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
         /// </summary>
         /// <param name="bizFolder">业务文件夹</param>
         /// <param name="indexFolder">数据索引文件夹</param>
+        /// <param name="fileName">文件保存名称，用户可自定义指定，若不传则自动计算MD5值</param>
         /// <remarks>
         /// 整个文件读入 IFormFile，它是文件的 C# 表示形式，用于处理或保存文件。文件上传所用的资源（磁盘、内存）取决于并发文件上传的数量和大小。 
         /// 如果应用尝试缓冲过多上传，站点就会在内存或磁盘空间不足时崩溃。如果文件上传的大小或频率会消耗应用资源，请使用流式传输
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> UploadingFormFile(string bizFolder, string indexFolder)
+        public async Task<IActionResult> UploadingFormFile(string bizFolder, string indexFolder, string fileName)
         {
             //权限判断
             if (!this.HasPremission)
@@ -188,8 +189,9 @@ namespace AtomicCore.IOStorage.StoragePort.Controllers
             string relativePath;
             using (Stream stream = file.OpenReadStream())
             {
-                //计算文件HASH值
-                string fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
+                // 判断上传是否指定保存文件名称,若为空则计算文件HASH值
+                if (string.IsNullOrEmpty(fileName))
+                    fileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
 
                 //计算存储路径 + 上传文件
                 string savePath = GetSaveIOPath(bizFolder, indexFolder, fileName);

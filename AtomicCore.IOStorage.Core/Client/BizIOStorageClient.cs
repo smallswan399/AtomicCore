@@ -74,6 +74,8 @@ namespace AtomicCore.IOStorage.Core
             ));
             if (!string.IsNullOrEmpty(input.SubFolder))
                 urlBuilder.AppendFormat("&indexFolder={0}", input.SubFolder);
+            if (!string.IsNullOrEmpty(input.FileName))
+                urlBuilder.AppendFormat("&fileName={0}", input.FileName);
             urlBuilder.AppendFormat("&rd={0}", DateTime.Now.Ticks.ToString("x"));
 
             //Stream -> buffer

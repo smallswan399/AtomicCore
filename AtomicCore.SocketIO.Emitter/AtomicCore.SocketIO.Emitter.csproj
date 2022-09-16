@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="MsgPack.Cli" Version="1.0.1" />
-    <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.66" />
   </ItemGroup>
 
 </Project>

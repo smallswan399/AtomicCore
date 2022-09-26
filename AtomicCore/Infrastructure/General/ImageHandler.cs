@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Drawing;
-using System.Drawing.Imaging;
+using System.DrawingCore;
+using System.DrawingCore.Imaging;
+using System.DrawingCore.Drawing2D;
 using System.Net;
-using System.Drawing.Drawing2D;
 
 namespace AtomicCore
 {
@@ -199,6 +199,7 @@ namespace AtomicCore
             string ext = null;
             Image img = null;
             imageStream.Position = 0;
+
             try
             {
                 img = Image.FromStream(imageStream);
@@ -390,7 +391,7 @@ namespace AtomicCore
 
             qualityParam[0] = quality;
 
-            EncoderParameter encoderParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qualityParam);
+            EncoderParameter encoderParam = new EncoderParameter(Encoder.Quality, qualityParam);
             encoderParams.Param[0] = encoderParam;
 
             if (ici != null)
@@ -495,7 +496,7 @@ namespace AtomicCore
 
             qualityParam[0] = quality;
 
-            EncoderParameter encoderParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qualityParam);
+            EncoderParameter encoderParam = new EncoderParameter(Encoder.Quality, qualityParam);
             encoderParams.Param[0] = encoderParam;
 
             if (ici != null)
@@ -994,7 +995,7 @@ namespace AtomicCore
 
             //设置 原图片 对象的 EncoderParameters 对象
             EncoderParameters parameters = new EncoderParameters(1);
-            parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, ((long)100));
+            parameters.Param[0] = new EncoderParameter(Encoder.Quality, 100L);
             image.Save(ms, ici, parameters);
             parameters.Dispose();
 

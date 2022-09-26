@@ -174,7 +174,7 @@ namespace AtomicCore
                 response = (HttpWebResponse)request.GetResponse();
                 using (System.IO.MemoryStream ms = new MemoryStream())
                 {
-                    using (System.Drawing.Image img = System.Drawing.Image.FromStream(response.GetResponseStream()))
+                    using (System.DrawingCore.Image img = System.DrawingCore.Image.FromStream(response.GetResponseStream()))
                         img.Save(ms, img.RawFormat);
 
                     bys = ms.ToArray();

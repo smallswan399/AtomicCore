@@ -39,9 +39,15 @@ namespace AtomicCore
                         confKey = def_consultKey;
                     else
                     {
-                        confKey = ConfigurationJsonManager.AppSettings["symmetryKey"];
+                        // 针对新版(NETCORE)
+                        confKey = ConfigurationJsonManager.AppSettings["SystemWebConfig:SymmetryKey"];
                         if (string.IsNullOrEmpty(confKey))
-                            confKey = def_consultKey;
+                        {
+                            // 针对旧版(ASP.NET)
+                            confKey = ConfigurationJsonManager.AppSettings["symmetryKey"];
+                            if (string.IsNullOrEmpty(confKey))
+                                confKey = def_consultKey;
+                        }
                     }
 
                     this._algorithmKey = MD5Handler.Generate(confKey, true).Top(8);

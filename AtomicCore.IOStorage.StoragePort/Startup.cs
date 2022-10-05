@@ -142,8 +142,7 @@ namespace AtomicCore.IOStorage.StoragePort
              *  https://learn.microsoft.com/en-us/aspnet/core/grpc/test-tools?view=aspnetcore-5.0
              */
             services.AddGrpc();
-            if (WebHostEnvironment.IsDevelopment())
-                services.AddGrpcReflection();
+            services.AddGrpcReflection();
 
             /*
              * 《MVC相关中间件》
@@ -227,8 +226,7 @@ namespace AtomicCore.IOStorage.StoragePort
             {
                 // 注册GRPC服务,并且打开调试引用（在调试状态下）
                 endpoints.MapGrpcService<BizFileGrpcService>();
-                if (env.IsDevelopment())
-                    endpoints.MapGrpcReflectionService();
+                endpoints.MapGrpcReflectionService();
 
                 endpoints.MapControllerRoute(
                     name: "default",

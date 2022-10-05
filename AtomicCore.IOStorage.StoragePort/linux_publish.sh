@@ -1,13 +1,13 @@
 ﻿#!/bin/bash
 
-docker pull 0646894062/tlbc.betgame.static
+docker pull 0646894062/atomiccore.iostorage.storageport
 
-docker stop tlbc.betgame.static
+docker stop iostorage
 
-docker rm tlbc.betgame.static
+docker rm iostorage
 
 docker run -d -p 8019:80 \
---name=tlbc.betgame.static \
+--name=iostorage \
 -e Logging__Console__FormatterName="" \
 -e IOSTORAGE_APPTOKEN=a6e2f27ee1f544cc889898e4397f7b07 \
 -e IOSTORAGE_SAVEROOTDIR=uploads \
@@ -17,6 +17,6 @@ docker run -d -p 8019:80 \
 -v /data/wwwroot/static/uploads:/app/wwwroot/uploads:rw \
 --privileged=true \
 --restart=always \
--it 0646894062/tlbc.betgame.static
+-it 0646894062/atomiccore.iostorage.storageport
 
 sleep 3

@@ -81,8 +81,22 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
                     Message = "request data is empty"
                 };
 
+            // 拼接上传图片流
+            var received = 0L;
+            var fileStream = new MemoryStream();
+            while (requests.Count > 0)
+            {
+                var current = requests.Dequeue();
+                var buffer = current.FileBytes.ToByteArray();
+
+                fileStream.Seek(received, SeekOrigin.Begin);
+                await fileStream.WriteAsync(buffer);
+
+                received += buffer.Length;
+            }
+
             // 空验证、长度验证
-            if (null == first.FileBytes || first.FileBytes.Length <= 0)
+            if (null == fileStream || fileStream.Length <= 0)
                 return new UploadFileReply()
                 {
                     Result = false,
@@ -121,23 +135,23 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
 
             //读取文件流并保存数据
             string relativePath;
-            var buffer = first.FileBytes.ToByteArray();
-            using (var stream = new MemoryStream(buffer))
-            {
-                // 判断上传是否指定保存文件名称,若为空则计算文件HASH值
-                if (string.IsNullOrEmpty(first.FileName))
-                    first.FileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
 
-                //计算存储路径 + 上传文件
-                string savePath = GetSaveIOPath(first.BizFolder, first.IndexFolder, first.FileName);
-                _logger.LogInformation($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> savePath is {savePath},ready to save file!");
+            // 判断上传是否指定保存文件名称,若为空则计算文件HASH值
+            if (string.IsNullOrEmpty(first.FileName))
+                first.FileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(fileStream, false), fileExt);
 
-                //开始异步写入磁盘
-                await WriteFileAsync(stream, savePath);
+            //计算存储路径 + 上传文件
+            string savePath = GetSaveIOPath(first.BizFolder, first.IndexFolder, first.FileName);
+            _logger.LogInformation($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> savePath is {savePath},ready to save file!");
 
-                //获取当前文件存储的相对路径
-                relativePath = this.GetRelativePath(first.BizFolder, first.IndexFolder, first.FileName);
-            }
+            //开始异步写入磁盘
+            await WriteFileAsync(fileStream, savePath);
+
+            //获取当前文件存储的相对路径
+            relativePath = this.GetRelativePath(first.BizFolder, first.IndexFolder, first.FileName);
+
+            //释放文件流
+            fileStream.Dispose();
 
             return new UploadFileReply()
             {

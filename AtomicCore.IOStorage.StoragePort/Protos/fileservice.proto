@@ -21,7 +21,6 @@ message UploadFileReply {
 	bool result = 1;
 	string message = 2;
 	string relativePath = 3;
-	string url = 4;
 }
 
 message DownloadFileRequest {

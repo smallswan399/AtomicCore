@@ -165,8 +165,7 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
             {
                 Result = true,
                 Message = "success",
-                RelativePath = relativePath,
-                Url = $"{(requestContext.Request.IsHttps ? "https" : "http")}://{requestContext.Request.Host.Value}{relativePath}"
+                RelativePath = relativePath
             };
         }
 

@@ -15,6 +15,7 @@ namespace AtomicCore.IOStorage.Core
         private const string c_head_token = "token";
         private readonly string _host;
         private readonly int _port;
+        private readonly string _baseUrl;
         private readonly string _apiKey;
         private readonly int _bufferSize;
 
@@ -23,12 +24,14 @@ namespace AtomicCore.IOStorage.Core
         /// </summary>
         /// <param name="host">GRPC HOST</param>
         /// <param name="port">GRPC PORT</param>
+        /// <param name="baseUrl"></param>
         /// <param name="apiKey">APIKEY</param>
         /// <param name="bufferSize">文件流缓冲区间大小,默认:1M</param>
-        public BizIOStorageGrcpClient(string host, int port, string apiKey, int bufferSize = 1)
+        public BizIOStorageGrcpClient(string host, int port, string baseUrl, string apiKey, int bufferSize = 1)
         {
             _host = host;
             _port = port;
+            _baseUrl = baseUrl;
             _apiKey = apiKey;
             _bufferSize = bufferSize;
         }
@@ -114,7 +117,7 @@ namespace AtomicCore.IOStorage.Core
                 Code = reply.Result ? BizIOStateCode.Success : BizIOStateCode.Failure,
                 Message = reply.Message,
                 RelativePath = reply.RelativePath,
-                Url = reply.Url
+                Url = $"{_baseUrl}{reply.RelativePath}"
             };
         }
 

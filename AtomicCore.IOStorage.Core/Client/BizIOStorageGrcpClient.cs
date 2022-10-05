@@ -95,7 +95,7 @@ namespace AtomicCore.IOStorage.Core
                     request = new UploadFileRequest()
                     {
                         BizFolder = bizFolder,
-                        IndexFolder = indexFolder,
+                        IndexFolder = indexFolder ?? string.Empty,
                         FileName = fileName,
                         FileExt = string.Empty,
                         FileBytes = ByteString.CopyFrom(buffer)
@@ -167,7 +167,7 @@ namespace AtomicCore.IOStorage.Core
                 }
             }
 
-            return new BizIODownloadJsonResult() 
+            return new BizIODownloadJsonResult()
             {
                 Code = BizIOStateCode.Success,
                 Message = "success",

@@ -53,8 +53,10 @@ namespace AtomicCore.IOStorage.Core
             fileStream.Seek(0, SeekOrigin.Begin);
 
             // 设置GRPC头
-            var grpcHeads = new Grpc.Core.Metadata();
-            grpcHeads.Add(c_head_token, _apiKey);
+            var grpcHeads = new Grpc.Core.Metadata
+            {
+                { c_head_token, _apiKey }
+            };
 
             // 变量定义
             var sended = 0;

@@ -14,18 +14,21 @@ namespace AtomicCore.IOStorage.Core
         private readonly string _host;
         private readonly int _port;
         private readonly string _apiKey;
+        private readonly int _bufferSize;
 
         /// <summary>
         /// Constructors
         /// </summary>
-        /// <param name="host"></param>
-        /// <param name="port"></param>
-        /// <param name="apiKey"></param>
-        public BizIOStorageGrcpClient(string host, int port, string apiKey)
+        /// <param name="host">GRPC HOST</param>
+        /// <param name="port">GRPC PORT</param>
+        /// <param name="apiKey">APIKEY</param>
+        /// <param name="bufferSize">文件流缓冲区间大小,默认:1M</param>
+        public BizIOStorageGrcpClient(string host, int port, string apiKey, int bufferSize = 1)
         {
             _host = host;
             _port = port;
             _apiKey = apiKey;
+            _bufferSize = bufferSize;
         }
 
         /// <summary>
@@ -55,9 +58,8 @@ namespace AtomicCore.IOStorage.Core
 
             // 变量定义
             var sended = 0;
-            var eachLength = 1024 * 1024;                   // 每次最多发送 1M 的文件内容
-            var totalLength = fileStream.Length;            // 文件流长度
-            var buffer = new byte[eachLength];
+            var eachLength = _bufferSize * 1024 * 1024;                 // 每次最多发送 1M 的文件内容
+            var totalLength = fileStream.Length;                        // 文件流长度
 
             UploadFileRequest request;
             UploadFileReply reply;
@@ -70,10 +72,18 @@ namespace AtomicCore.IOStorage.Core
                 while (sended < totalLength)
                 {
                     int length;
+                    byte[] buffer;
                     if ((totalLength - sended) > eachLength)
+                    {
+                        buffer = new byte[eachLength];
                         length = await fileStream.ReadAsync(buffer, sended, eachLength);
+                    }
                     else
+                    {
+                        buffer = new byte[totalLength - sended];
                         length = await fileStream.ReadAsync(buffer, sended, (int)(totalLength - sended));
+                    }
+
                     sended += length;
 
                     request = new UploadFileRequest()

@@ -21,19 +21,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Uploads\**" />
-    <Content Remove="Uploads\**" />
-    <EmbeddedResource Remove="Uploads\**" />
-    <None Remove="Uploads\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Dockerfile~RF230620.TMP" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AtomicCore" Version="1.1.9" />
     <PackageReference Include="AtomicCore.IOStorage.Core" Version="1.1.8" />
+    <PackageReference Include="Google.Protobuf" Version="3.21.7" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.49.0" />
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.8" />
@@ -41,6 +37,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\fileservice.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

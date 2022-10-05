@@ -1,0 +1,34 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "AtomicCore.IOStorage.StoragePort";
+
+package file;
+
+service FileService {
+  rpc UploadFile(stream UploadFileRequest) returns (UploadFileReply);
+  rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileReply);
+}
+
+message UploadFileRequest {
+	string bizFolder = 1;
+	string indexFolder = 2;
+	string fileName = 3;
+	bytes fileBytes = 4;
+}
+
+message UploadFileReply {
+	bool result = 1;
+	string message = 2;
+	string relativePath = 3;
+	string url = 4;
+}
+
+message DownloadFileRequest {
+	string relativePath = 1;
+}
+
+message DownloadFileReply {
+	bool result = 1;
+	string message = 2;
+	bytes fileBytes = 3;
+}

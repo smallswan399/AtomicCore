@@ -1,3 +1,4 @@
+using AtomicCore.IOStorage.StoragePort.GrpcService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -135,6 +136,15 @@ namespace AtomicCore.IOStorage.StoragePort
                 "DataProtection"
             ));
 
+            /* 
+             * 《启用GRPC》 
+             *  https://codingnote.cc/p/598478/
+             *  https://learn.microsoft.com/en-us/aspnet/core/grpc/test-tools?view=aspnetcore-5.0
+             */
+            services.AddGrpc();
+            if (WebHostEnvironment.IsDevelopment())
+                services.AddGrpcReflection();
+
             /*
              * 《MVC相关中间件》
              * 1.注册MVC控制器和视图
@@ -215,6 +225,11 @@ namespace AtomicCore.IOStorage.StoragePort
             app.UseResponseCaching();                       //激活输出缓存
             app.UseEndpoints(endpoints =>
             {
+                // 注册GRPC服务,并且打开调试引用（在调试状态下）
+                endpoints.MapGrpcService<BizFileGrpcService>();
+                if (env.IsDevelopment())
+                    endpoints.MapGrpcReflectionService();
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

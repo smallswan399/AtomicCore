@@ -203,7 +203,14 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
             }
 
             // 获取文件路径
-            var io_file = Path.Combine(_pathProvider.SaveRootDir, string.Join(Path.DirectorySeparatorChar, request.RelativePath.Split(Path.AltDirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries)));
+            string io_file;
+            var path_arrs = request.RelativePath.Split(Path.AltDirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
+            if (_pathProvider.SaveRootDir.Equals(path_arrs.First(), StringComparison.OrdinalIgnoreCase))
+                io_file = string.Join(Path.DirectorySeparatorChar, path_arrs);
+            else
+                io_file = Path.Combine(_pathProvider.SaveRootDir, string.Join(Path.DirectorySeparatorChar, path_arrs));
+
+            // 路劲转换
             var filePath = _pathProvider.MapPath(io_file);
             if (!File.Exists(filePath))
             {

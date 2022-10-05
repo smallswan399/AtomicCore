@@ -1,6 +1,8 @@
 ﻿using Google.Protobuf;
 using Grpc.Net.Client;
+using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AtomicCore.IOStorage.Core
@@ -113,6 +115,63 @@ namespace AtomicCore.IOStorage.Core
                 Message = reply.Message,
                 RelativePath = reply.RelativePath,
                 Url = reply.Url
+            };
+        }
+
+        /// <summary>
+        /// grpc down file
+        /// </summary>
+        /// <param name="relativePath"></param>
+        /// <returns></returns>
+        public async Task<BizIODownloadJsonResult> DownLoadFile(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+                return new BizIODownloadJsonResult()
+                {
+                    Code = BizIOStateCode.Failure,
+                    Message = "relative path is empty"
+                };
+
+            // 设置GRPC头
+            var grpcHeads = new Grpc.Core.Metadata
+            {
+                { c_head_token, _apiKey }
+            };
+
+            // 定义内存留缓冲数据
+            MemoryStream fileStream = new MemoryStream();
+
+            // grpc获取数据
+            string url = $"http://{_host}:{_port}";
+            using (var channel = GrpcChannel.ForAddress(url))
+            {
+                var client = new FileService.FileServiceClient(channel);
+                var downloadResult = client.DownloadFile(new DownloadFileRequest()
+                {
+                    RelativePath = relativePath
+                },
+                grpcHeads);
+
+                // 开始接受数据
+                var received = 0L;
+                while (await downloadResult.ResponseStream.MoveNext(CancellationToken.None))
+                {
+                    var current = downloadResult.ResponseStream.Current;
+                    var buffer = current.FileBytes.ToByteArray();
+
+                    fileStream.Seek(received, SeekOrigin.Begin);
+                    await fileStream.WriteAsync(buffer, 0, buffer.Length);
+
+                    received += buffer.Length;
+                    received = Math.Min(received, current.TotalSize);
+                }
+            }
+
+            return new BizIODownloadJsonResult() 
+            {
+                Code = BizIOStateCode.Success,
+                Message = "success",
+                FileStream = fileStream
             };
         }
     }

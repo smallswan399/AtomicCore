@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using AtomicCore.IOStorage.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
 namespace AtomicCore.IOStorage.Core.Tests
@@ -26,6 +27,16 @@ namespace AtomicCore.IOStorage.Core.Tests
 
                 result = client.UploadFile("Test", "dog", "test.jpg", fs).Result;
             }
+
+            Assert.IsTrue(result.Code == BizIOStateCode.Success);
+        }
+
+        [TestMethod()]
+        public void DownLoadFileTest()
+        {
+            var client = new BizIOStorageGrcpClient("127.0.0.1", 8778, "a6e2f27ee1f544cc889898e4397f7b07");
+
+            BizIODownloadJsonResult result = client.DownLoadFile("/test/dog/test.jpg").Result;
 
             Assert.IsTrue(result.Code == BizIOStateCode.Success);
         }

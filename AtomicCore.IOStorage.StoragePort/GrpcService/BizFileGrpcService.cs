@@ -202,7 +202,9 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
                 return;
             }
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), request.RelativePath);
+            // 获取文件路径
+            var io_file = Path.Combine(_pathProvider.SaveRootDir, string.Join(Path.DirectorySeparatorChar, request.RelativePath.Split(Path.AltDirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries)));
+            var filePath = _pathProvider.MapPath(io_file);
             if (!File.Exists(filePath))
             {
                 await responseStream.WriteAsync(new DownloadFileReply()

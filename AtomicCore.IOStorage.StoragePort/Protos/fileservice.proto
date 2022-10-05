@@ -13,7 +13,8 @@ message UploadFileRequest {
 	string bizFolder = 1;
 	string indexFolder = 2;
 	string fileName = 3;
-	bytes fileBytes = 4;
+	string fileExt = 4;
+	bytes fileBytes = 5;
 }
 
 message UploadFileReply {

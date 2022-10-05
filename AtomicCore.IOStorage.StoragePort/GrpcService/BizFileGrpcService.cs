@@ -1,9 +1,13 @@
 ﻿using Grpc.Core;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AtomicCore.IOStorage.StoragePort.GrpcService
@@ -13,29 +17,47 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
     /// </summary>
     public class BizFileGrpcService : FileService.FileServiceBase
     {
+        #region Variable
+
         /// <summary>
         /// 头部信息Token
         /// </summary>
         private const string c_head_token = "token";
 
         /// <summary>
+        /// 当前WEB路径(相关配置参数)
+        /// </summary>
+        private readonly IBizPathSrvProvider _pathProvider = null;
+
+        /// <summary>
         /// 日志对象
         /// </summary>
         private readonly ILogger _logger;
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="pathProvider"></param>
         /// <param name="logger"></param>
-        public BizFileGrpcService(ILogger<BizFileGrpcService> logger)
+        public BizFileGrpcService(IBizPathSrvProvider pathProvider, ILogger<BizFileGrpcService> logger)
         {
+            _pathProvider = pathProvider;
             _logger = logger;
         }
+
+        #endregion
+
+        #region Grpc Methods
 
         public override async Task<UploadFileReply> UploadFile(IAsyncStreamReader<UploadFileRequest> requestStream, ServerCallContext context)
         {
             // 判断权限
-            if (!HasPremission(context))
+            var requestContext = context.GetHttpContext();
+            if (!HasPremission(requestContext))
                 return new UploadFileReply()
                 {
                     Result = false,
@@ -52,14 +74,77 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
 
             // 参数转化
             var first = requests.Peek();
+            if (null == first)
+                return new UploadFileReply()
+                {
+                    Result = false,
+                    Message = "request data is empty"
+                };
 
-            // 基础判断
-            //if(requestStream.f)
+            // 空验证、长度验证
+            if (null == first.FileBytes || first.FileBytes.Length <= 0)
+                return new UploadFileReply()
+                {
+                    Result = false,
+                    Message = "upload data stream is empty"
+                };
+
+            // 格式验证
+            string fileExt = string.Empty;
+            if (!string.IsNullOrEmpty(first.FileName))
+            {
+                // 通过文件名称提取后缀
+                fileExt = Path.GetExtension(first.FileName).ToLowerInvariant();
+                if (string.IsNullOrEmpty(fileExt))
+                    return new UploadFileReply()
+                    {
+                        Result = false,
+                        Message = $"Illegal file format -> The current format is empty"
+                    };
+                if (null != _pathProvider.PermittedExtensions && !_pathProvider.PermittedExtensions.Select(s => s.Trim()).Any(d => d.Equals(fileExt, StringComparison.OrdinalIgnoreCase)))
+                    return new UploadFileReply()
+                    {
+                        Result = false,
+                        Message = $"Illegal file format -> The current format is [{fileExt}]"
+                    };
+            }
+            else
+            {
+                fileExt = first.FileExt;
+                if (string.IsNullOrEmpty(fileExt))
+                    return new UploadFileReply()
+                    {
+                        Result = false,
+                        Message = "the file suffix must be specified when specifying the file name"
+                    };
+            }
+
+            //读取文件流并保存数据
+            string relativePath;
+            var buffer = first.FileBytes.ToByteArray();
+            using (var stream = new MemoryStream(buffer))
+            {
+                // 判断上传是否指定保存文件名称,若为空则计算文件HASH值
+                if (string.IsNullOrEmpty(first.FileName))
+                    first.FileName = string.Format("{0}{1}", AtomicCore.MD5Handler.Generate(stream, false), fileExt);
+
+                //计算存储路径 + 上传文件
+                string savePath = GetSaveIOPath(first.BizFolder, first.IndexFolder, first.FileName);
+                _logger.LogInformation($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> savePath is {savePath},ready to save file!");
+
+                //开始异步写入磁盘
+                await WriteFileAsync(stream, savePath);
+
+                //获取当前文件存储的相对路径
+                relativePath = this.GetRelativePath(first.BizFolder, first.IndexFolder, first.FileName);
+            }
 
             return new UploadFileReply()
             {
                 Result = true,
-                Message = "success"
+                Message = "success",
+                RelativePath = relativePath,
+                Url = $"{(requestContext.Request.IsHttps ? "https" : "http")}://{requestContext.Request.Host.Value}{relativePath}"
             };
         }
 
@@ -68,28 +153,30 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
             return base.DownloadFile(request, responseStream, context);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// 是否有权限
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool HasPremission(ServerCallContext context)
+        private bool HasPremission(HttpContext context)
         {
-            var requestContext = context.GetHttpContext();
-            IBizPathSrvProvider pathSrvProvider = requestContext.RequestServices.GetRequiredService<IBizPathSrvProvider>();
-            if (null == pathSrvProvider)
+            if (null == _pathProvider)
             {
                 _logger.LogError($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> '{nameof(IBizPathSrvProvider)}' is null, are you register the interface of '{nameof(IBizPathSrvProvider)}' in startup?");
                 return false;
             }
-            if (string.IsNullOrEmpty(pathSrvProvider.AppToken))
+            if (string.IsNullOrEmpty(_pathProvider.AppToken))
             {
-                _logger.LogError($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> '{nameof(pathSrvProvider.AppToken)}' is null, are you setting the env or appsetting?");
+                _logger.LogError($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> '{nameof(_pathProvider.AppToken)}' is null, are you setting the env or appsetting?");
                 return false;
             }
 
             // 判断头部是否包含token
-            bool hasHeadToken = requestContext.Request.Headers.TryGetValue(c_head_token, out StringValues headTK);
+            bool hasHeadToken = context.Request.Headers.TryGetValue(c_head_token, out StringValues headTK);
             if (!hasHeadToken)
             {
                 _logger.LogError($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> illegal request, insufficient permission to request");
@@ -97,7 +184,7 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
             }
 
             // 判断Token是否匹配
-            if (!pathSrvProvider.AppToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (!_pathProvider.AppToken.Equals(headTK.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogError($"[Grpc | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] --> app token is illegal, current request token is '{headTK}'");
                 return false;
@@ -105,5 +192,156 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
 
             return true;
         }
+
+        /// <summary>
+        /// 获取相对路径
+        /// </summary>
+        /// <param name="bizFolder"></param>
+        /// <param name="indexFolder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private string GetRelativePath(string bizFolder, string indexFolder, string fileName)
+        {
+            if (string.IsNullOrEmpty(bizFolder))
+                throw new ArgumentNullException(nameof(bizFolder));
+
+            StringBuilder strb = new("/");
+            strb.Append(_pathProvider.SaveRootDir);
+            strb.Append('/');
+            strb.Append(bizFolder);
+            strb.Append('/');
+            if (string.IsNullOrEmpty(indexFolder))
+                strb.Append(fileName);
+            else
+                strb.AppendFormat("{0}/{1}", indexFolder, fileName);
+
+            return strb.ToString().ToLower();
+        }
+
+        /// <summary>
+        /// 获取存储IO路径
+        /// </summary>
+        /// <param name="bizFolder"></param>
+        /// <param name="indexFolder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private string GetSaveIOPath(string bizFolder, string indexFolder, string fileName)
+        {
+            //判断业务文件夹是否为空
+            if (string.IsNullOrEmpty(bizFolder))
+                throw new ArgumentNullException(nameof(bizFolder));
+            else
+                bizFolder = bizFolder.ToLower();
+
+            //判断文件名是否为空
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException(nameof(fileName));
+            else
+                fileName = fileName.ToLower();
+
+            //判断wwwroot文件夹是否存在,防止根目录不存在
+            string io_wwwroot = this._pathProvider.MapPath(string.Empty).ToLower();
+            if (!Directory.Exists(io_wwwroot))
+                Directory.CreateDirectory(io_wwwroot);
+
+            //判断wwwroot根目录下的逻辑存储根目录是否存在
+            string io_saveRoot = this._pathProvider.MapPath(_pathProvider.SaveRootDir).ToLower();
+            if (!Directory.Exists(io_saveRoot))
+            {
+                _logger.LogInformation($"[GetSaveIOPath] -> save root path '{io_saveRoot}' has not exists,ready to created!");
+                Directory.CreateDirectory(io_saveRoot);
+            }
+
+            //判断业务模块文件夹是否存在
+            string io_bizFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder)).ToLower();
+            if (!Directory.Exists(io_bizFolder))
+            {
+                _logger.LogInformation($"[GetSaveIOPath] -> io_bizFolder path is '{io_bizFolder}' has not exists......");
+                _logger.LogInformation($"[GetSaveIOPath] -> directory '{bizFolder}' has not exists,ready to created!");
+                Directory.CreateDirectory(io_bizFolder);
+            }
+
+            //判断数据索引文件夹是否存在
+            string io_indexFolder;
+            if (string.IsNullOrEmpty(indexFolder))
+                io_indexFolder = io_bizFolder;
+            else
+            {
+                indexFolder = indexFolder.ToLower();
+                io_indexFolder = this._pathProvider.MapPath(Path.Combine(_pathProvider.SaveRootDir, bizFolder, indexFolder)).ToLower();
+                if (!Directory.Exists(io_indexFolder))
+                {
+                    _logger.LogInformation($"[GetSaveIOPath] -> io_indexFolder path is '{io_indexFolder}' has not exists......");
+                    _logger.LogInformation($"[GetSaveIOPath] -> directory '{indexFolder}' has not exists,ready to created!");
+                    Directory.CreateDirectory(io_indexFolder);
+                }
+            }
+
+            return Path.Combine(io_indexFolder, fileName);
+        }
+
+        /// <summary>
+        /// 写文件导到磁盘
+        /// </summary>
+        /// <param name="stream">流</param>
+        /// <param name="path">文件保存路径</param>
+        /// <returns></returns>
+        private static async Task<int> WriteFileAsync(System.IO.Stream stream, string path)
+        {
+            const int FILE_WRITE_SIZE = 84975;
+            int writeCount = 0;
+
+            using (FileStream fileStream = new(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite, FILE_WRITE_SIZE, true))
+            {
+                int readCount = 0;
+                byte[] byteArr = new byte[FILE_WRITE_SIZE];
+
+                while ((readCount = await stream.ReadAsync(byteArr.AsMemory(0, byteArr.Length))) > 0)
+                {
+                    await fileStream.WriteAsync(byteArr.AsMemory(0, readCount));
+                    writeCount += readCount;
+                }
+            }
+
+            return writeCount;
+        }
+
+        /// <summary>
+        /// 写文件导入磁盘
+        /// </summary>
+        /// <param name="buffer">字节数组</param>
+        /// <param name="path">文件保存路径</param>
+        /// <returns></returns>
+        private static async Task WriteFileAsync(byte[] buffer, string path)
+        {
+            using FileStream fs = new(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            await fs.WriteAsync(buffer.AsMemory(0, buffer.Length));
+        }
+
+        /// <summary>
+        /// 获取验证模型中的第一个错误
+        /// </summary>
+        /// <param name="modelStateDic"></param>
+        /// <returns></returns>
+        private static string GetError(ModelStateDictionary modelStateDic)
+        {
+            foreach (var item in modelStateDic.Values)
+            {
+                if (item.Errors.Count > 0)
+                {
+                    ModelError mr = item.Errors[0];
+                    if (null != mr.Exception)
+                        return mr.Exception.Message;
+                    else if (!string.IsNullOrEmpty(mr.ErrorMessage))
+                        return mr.ErrorMessage;
+                    else
+                        return "error";
+                }
+            }
+
+            return string.Empty;
+        }
+
+        #endregion
     }
 }

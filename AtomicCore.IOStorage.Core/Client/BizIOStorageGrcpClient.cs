@@ -67,7 +67,6 @@ namespace AtomicCore.IOStorage.Core
             var sended = 0;
             var eachLength = _bufferSize * 1024 * 1024;                 // 每次最多发送 1M 的文件内容
             var totalLength = fileStream.Length;                        // 文件流长度
-            FileStream fs = (FileStream)fileStream;
 
             UploadFileRequest request;
             UploadFileReply reply;
@@ -85,12 +84,12 @@ namespace AtomicCore.IOStorage.Core
                     if (diff > eachLength)
                     {
                         buffer = new byte[eachLength];
-                        length = await fs.ReadAsync(buffer, 0, eachLength);
+                        length = await fileStream.ReadAsync(buffer, 0, eachLength);
                     }
                     else
                     {
                         buffer = new byte[diff];
-                        length = await fs.ReadAsync(buffer, 0, diff);
+                        length = await fileStream.ReadAsync(buffer, 0, diff);
                     }
 
                     sended += length;

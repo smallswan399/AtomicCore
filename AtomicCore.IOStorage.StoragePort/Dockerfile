@@ -3,7 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 RUN apt update -y && apt install nano -y && apt install tzdata -y
 WORKDIR /app
-EXPOSE 80
+EXPOSE 80 50051
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src

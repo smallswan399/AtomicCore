@@ -53,6 +53,12 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
 
         #region Grpc Methods
 
+        /// <summary>
+        /// UploadFile
+        /// </summary>
+        /// <param name="requestStream"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override async Task<UploadFileReply> UploadFile(IAsyncStreamReader<UploadFileRequest> requestStream, ServerCallContext context)
         {
             // 判断权限
@@ -94,6 +100,7 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
 
                 received += buffer.Length;
             }
+            fileStream.Seek(0, SeekOrigin.Begin);
 
             // 空验证、长度验证
             if (null == fileStream || fileStream.Length <= 0)
@@ -162,6 +169,13 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
             };
         }
 
+        /// <summary>
+        /// DownloadFile
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="responseStream"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override Task DownloadFile(DownloadFileRequest request, IServerStreamWriter<DownloadFileReply> responseStream, ServerCallContext context)
         {
             return base.DownloadFile(request, responseStream, context);

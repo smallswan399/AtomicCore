@@ -32,4 +32,5 @@ message DownloadFileReply {
 	bool result = 1;
 	string message = 2;
 	bytes fileBytes = 3;
+	int32 totalSize = 4;
 }

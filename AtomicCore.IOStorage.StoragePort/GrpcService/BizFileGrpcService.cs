@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf;
+using Grpc.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
@@ -176,9 +177,65 @@ namespace AtomicCore.IOStorage.StoragePort.GrpcService
         /// <param name="responseStream"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task DownloadFile(DownloadFileRequest request, IServerStreamWriter<DownloadFileReply> responseStream, ServerCallContext context)
+        public override async Task DownloadFile(DownloadFileRequest request, IServerStreamWriter<DownloadFileReply> responseStream, ServerCallContext context)
         {
-            return base.DownloadFile(request, responseStream, context);
+            // 判断权限
+            var requestContext = context.GetHttpContext();
+            if (!HasPremission(requestContext))
+            {
+                await responseStream.WriteAsync(new DownloadFileReply()
+                {
+                    Result = false,
+                    Message = "illegal request, insufficient permission to request"
+                });
+                return;
+            }
+
+            // 基础判断
+            if (string.IsNullOrEmpty(request.RelativePath))
+            {
+                await responseStream.WriteAsync(new DownloadFileReply()
+                {
+                    Result = false,
+                    Message = "file path is not allowed to be empty"
+                });
+                return;
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), request.RelativePath);
+            if (!File.Exists(filePath))
+            {
+                await responseStream.WriteAsync(new DownloadFileReply()
+                {
+                    Result = false,
+                    Message = "file has not exists"
+                });
+                return;
+            }
+
+            // 读取文件
+            using (var fileStream = File.OpenRead(filePath))
+            {
+                var received = 0L;
+                var totalLength = fileStream.Length;
+
+                var buffer = new byte[1024 * 1024]; // 每次最多发送 1M 的文件内容
+                while (received < totalLength)
+                {
+                    var length = await fileStream.ReadAsync(buffer);
+                    received += length;
+
+                    var response = new DownloadFileReply()
+                    {
+                        Result = true,
+                        Message = $"{received}/{fileStream.Length}",
+                        FileBytes = ByteString.CopyFrom(buffer),
+                        TotalSize = (int)fileStream.Length
+                    };
+
+                    await responseStream.WriteAsync(response);
+                }
+            }
         }
 
         #endregion

@@ -263,13 +263,13 @@ namespace AtomicCore.Integration.MssqlDbProvider
             //开始执行
             using (SqlConnection connection = new SqlConnection(dbString))
             {
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.UseInternalTransaction | SqlBulkCopyOptions.FireTriggers, null))
                 {
                     bulkCopy.DestinationTableName = this._dbMappingHandler.GetDbTableName(modelT);
                     bulkCopy.BatchSize = dt.Rows.Count;
 
                     //尝试打开数据库连结
-                    if (this.TryOpenDbConnection<DbCollectionRecord<M>>(connection, ref result))
+                    if (this.TryOpenDbConnection(connection, ref result))
                     {
                         bulkCopy.WriteToServer(dt);
 
@@ -1656,7 +1656,7 @@ namespace AtomicCore.Integration.MssqlDbProvider
         private bool TryOpenDbConnection<T>(DbConnection connection, ref T result)
             where T : ResultBase
         {
-            bool isOpen = false;
+            bool isOpen;
             try
             {
                 connection.Open();

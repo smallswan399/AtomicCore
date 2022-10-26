@@ -28,6 +28,17 @@
         /// <summary>
         /// EV版本
         /// </summary>
-        public enum EVersion { V0_9_9, V1_4_4 };
+        public enum EVersion 
+        { 
+            /// <summary>
+            /// Version 0.9.9
+            /// </summary>
+            V0_9_9, 
+
+            /// <summary>
+            /// Version 1.4.4
+            /// </summary>
+            V1_4_4 
+        };
     }
 }

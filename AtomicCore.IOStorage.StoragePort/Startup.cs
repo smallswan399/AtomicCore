@@ -201,9 +201,9 @@ namespace AtomicCore.IOStorage.StoragePort
             IDictionary<string, string> mimeDic = BizMIMETypeConfig.ResolveTypes(this.Configuration);
 
             /* 激活静态资源访问(调试模式不缓存Cache) */
-            FileServerOptions options = new FileServerOptions();
+            var options = new FileServerOptions();
             options.StaticFileOptions.OnPrepareResponse = SetCacheControl;
-            FileExtensionContentTypeProvider provider = new FileExtensionContentTypeProvider();
+            var provider = new FileExtensionContentTypeProvider();
             if (null != mimeDic && mimeDic.Count > 0)
                 foreach (var kv in mimeDic)
                     if (!provider.Mappings.ContainsKey(kv.Key))

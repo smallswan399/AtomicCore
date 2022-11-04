@@ -676,8 +676,9 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <param name="limit">page size for pagination</param>
         /// <param name="start_timestamp">query date range</param>
         /// <param name="end_timestamp">query date range</param>
+        /// <param name="confirm">query transfer status. null => all, 1 => unconfirmed, 0 => confirmed, 2 => rolled back</param>
         /// <returns>TRC20 token transfers list</returns>
-        public TronTRC20TransactionListJson GetTRC20Transactions(string contractAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null)
+        public TronTRC20TransactionListJson GetTRC20Transactions(string contractAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, uint? confirm = null)
         {
             //Params Builder
             StringBuilder paramBuilder = new StringBuilder();
@@ -695,6 +696,8 @@ namespace AtomicCore.BlockChain.TronscanAPI
                 paramBuilder.AppendFormat("start_timestamp={0}&", start_timestamp);
             if (null != end_timestamp && end_timestamp > 0UL)
                 paramBuilder.AppendFormat("end_timestamp={0}&", end_timestamp);
+            if (null != confirm && confirm >= 0 && confirm <= 2)
+                paramBuilder.AppendFormat("confirm={0}&", confirm);
 
             //add dynamic parameters
             paramBuilder.Append($"rd={DateTime.UtcNow:yyyyMMddHHmmssffff}");

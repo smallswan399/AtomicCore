@@ -251,6 +251,25 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
         }
 
         [TestMethod()]
+        public void GetTRC20ConfirmedTransactionsTest()
+        {
+            ITronScanClient client = new TronScanClient();
+            var result = client.GetTRC20Transactions(
+              "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+              0,
+              20,
+              null,
+              null,
+              0
+            );
+
+            Assert.IsTrue(null != result);
+            Assert.IsTrue(result.TokenTransfers.Length > 0);
+            Assert.IsTrue(result.TokenTransfers[0].BlockHeight > 0);
+            Assert.IsTrue(result.TokenTransfers.All(t => t.Confirmed));
+        }
+
+        [TestMethod()]
         public void GetResourceTransactionTest()
         {
             ITronScanClient client = new TronScanClient();

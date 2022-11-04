@@ -714,6 +714,31 @@ namespace AtomicCore.BlockChain.TronscanAPI
             return jsonResult;
         }
 
+        public TronTRC20TransactionListJson GetTRC20Transactions(ulong block, int start = 0, int limit = 20)
+        {
+            //Params Builder
+            StringBuilder paramBuilder = new StringBuilder();
+            paramBuilder.AppendFormat("block={0}&", block);
+            if (start > -1)
+              paramBuilder.AppendFormat("start={0}&", start);
+            else
+              paramBuilder.Append("start=0&");
+            if (limit > 0)
+              paramBuilder.AppendFormat("limit={0}&", limit);
+            else
+              paramBuilder.Append("limit=20&");
+            //create url
+            string url = this.CreateRestUrl(string.Format("token_trc20/transfers?{0}", paramBuilder.ToString()));
+
+            //http get
+            string resp = this.RestGet(url);
+
+            //json parse
+            TronTRC20TransactionListJson jsonResult = ObjectParse<TronTRC20TransactionListJson>(resp);
+
+            return jsonResult;
+        }
+
         /// <summary>
         /// Get Resource Transaction List
         /// </summary>

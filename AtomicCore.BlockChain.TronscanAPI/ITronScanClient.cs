@@ -203,6 +203,15 @@
         TronTRC20TransactionListJson GetTRC20Transactions(string contractAddress, int start = 0, int limit = 20, ulong? start_timestamp = null, ulong? end_timestamp = null, uint? confirm = null);
 
         /// <summary>
+        /// List the TRC20 transfers in a block
+        /// </summary>
+        /// <param name="block">block number</param>
+        /// <param name="start">query index for pagination</param>
+        /// <param name="limit">page size for pagination</param>
+        /// <returns></returns>
+        TronTRC20TransactionListJson GetTRC20Transactions(ulong block, int start = 0, int limit = 20);
+
+        /// <summary>
         /// Get Resource Transaction List
         /// </summary>
         /// <param name="address"></param>

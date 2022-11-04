@@ -106,7 +106,7 @@ namespace AtomicCore.BlockChain.TronscanAPI
         /// <summary>
         /// block height
         /// </summary>
-        [JsonProperty("blockId"), JsonConverter(typeof(BizTronULongJsonConverter))]
+        [JsonProperty("block"), JsonConverter(typeof(BizTronULongJsonConverter))]
         public ulong BlockHeight { get; set; }
     }
 }

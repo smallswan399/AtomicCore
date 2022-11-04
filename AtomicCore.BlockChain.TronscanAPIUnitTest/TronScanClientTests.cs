@@ -246,6 +246,8 @@ namespace AtomicCore.BlockChain.TronscanAPI.Tests
             );
 
             Assert.IsTrue(null != result);
+            Assert.IsTrue(result.TokenTransfers.Length > 0);
+            Assert.IsTrue(result.TokenTransfers[0].BlockHeight > 0);
         }
 
         [TestMethod()]
